@@ -1,0 +1,15 @@
+baseURL = "containers.wesleyreisz.com"
+languageCode = "en-us"
+title = "Introduction to Containers and Containerization"
+test = "I'm a test"
+description = "My workshop notes"
+homepage_image = "logoWes.png"
+#enableGitInfo = true
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+BookSearch = true
+Booklogo = "logoWes.png"

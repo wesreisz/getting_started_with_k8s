@@ -1,15 +1,11 @@
-baseURL = "containers.wesleyreisz.com"
+baseURL = "http://www.wesleyreisz.com/getting_started_with_containerization"
 languageCode = "en-us"
 title = "Introduction to Containers and Containerization"
-test = "I'm a test"
-description = "My workshop notes"
-homepage_image = "logoWes.png"
-#enableGitInfo = true
+enableGitInfo = true
+description = "Workshop on containerization"
+publishDir = "docs"
 
 [[menu.main]]
 name = "Home"
 url = "/"
 weight = 1
-
-BookSearch = true
-Booklogo = "logoWes.png"

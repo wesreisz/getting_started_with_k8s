@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Docker Compose - Introduction to Containers and Containerization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Introduction to Containers and Containerization</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 6: Multi-stage &amp; Docker Compose</h1>
+
+<div class="content ">
+  <h3 id="multistage-build">Multistage Build</h3>
+<p>With multi-stage builds, you use multiple FROM statements in your Dockerfile. Each FROM instruction can use a different base, and each of them begins a new stage of the build. You can selectively copy artifacts from one stage to another, leaving behind everything you don’t want in the final image. To show how this works, let’s adapt the Dockerfile from the previous section to use multi-stage builds.</p>
+<p>It is used for great clarity, security, and image size. NOTE: Scatch is the smallest possible container you can start with.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:1.14</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> git clone https://github.com/coredns/coredns.git /coredns<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cd /coredns <span style="color:#f92672">&amp;&amp;</span> make<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> scratch</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> /coredns/coredns /coredns<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 53 53/udp</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;/coredns&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><h3 id="docker-compose">Docker Compose</h3>
+<p>Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. To learn more about all the features of Compose, see the list of features.</p>
+<p>Compose works in all environments: production, staging, development, testing, as well as CI workflows. You can learn more about each case in Common Use Cases.</p>
+<p>Using Compose is basically a three-step process:</p>
+<ol>
+<li>
+<p>Define your app’s environment with a Dockerfile so it can be reproduced anywhere.</p>
+</li>
+<li>
+<p>Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.</p>
+</li>
+<li>
+<p>Run docker-compose up and Compose starts and runs your entire app.</p>
+</li>
+</ol>
+<p>A docker-compose.yml looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">version</span>: <span style="color:#e6db74">&#39;3&#39;</span>
+<span style="color:#f92672">services</span>:
+  <span style="color:#f92672">azure-vote-back</span>:
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">redis</span>
+    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">azure-vote-back</span>
+    <span style="color:#f92672">ports</span>:
+        - <span style="color:#e6db74">&#34;6379:6379&#34;</span>
+
+  <span style="color:#f92672">azure-vote-front</span>:
+    <span style="color:#f92672">build</span>: <span style="color:#ae81ff">./azure-vote</span>
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">azure-vote-front</span>
+    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">azure-vote-front</span>
+    <span style="color:#f92672">environment</span>:
+      <span style="color:#f92672">REDIS</span>: <span style="color:#ae81ff">azure-vote-back</span>
+    <span style="color:#f92672">ports</span>:
+        - <span style="color:#e6db74">&#34;8080:80&#34;</span>
+</code></pre></div><p>This is a powerful workflow:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/wesreisz/azure-voting-app-redis.git
+cd azure-voting-app-redis
+docker-compose up
+</code></pre></div><h3 id="features">Features</h3>
+<p>The features of Compose that make it effective are:</p>
+<ul>
+<li>Multiple isolated environments on a single host</li>
+<li>Preserve volume data when containers are created</li>
+<li>Only recreate containers that have changed</li>
+<li>Variables and moving a composition between environments</li>
+<li>Multiple isolated environments on a single host</li>
+<li>Compose uses a project name to isolate environments from each other.</li>
+</ul>
+<p>You can make use of this project name in several different contexts:</p>
+<ul>
+<li>on a dev host, to create multiple copies of a single environment, such as when you want to run a stable copy for each feature branch of a project</li>
+<li>on a CI server, to keep builds from interfering with each other, you can set the project name to a unique build number</li>
+<li>on a shared host or dev host, to prevent different projects, which may use the same service names, from interfering with each other</li>
+</ul>
+<h3 id="common-use-cases">Common use cases</h3>
+<p>Compose can be used in many different ways. Some common use cases are outlined below.</p>
+<p><strong>Development environments</strong></p>
+<p>When you’re developing software, the ability to run an application in an isolated environment and interact with it is crucial. The Compose command line tool can be used to create the environment and interact with it.</p>
+<p>The Compose file provides a way to document and configure all of the application’s service dependencies (databases, queues, caches, web service APIs, etc). Using the Compose command line tool you can create and start one or more containers for each dependency with a single command (docker-compose up).</p>
+<p>Together, these features provide a convenient way for developers to get started on a project. Compose can reduce a multi-page “developer getting started guide” to a single machine readable Compose file and a few commands.</p>
+<p><strong>Automated testing environments</strong></p>
+<p>An important part of any Continuous Deployment or Continuous Integration process is the automated test suite. Automated end-to-end testing requires an environment in which to run tests. Compose provides a convenient way to create and destroy isolated testing environments for your test suite. By defining the full environment in a Compose file, you can create and destroy these environments in just a few commands:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker-compose up -d
+$ ./run_tests
+$ docker-compose down
+</code></pre></div><p><strong>Single host deployments</strong></p>
+<p>Compose has traditionally been focused on development and testing workflows, but with each release we’re making progress on more production-oriented features.</p>
+<p>For details on using production-oriented features, see compose in production in this documentation.</p>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

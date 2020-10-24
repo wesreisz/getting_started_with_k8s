@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>chroot, namespace, &amp; cgroups - Introduction to Containers and Containerization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Introduction to Containers and Containerization</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 2: chroot, namespaces, cgroups</h1>
+
+<div class="content ">
+  <p>There&rsquo;s no magic here. Getting back to first principles. A container is: chroot, namespaces, &amp; cgroups. With the exception of cgroups, these are technologies that have been around for a longtime.</p>
+<ul>
+<li><strong>chroot</strong>: A chroot is an operation that changes the apparent root directory for the current running process and their children. A program that is run in such a modified environment cannot access files and commands outside that environmental directory tree</li>
+<li><strong>namespaces</strong>: Namespaces are a feature of the Linux kernel that partitions kernel resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources. The feature works by having the same namespace for a set of resources and processes, but those namespaces refer to distinct resources. Resources may exist in multiple spaces. Examples of such resources are process IDs, hostnames, user IDs, file names, and some names associated with network access, and interprocess communication.</li>
+<li><strong>cgroups</strong>: cgroups is a Linux kernel feature that limits, accounts for, and isolates the resource usage of a collection of processes. Engineers at Google started the work on this feature in 2006 under the name &ldquo;process containers&rdquo;</li>
+</ul>
+<h3 id="learning-objectives">Learning Objectives</h3>
+<ul>
+<li><em>Understand</em> how linux implements containers and how you can do them yourself.</li>
+<li><em>Gain</em> deeper insight into what docker does for us</li>
+<li><em>See</em> how three core concepts central to containers actually work.</li>
+</ul>
+<h3 id="chroot-walk-through">chroot walk through</h3>
+<p>Launch your cloud vm and run a priviledged container on your machine. Yes, it&rsquo;s turtles all the way down. We&rsquo;re going to login to linux, run a linux container, and create a container by hand. :)</p>
+<p>Launching a priviledged container:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -it --name docker-host --rm --privileged ubuntu:bionic
+</code></pre></div><p>Docker privileged mode grants a Docker container root capabilities to all devices on the host system. Running a container in privileged mode gives it the capabilities of its host machine. For example, it enables it to modify App Arm and SELinux configurations.</p>
+<p>With the host’s kernel features and device access, you can even install a new instance of the Docker platform within the privileged container. Essentially, this mode allows running Docker inside Docker.</p>
+<p>Create new root directory</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir /my-new-root
+chroot /my-new-root bash
+cp /bin/bash /my-new-root
+chroot /my-new-root /bin/bash
+</code></pre></div><p>Still won&rsquo;t work. Bash isn&rsquo;t going to work without some of it&rsquo;s dependencies installed. You can use ldd to see what those dependencies are. <code>ldd</code> is a *nix utility that prints the shared libraries required by each program or shared library specified on the command line.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ldd /bin/bash
+</code></pre></div><p>Now let&rsquo;s add them to the new file system we&rsquo;re creating.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir /my-new-root/lib
+mkdir /my-new-root/lib64
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libc.so.6 /my-new-root/lib
+cp /lib64/ld-linux-x86-64.so.2 /my-new-root/lib
+chroot /my-new-root /bin/bash
+</code></pre></div><p>Now it should work, but other commands&hellip; like <code>ls</code> won&rsquo;t. Why? Let&rsquo;s fix this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ldd /bin/ls
+</code></pre></div><p>Do the same for each of these files. There should be about 6 or 7 of them. NOTE: Don&rsquo;t forget to copy the binary over too (ie: <code>cp /bin/ls /my-new-root/bin/ls</code> )</p>
+<p>Now when you type <code>ls</code> it works.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"></code></pre></div><h3 id="namespace-walk-through">namespace walk through</h3>
+<p>debootstrap: debootstrap is a tool which will install a Debian base system into a subdirectory of another, already installed system. It doesn&rsquo;t require an installation CD, just access to a Debian repository.
+<a href="https://linux.die.net/man/8/debootstrap">https://linux.die.net/man/8/debootstrap</a></p>
+<p>Launch a priviledged container:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -it --name docker-host --rm --privileged ubuntu:bionic
+</code></pre></div><p>install debootstrap</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">apt-get update -y
+apt-get install debootstrap -y
+</code></pre></div><p>setup a basic debian filesystem</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">debootstrap --variant<span style="color:#f92672">=</span>minbase bionic /better-root
+</code></pre></div><p>Namespaces are a feature of the Linux kernel that partitions kernel resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources. The feature works by having the same namespace for a set of resources and processes, but those namespaces refer to distinct resources. Resources may exist in multiple spaces. Examples of such resources are process IDs, hostnames, user IDs, file names, and some names associated with network access, and interprocess communication.</p>
+<p>Namespaces are a fundamental aspect of containers on Linux.</p>
+<p>The term &ldquo;namespace&rdquo; is often used for a type of namespace (e.g. process ID) as well as for a particular space of names.</p>
+<p>A Linux system starts out with a single namespace of each type, used by all processes. Processes can create additional namespaces and join different namespaces.</p>
+<p>Linux Namespaces originated in 2002 in the 2.4.19 kernel with work on the mount namespace kind. Additional namespaces were added beginning in 2006.</p>
+<p>Since kernel version 5.6, there are 8 kinds of namespaces. Namespace functionality is the same across all kinds: each process is associated with a namespace and can only see or use the resources associated with that namespace, and descendant namespaces where applicable. This way each process (or process group thereof) can have a unique view on the resources. Which resource is isolated depends on the kind of namespace that has been created for a given process group.</p>
+<ul>
+<li>Mount (mnt)</li>
+<li>Process ID (pid)</li>
+<li>Network (net)</li>
+<li>Interprocess Communication (ipc)</li>
+<li>UTS</li>
+<li>User ID (user)</li>
+<li>Control group (cgroup) Namespace</li>
+<li>Time Namespace</li>
+</ul>
+<p>Let&rsquo;s remove some of the things this file system can see and launch chroot</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#unmount namespaces</span>
+unshare --mount --uts --ipc --net --pid --fork --user --map-root-user chroot /better-root bash
+</code></pre></div><p>Open and <code>exec bash</code> on the shell that you&rsquo;re running chroot into. Look at the processes it can see. Look at the pids and tail -f a file and examine it between the two different terminals.</p>
+<p>NOTE: Don&rsquo;t get confused between terminals. Look for the &lsquo;better-root` to know where you are. If you see better-root, you&rsquo;re in your chroot&rsquo;d env.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker ps
+docker exec docker-host bash
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> docker exec --help
+</code></pre></div><pre><code>Usage:	docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+Run a command in a running container
+
+Options:
+  -d, --detach               Detached mode: run command in the background
+      --detach-keys string   Override the key sequence for detaching a container
+  -e, --env list             Set environment variables
+  -i, --interactive          Keep STDIN open even if not attached
+      --privileged           Give extended privileges to the command
+  -t, --tty                  Allocate a pseudo-TTY
+  -u, --user string          Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;])
+  -w, --workdir string       Working directory inside the container
+</code></pre><h3 id="cgroup-walk-through">cgroup walk through</h3>
+<p>cgroups (abbreviated from control groups) is a Linux kernel feature that limits, accounts for, and isolates the resource usage (CPU, memory, disk I/O, network, etc.) of a collection of processes.</p>
+<p>Engineers at Google (primarily Paul Menage and Rohit Seth) started the work on this feature in 2006 under the name &ldquo;process containers&rdquo;. In late 2007, the nomenclature changed to &ldquo;control groups&rdquo; to avoid confusion caused by multiple meanings of the term &ldquo;container&rdquo; in the Linux kernel context, and the control groups functionality was merged into the Linux kernel mainline in kernel version 2.6.24, which was released in January 2008.</p>
+<p>Two versions&hellip; version two is a total rewrite that discriminates between processes, not threads like v1. It appeared in the linux kernel in 2016.</p>
+<p>Exit the chroot and go back to the priveledged container (you should be able to see better-root). Don&rsquo;t go all the way back to the host OS. Otherwise, you&rsquo;ll have to reset up the container.</p>
+<p>Install tools, create a control group, and test isolation. XXXX is the pid of your chroot env. Look for the chroot command. It will be the bash pid, right under it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">apt-get install -y cgroup-tools htop
+cgcreate -g cpu,memory,blkio,devices,freezer:/sandbox
+cgclassify -g cpu,memory,blkio,devices,freezer:sandbox XXXX
+
+<span style="color:#75715e">#show you what the current settings are</span>
+cat /sys/fs/cgroup/cpu/sandbox/tasks
+
+<span style="color:#75715e">#look at priorities</span>
+cat /sys/fs/cgroup/cpu/sandbox/cpu.share
+
+<span style="color:#75715e"># Limit usage at 5% for a multi core system</span>
+cgset -r cpu.cfs_period_us<span style="color:#f92672">=</span><span style="color:#ae81ff">100000</span> -r cpu.cfs_quota_us<span style="color:#f92672">=</span>$<span style="color:#f92672">[</span> <span style="color:#ae81ff">5000</span> * <span style="color:#66d9ef">$(</span>getconf _NPROCESSORS_ONLN<span style="color:#66d9ef">)</span> <span style="color:#f92672">]</span> sandbox
+
+<span style="color:#75715e"># limit the memory</span>
+cgset -r memory.limit_in_bytes<span style="color:#f92672">=</span>80M sandbox
+
+<span style="color:#75715e">#check out settings are applied</span>
+cgget -r memory.stat sandbox
+
+
+cat /sys/fs/cgroup/cpu/sandbox/tasks | grep -i hierarchical_memory_limit
+</code></pre></div><p>inside and then outside the cgrouped chroot environment&hellip; let&rsquo;s peg CPU and watch it in htop</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yes docker rocks &gt;&gt; /dev/null
+</code></pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

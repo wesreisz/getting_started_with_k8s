@@ -1,7 +1,11 @@
 <div class="summary mb-2">
-  {{ if .Params.image }}
-  <img alt="{{ .Title }}" src="{{ .Params.image }}" />
-  {{ end}}
-  <h2 class="title-summary"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-  <p>{{ .Summary }}</p>
+  <h2 class="title-summary"><a href="{{ .Permalink }}">{{ .Params.full_title }}</a>
+    {{ if (isset .Params "target_time") }}
+      ({{ .Params.target_time }})
+    {{ end }}
+  
+  </h2>
+  <p>{{ .Summary}}
+</p>
+  
 </div>

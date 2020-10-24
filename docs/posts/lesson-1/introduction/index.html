@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Course Introduction - Introduction to Containers and Containerization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Introduction to Containers and Containerization</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 1: Course Introduction and Logistics</h1>
+
+<div class="content ">
+  <p>Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features. In this hands-on workshop, you will learn about Docker basic concepts, how to run containers, create your own images, interact with the &ldquo;Docker Hub&rdquo;, and more.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Learn what containers are and how they work</li>
+<li>Understand the main use cases of containers</li>
+<li>Understand how to containerize an app</li>
+</ol>
+<h3 id="audience">Audience</h3>
+<p>Anyone wanting to learn about containers. Will look at things through a developers lens.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>You will need an ssh client on your machine.</li>
+<li>Everything can be run locally with your own installation of Docker; however, this is a 3 hour class, I have created Amazon workstation instances that you may access. I ask that you use those instances to minimize the configuration challenges with a large group. You can download the client here: <a href="https://clients.amazonworkspaces.com">https://clients.amazonworkspaces.com</a></li>
+</ul>
+<h3 id="agenda">Agenda</h3>
+<ul>
+<li><a href="/getting_started_with_containerization/posts/">Course Agenda</a></li>
+</ul>
+<h3 id="environment">Environment</h3>
+<p>Each student has been created a virtual desktop enviornment. Everything can be run on your own machine if you have docker and docker-compose installed. As this is only a short 3-hour course, I request that you use the virtual desktop environment. This will minimize the support time if docker/docker compose is not setup correctly. Feel free to install docker and start locally, and use the VDI only if there&rsquo;s an issue.</p>
+<p>To access the Amazon VDI, install workplace on your OS. The clients are available here:
+<a href="https://clients.amazonworkspaces.com">https://clients.amazonworkspaces.com</a></p>
+<p>You should have an <a href="/getting_started_with_containerization/images/lesson0/email.png">email</a> that has</p>
+<ul>
+<li>link create your profile for the workspace</li>
+<li>the registration code to your specific workspace</li>
+<li>your userid that I created for you</li>
+</ul>
+<p>Please install the client, register your Ubuntu profile, and launch your VDI (make sure to use the registration code in your email).</p>
+<p><img src="/getting_started_with_containerization/images/lesson0/desktop.png" alt="Your Amazon VDI" title="Amazon VDI"></p>
+<h3 id="validate-you-are-ready-to-start">Validate you are ready to start</h3>
+<p>Open a terminal and type:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker version
+</code></pre></div><p>You should see information about your installation of docker. There should be no errors.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run hello-world
+</code></pre></div><p>You should see something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the <span style="color:#e6db74">&#34;hello-world&#34;</span> image from the Docker Hub.
+    <span style="color:#f92672">(</span>amd64<span style="color:#f92672">)</span>
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+</code></pre></div><p>If so, you&rsquo;re ready to start! If this doesn&rsquo;t work, please install Docker and configure it for your system:
+<a href="https://docs.docker.com/get-docker">https://docs.docker.com/get-docker</a></p>
+<h3 id="potential-issues">Potential Issues</h3>
+<p><strong>Amazon Workspace: Unable to run docker without using root</strong></p>
+<p>ref: <a href="https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue">https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue</a></p>
+<p>I&rsquo;ve installed docker and configured it. However, for your user you may get this error:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker ps
+Got permission denied <span style="color:#66d9ef">while</span> trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/json: dial unix /var/run/docker.sock: connect: permission denied
+</code></pre></div><p>If you get this error, do the following to allow your user to run as a non-root user:</p>
+<p>Create the docker group if it does not exist</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo groupadd docker
+</code></pre></div><p>Add your user to the docker group.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo usermod -aG docker $USER
+</code></pre></div><p>Run the following command or Logout and login again and run (that doesn&rsquo;t work you may need to reboot your machine first)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">newgrp docker
+</code></pre></div><p>Check if docker can be run without root</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run hello-world
+</code></pre></div><p>Reboot &amp; log back in if you still get this error</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">reboot
+</code></pre></div><p><strong>Amazon Workspace: pip fails doing install due to network</strong></p>
+<p><code>failed to establish a new connection: [Errno -3] Temporary failure in name resolution</code></p>
+<p>There is an issue with the way that DNS is built with Amazon Linux workspaces</p>
+<p>ref: <a href="https://stackoverflow.com/questions/28668180/cant-install-pip-packages-inside-a-docker-container-with-ubuntu">https://stackoverflow.com/questions/28668180/cant-install-pip-packages-inside-a-docker-container-with-ubuntu</a></p>
+<p>Modifying /etc/resolv.conf and adding the following lines at the end</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Google IPv4 nameservers</span>
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+</code></pre></div><p>However this change won&rsquo;t be permanent (see this thread). To make it permanent :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo nano /etc/dhcp/dhclient.conf
+</code></pre></div><p>Uncomment and edit the line with prepend domain-name-server : prepend domain-name-servers 8.8.8.8, 8.8.4.4;</p>
+<p>Restart dhclient :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo dhclient
+</code></pre></div><p><strong>Amazon Workspace: If you get cannot connect to Docker daemon, just start the docker service</strong>
+docker run -it &ndash;name docker-host &ndash;rm &ndash;privileged ubuntu:bionic
+docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
+See &lsquo;docker run &ndash;help&rsquo;.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo service docker start
+</code></pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

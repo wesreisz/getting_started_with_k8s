@@ -2,6 +2,7 @@
   text-align: center;
   .title {
     font-weight: lighter;
+    font-size: xx-large;
     font-family: $font-family-base;
   }
   p {
@@ -16,13 +17,14 @@
       width: 60%;
     }
   }
+  .margin{
+    display: block !important;
+    padding: 30px;
+  }
   .terminal {
     border-radius: 3px;
     margin: 0 auto;
-    margin-top: -200px;
-    img {
-      width: 100%;
-      height: auto;
-    }
+    margin-top: 100px;
+    padding: 20px;
   }
 }

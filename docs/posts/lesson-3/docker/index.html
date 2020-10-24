@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Docker - Introduction to Containers and Containerization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Introduction to Containers and Containerization</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 3: Docker</h1>
+
+<div class="content ">
+  <p>Docker is a software platform for building applications based on containers. It is the defacto standard for doing containerization; however, it is not the only product out there (LXC, Hyper-V containers, podman, containerd, RUNC are all alternatives). However, we will use Docker in this course.</p>
+<p>There&rsquo;s alot of different command here. I&rsquo;ll explore some of the ones you&rsquo;ll use the most command and talk through them. We&rsquo;ll also talk about how do get more help and find additional containers.</p>
+<h3 id="learning-objectives">Learning Objectives</h3>
+<ul>
+<li><em>Download</em> and <em>run</em> docker containers.</li>
+<li><em>Understand</em> the difference between <code>docker run</code> and <code>docker exec</code>.</li>
+<li><em>Explore</em> how to use <code>docker image</code> and <code>docker container</code> commands.</li>
+<li><em>Understand</em> how to search dockerhub.</li>
+</ul>
+<p>Let&rsquo;s explore:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker info
+docker info help
+</code></pre></div><p>Each container has a RUN command that it executes when you run it. However, you can also call your own command explicitly.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run --interactive --tty unbuntu:bionic
+cat /etc/issue
+docker image ls
+docker run --interactive --tty ubuntu:bionic cat /etc/issue
+docker run -it ubuntu:bionic ps aux
+</code></pre></div><p>Let&rsquo;s search and then take a tour of dockerhub, open <a href="https://hub.docker.com">https://hub.docker.com</a>. Let&rsquo;s pull an image to our local image repository.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker search ubuntu
+docker pull ubuntu:14.04
+docker image ls
+docker run -it --name my-u ubuntu:14.04
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -detach -it jturpin/hollywood
+docker ps
+docker ps -a
+docker run --dit jturpin/hollywood
+</code></pre></div><p>Understand what commands are available</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker help
+docker image help
+docker container help
+</code></pre></div><p>Docker run is for creating containers. It is important to differentiate it from exec , which is used to interact with containers that are already running. Attach let&rsquo;s you connect to the same terminal instance.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -dit --name my-nginx nginx
+docker exec -it my-nginx bash
+docker exec -it my-nginx ps aux
+
+docker ps
+docker container attach my-nginx
+</code></pre></div><p>Start/Stop/Restarting a container</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker container ls
+docker container ls -a
+docker start ?????????????????
+docker stop ?????????????????
+docker restart ?????????????????
+docker ps
+</code></pre></div><p><strong>Tagging</strong></p>
+<p>Tagging is done to track and differentiate different versions. It&rsquo;s down with <code>docker tag &lt;IMAGE_ID&gt; &lt;tag&gt;</code> or by using a <code>-t</code> with the during the build. Using this is called aliasing an image</p>
+<p>A tag name must be valid ASCII and may contain lowercase and uppercase letters, digits, underscores, periods and dashes. A tag name may not start with a period or a dash and may contain a maximum of 128 characters.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker image ls
+docker tag 0810ad403c0f wesreisz/hello-node
+docker tag 0810ad403c0f wesreisz/hello-node:v1
+docker image ls 
+</code></pre></div><pre><code>REPOSITORY                                       TAG                 IMAGE ID            CREATED             SIZE
+wesreisz/hello-node                              latest              0810ad403c0f        37 hours ago        918MB
+wesreisz/hello-node                              v1                  0810ad403c0f        37 hours ago        918MB
+hello-node                                       latest              0810ad403c0f        37 hours ago        918MB
+
+</code></pre><p> </p>
+<p><strong>Docker Hub</strong></p>
+<p>Docker Hub is a hosted repository service provided by Docker for finding and sharing container images with your team. Key features include: Private Repositories: Push and pull container images. Automated Builds: Automatically build container images from GitHub and Bitbucket and push them to Docker Hub</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker login
+docker push wesreisz/hello-node:v1
+</code></pre></div><p><strong>Pushing Images</strong></p>
+<p>There are many other registrations gcr, ecr, and acr acr are the cloud providers. Here&rsquo;s what it looks like to upload to Azures container repo (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull nginx
+docker login azurealpharegistry.azurecr.io
+<span style="color:#75715e">#or az acr login --name azurealpharegistry.azurecr.io --resource-group initial-manually-created-cluster</span>
+docker tag nginx azurealpharegistry.azurecr.io/samples/nginx
+docker push azurealpharegistry.azurecr.io/samples/nginx
+docker run -it --rm -p 8080:80 azurealpharegistry.azurecr.io/samples/nginx
+</code></pre></div><p>Clean up old container or images</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker image prune
+docker container prune
+</code></pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

@@ -10,6 +10,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .title{
+      color: #4d4d4d;
+      display: block;
+    }
   }
   &.header-absolute {
     position: absolute;

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Introduction to Containers and Containerization</title>
+    <link>http://www.wesleyreisz.com/getting_started_with_containerization/</link>
+    <description>Recent content on Introduction to Containers and Containerization</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 23 Oct 2020 01:00:00 -0138</lastBuildDate><atom:link href="http://www.wesleyreisz.com/getting_started_with_containerization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Course Introduction</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/</guid>
+      <description>Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features.</description>
+    </item>
+    
+    <item>
+      <title>Why Containers</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/</guid>
+      <description>A container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another. A Docker container image is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings.
+Container images become containers at runtime and in the case of Docker containers - images become containers when they run on Docker Engine.</description>
+    </item>
+    
+    <item>
+      <title>chroot, namespace, &amp; cgroups</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0137</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/</guid>
+      <description>There&amp;rsquo;s no magic here. Getting back to first principles. A container is: chroot, namespaces, &amp;amp; cgroups. With the exception of cgroups, these are technologies that have been around for a longtime.
+ chroot: A chroot is an operation that changes the apparent root directory for the current running process and their children. A program that is run in such a modified environment cannot access files and commands outside that environmental directory tree namespaces: Namespaces are a feature of the Linux kernel that partitions kernel resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources.</description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0136</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/</guid>
+      <description>Docker is a software platform for building applications based on containers. It is the defacto standard for doing containerization; however, it is not the only product out there (LXC, Hyper-V containers, podman, containerd, RUNC are all alternatives). However, we will use Docker in this course.
+There&amp;rsquo;s alot of different command here. I&amp;rsquo;ll explore some of the ones you&amp;rsquo;ll use the most command and talk through them. We&amp;rsquo;ll also talk about how do get more help and find additional containers.</description>
+    </item>
+    
+    <item>
+      <title>Dockerfile</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0136</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/</guid>
+      <description>Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession.
+Learning Objectives  Understand how the Dockerfile works Build containers Understand how to push containers.  Here is the format of the Dockerfile:</description>
+    </item>
+    
+    <item>
+      <title>Mounts &amp; Volumes</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0136</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/</guid>
+      <description>Docker containers do not store persistent data. Any data written to a container&amp;rsquo;s writable layer will no longer be available once the container stops running. Also, getting data written to a container back out of it for another process can be difficult. To solve the issue of persisting data from a container, Docker has several options.
+  Bind mounts: A bind mount is a file or folder stored anywhere on the container host filesystem, mounted into a running container.</description>
+    </item>
+    
+    <item>
+      <title>Build an App</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0136</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/</guid>
+      <description>At this point, we&amp;rsquo;ve put all the pieces together. Now let&amp;rsquo;s keep going and build an app from the ground up.
+mkdir node_project cd node_project Create a new file package.json and run install
+{ &amp;#34;name&amp;#34;: &amp;#34;nodejs-image-demo&amp;#34;, &amp;#34;version&amp;#34;: &amp;#34;1.0.0&amp;#34;, &amp;#34;description&amp;#34;: &amp;#34;nodejs image demo&amp;#34;, &amp;#34;author&amp;#34;: &amp;#34;Sammy the Shark &amp;lt;sammy@example.com&amp;gt;&amp;#34;, &amp;#34;license&amp;#34;: &amp;#34;MIT&amp;#34;, &amp;#34;main&amp;#34;: &amp;#34;app.js&amp;#34;, &amp;#34;keywords&amp;#34;: [ &amp;#34;nodejs&amp;#34;, &amp;#34;bootstrap&amp;#34;, &amp;#34;express&amp;#34; ], &amp;#34;dependencies&amp;#34;: { &amp;#34;express&amp;#34;: &amp;#34;^4.16.8&amp;#34; } } npm install Let&amp;rsquo;s create and start building up app.</description>
+    </item>
+    
+    <item>
+      <title>Docker Compose</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0135</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/</guid>
+      <description>Multistage Build With multi-stage builds, you use multiple FROM statements in your Dockerfile. Each FROM instruction can use a different base, and each of them begins a new stage of the build. You can selectively copy artifacts from one stage to another, leaving behind everything you don’t want in the final image. To show how this works, let’s adapt the Dockerfile from the previous section to use multi-stage builds.
+It is used for great clarity, security, and image size.</description>
+    </item>
+    
+    <item>
+      <title>Networking</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0136</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/</guid>
+      <description>Docker includes support for networking containers through the use of network drivers. By default, Docker provides two network drivers for you, the bridge and the overlay drivers. You can also write a network driver plugin so that you can create your own drivers but that is an advanced task.
+Every installation of the Docker Engine automatically includes three default networks. You can list them:
+$ docker network ls NETWORK ID NAME DRIVER 18a2866682b8 none null c288470c46f6 host host 7b369448dccb bridge bridge The network named bridge is a special network.</description>
+    </item>
+    
+    <item>
+      <title> Key Takeaways &amp; Wrapup</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0135</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/</guid>
+      <description>Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features.</description>
+    </item>
+    
+  </channel>
+</rss>

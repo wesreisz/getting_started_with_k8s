@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/</loc>
+    <lastmod>2020-10-28T23:22:02-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/</loc>
+    <lastmod>2020-10-26T21:35:06-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/</loc>
+    <lastmod>2020-10-28T19:03:43-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/</loc>
+    <lastmod>2020-10-28T19:03:43-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/</loc>
+    <lastmod>2020-10-28T22:19:17-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/</loc>
+    <lastmod>2020-10-28T23:22:02-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/posts/</loc>
+    <lastmod>2020-10-28T23:22:02-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.wesleyreisz.com/getting_started_with_containerization/tags/</loc>
+  </url>
+  
+</urlset>

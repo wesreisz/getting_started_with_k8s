@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Dockerfile - Introduction to Containers and Containerization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Introduction to Containers and Containerization</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 4: Dockerfile</h1>
+
+<div class="content ">
+  <p>Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession.</p>
+<h3 id="learning-objectives">Learning Objectives</h3>
+<ul>
+<li><em>Understand</em> how the Dockerfile works</li>
+<li><em>Build</em> containers</li>
+<li><em>Understand</em> how to push containers.</li>
+</ul>
+<p>Here is the format of the Dockerfile:</p>
+<p><code>INSTRUCTION arguments</code></p>
+<p><strong>NOTE</strong>: The capitalized INSTRUCTION is more convention than anything else. Your editors may warn you and you&rsquo;ll rarely see the instruction not capitalized, but it will work if it&rsquo;s lowercase.</p>
+<p>After we create the file, we&rsquo;ll use <code>docker build .</code> to create an image. When we build an image, it&rsquo;s stored in a local copy of your image repository (if you&rsquo;re used to maven, similar to that).</p>
+<p>Let&rsquo;s go through a simple example. Create a new working direction and <code>cd</code> into it. This snippet just writes some text into a file.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat <span style="color:#e6db74">&lt;&lt;EOF &gt; Dockerfile
+</span><span style="color:#e6db74">FROM ubuntu:latest
+</span><span style="color:#e6db74">RUN echo &#34;Hello World&#34;
+</span><span style="color:#e6db74">EOF</span>
+</code></pre></div><p>After you have your <code>Dockerfile</code>, build it with:
+<code>docker build .</code></p>
+<p>Let&rsquo;s go through a more complete example and build a node server.</p>
+<p>Here&rsquo;s the Dockerfile.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> node:12-stretch</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> index.js index.js<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;node&#34;</span>, <span style="color:#e6db74">&#34;index.js&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Let&rsquo;s create index.js</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">http</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;http&#34;</span>);
+  <span style="color:#a6e22e">http</span>
+   .<span style="color:#a6e22e">createServer</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">request</span>, <span style="color:#a6e22e">response</span>){
+       <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;request received&#34;</span>);
+       <span style="color:#a6e22e">response</span>.<span style="color:#a6e22e">end</span>(<span style="color:#e6db74">&#34;Hello World&#34;</span>, <span style="color:#e6db74">&#34;utf-8&#34;</span>)
+   })
+   .<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">3000</span>)
+  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;server running: localhost:3000&#34;</span>);
+</code></pre></div><p>build and tag it</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker build -t hello-node .
+</code></pre></div><p>run it</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run hello-node
+</code></pre></div><p>This won&rsquo;t run because while the port is open in the container, it&rsquo;s not exposed outside the container. We have to open it. Kill it and let&rsquo;s try again. <code>--publish</code> or <code>-p</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run --publish 3000:3000 hello-node
+</code></pre></div><p><strong>NOTE:</strong></p>
+<p>cntrl-c doesn&rsquo;t work&hellip; because we&rsquo;re sending cntrl-c to docker and it&rsquo;s not being passed to node. There is a more correct way to capture the signal; however, if you use <code>--init</code> for the time being when you run it. It will exit normally. To close the process, open another terminal windows and find the process with <code>ps aux</code> and kill that pid.</p>
+<p><strong>Container Naming</strong></p>
+<p>An image name is made up of slash-separated name components, optionally prefixed by a registry hostname. The hostname must comply with standard DNS rules, but may not contain underscores. If a hostname is present, it may optionally be followed by a port number in the format :8080. If not present, the command uses Docker’s public registry located at registry-1.docker.io by default (this is where it will push/pull from). Name components may contain lowercase letters, digits and separators. A separator is defined as a period, one or two underscores, or one or more dashes. A name component may not start or end with a separator.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker image ls
+</code></pre></div><pre><code>REPOSITORY                                       TAG                 IMAGE ID            CREATED             SIZE
+hello-node                                       latest              0810ad403c0f        37 hours ago        918MB
+mcr.microsoft.com/dotnet/core/sdk                3.1                 c4155a9104a8        6 weeks ago         708MB
+azurealpharegistry.azurecr.io/azure-vote-front   v1                  5d0b975ec2b3        2 months ago        944MB
+registry.tkg.vmware.run/kind/node                v1.18.6_vmware.1    62aa5847174e        3 months ago        1.42GB
+tiangolo/uwsgi-nginx-flask                       python3.6           42c10a01539f        4 months ago        944MB
+</code></pre><p> </p>
+<p><strong>Running as Root</strong>
+In this node example, we&rsquo;re running as root. That&rsquo;s not really desired. It&rsquo;s more of an attack surface. Let&rsquo;s create and run as a less priveledged user. Update the Dockerfile with this</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> node:12-stretch</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">USER</span><span style="color:#e6db74"> node </span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --chown<span style="color:#f92672">=</span>node:node index.js index.js<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;node&#34;</span>, <span style="color:#e6db74">&#34;index.js&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Now let&rsquo;s build, run, and exec into the container. What user is it running as?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker build -t hello-node:v1 .
+docker image ls
+docker run -dit --rm -p 3000:3000  hello-node:v1
+docker ps
+docker exec -it 499f587a0691 bash
+</code></pre></div><p>ADD vs COPY
+ADD and COPY are doing the same thing. ADD has the ability to do a few different things like go out to the network and download a file from the network. In general doing less, is safer. So use the least priveledged &ldquo;thing&rdquo; you can. Doing less is safer. Add will automatically unzip/untar as well (a copy would require that extra step).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /home/node/src</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --chown<span style="color:#f92672">=</span>node:node index.js index.js<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Create a working directory&hellip; we put it in home because we know for sure the node user owns it&rsquo;s own home directory.  If it doesn&rsquo;t exist, it will create it for you. Build it and run it again. Then look at the directory where the source code is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">...
+docker exec -it 2e91baefe0 pwd
+</code></pre></div><p><strong>Docker Layers</strong>
+Docker containers are building blocks for applications. Each container is an image with a readable/writeable layer on top of a bunch of read-only layers.
+These layers (also called intermediate images) are generated when the commands in the Dockerfile are executed during the Docker image build.
+For example, here is a Dockerfile for creating a node.js web app image . It shows the commands that are executed to create the image. Layers are neat because they can be re-used by multiple images saving disk space and reducing time to build images while maintaining their integrity. Order matters&hellip; and each layer is cached. So you may have to change a Dockefile at a certain line to get it to rebuild. You may also reorganize when you&rsquo;re doing installs so it doesn&rsquo;t install everytime. We&rsquo;ll see more about this in a bit.</p>
+<pre><code>wesleyreisz@Wesleys-MacBook-Pro hello-node % docker build .
+Sending build context to Docker daemon  3.072kB
+Step 1/5 : FROM node:12-stretch
+ ---&gt; 1f560ce4ce7e
+Step 2/5 : USER node
+ ---&gt; Using cache
+ ---&gt; 372366a9e39a
+Step 3/5 : WORKDIR /home/node/src
+ ---&gt; Using cache
+ ---&gt; a99e8cb0772f
+Step 4/5 : COPY --chown=node:node index.js index.js
+ ---&gt; Using cache
+ ---&gt; 9546865b3c50
+Step 5/5 : CMD [&quot;node&quot;, &quot;index.js&quot;]]
+ ---&gt; Using cache
+ ---&gt; 4ec64400f39d
+Successfully built 4ec64400f39d
+</code></pre><p><strong>CMD and ENTRYPOINT</strong></p>
+<p>What is the difference between CMD and ENTRYPOINT? You cannot override the ENTRYPOINT instruction by adding command-line parameters to the docker run command. By opting for this instruction, you imply that the container is specifically built for such use.</p>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

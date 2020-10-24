@@ -1,7 +1,6 @@
-{{ define "title" }}{{ .Site.Title }}{{ end}}
-{{ define "header_css" }}{{ end }}
-{{ define "body_classes" }}page-home{{ end }}
-{{ define "header_classes" }}{{ end }}
+  {{ define "title" }}{{ .Site.Title }}{{ end}}
+  {{ define "header_css" }}{{ end }}
+  {{ define "body_classes" }}page-home{{ end }}
 
 {{ define "meta_tags" }}
 <meta name="description" content="{{ .Site.Params.homepage_meta_tags.meta_description }}" />
@@ -16,35 +15,29 @@
 {{ end }}
 
 {{ define "main" }}
-<div class="strip">
-  <div class="container pt-4 pb-16">
-    <div class="row">
-      <div class="col-12">
-        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-        <a class="button button-primary mb-2" href="/posts">
-          Course Material
-        </a>
-
-        <div class="content">
-          Thank you for coming to my course. To launch the material, click above
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{{ if .Site.Params.homepage_image }}
-<div class="strip">
+<div>
   <div class="container pt-4 pb-4">
     <div class="row justify-content-center">
       <div class="col-12 col-md-10">
+        <div >
+          <img src="images/logoWes.png" />
+        </div>
         <div class="terminal">
-          <img src="{{ .Site.Params.homepage_image | relURL}}" />
+          <h1 class="title">Introduction to Containers and Containerization</h1>
+          Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features.
+          
+          In this hands-on workshop, you will learn about Docker basic concepts, how to run containers, create your own images, interact with the "Docker Hub", and more.
+          
+          <br /><br />
+
+          <a class="button button-primary mb-2 padded" href="/getting_started_with_containerization/posts/">
+            Launch
+          </a> 
         </div>
       </div>
     </div>
   </div>
 </div>
-{{ end }}
 
 {{ end }}
 

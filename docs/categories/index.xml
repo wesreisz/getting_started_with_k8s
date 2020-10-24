@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Introduction to Containers and Containerization</title>
+    <link>http://www.wesleyreisz.com/getting_started_with_containerization/categories/</link>
+    <description>Recent content in Categories on Introduction to Containers and Containerization</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="http://www.wesleyreisz.com/getting_started_with_containerization/categories/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

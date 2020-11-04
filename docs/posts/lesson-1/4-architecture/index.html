@@ -129,7 +129,23 @@ A controller tracks at least one Kubernetes resource type. These objects have a 
 <p>Kubernetes Controllers allow you to run and manage your applications inside a cluster, and are one of the core concepts you’ll need to understand to be successful with Kubernetes.</p>
 <h3 id="api-server">API Server</h3>
 <p>We will interact with our Kubernetes cluster through the Kubernetes API</p>
+<p>In Kubernetes, everything is an API call served by the Kubernetes API server (kube-apiserver). The API server is a gateway to an etcd datastore that maintains the desired state of your application cluster. To update the state of a Kubernetes cluster, you make API calls to the API server describing your desired state.</p>
 <p>The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources</p>
+<p>Two methods to access:</p>
+<ul>
+<li>kubectl proxy &ndash;port=8080</li>
+<li>Direct Access using Tokens and Certificates</li>
+</ul>
+<p><strong>Example Using kubectl proxy</strong>
+In one terminal, start the proxy</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl proxy --port<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span>
+</code></pre></div><p>Either send that process to the background or open another terminal:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+</code></pre></div><pre><code>NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-86d687ddfb-d56dp   1/1     Running   0          5h26m
+</code></pre><p>Call the api</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl localhost:8080/api/v1/namespaces/default/pods/hello-node-86d687ddfb-d56dp | jq
+</code></pre></div><p>[Kubernetes API Reference](<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_</a></p>
 <h3 id="scheduler">Scheduler</h3>
 <h3 id="etcd">etcd</h3>
 <h3 id="cni">CNI</h3>

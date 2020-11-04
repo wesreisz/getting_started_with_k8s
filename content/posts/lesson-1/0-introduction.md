@@ -42,6 +42,7 @@ Attend if you want to answer the questions below.
 * How does K8s integrate with load balancers? Or other cloud resources?
 
 ### Agenda
+
 * [Course Agenda](/getting_started_with_k8s/posts/)
 
 
@@ -156,8 +157,12 @@ Notes:
 * "Validates" = continuous integration builds with very extensive (and expensive) testing
 * The Docker API is versioned, and offers strong backward-compatibility (if a client uses e.g. API v1.25, the Docker Engine will keep behaving the same way)
 
+### Attribution
 
+Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is non-the-less heavily influenced by his container.training material. [He and his contributors](https://github.com/jpetazzo/container.training/graphs/contributors) maintain an [Apache 2 licensed Open Source](https://github.com/jpetazzo/container.training/blob/master/LICENSE) project of his [training material](https://github.com/jpetazzo/container.training/) on github. 
 
+Many additional sources influenced the shape of this project. Those items will be identified throughout.
+ 
 ### Just for fun
 
 Just to validate everything is working correctly, let's spin up a cluster:

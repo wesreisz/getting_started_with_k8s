@@ -96,18 +96,172 @@
 <h1>Lesson 5: Security</h1>
 
 <div class="content ">
-  <p>Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.</p>
-<p>A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod&rsquo;s contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific &ldquo;logical host&rdquo;: it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.</p>
+  <p>Kubernetes security is important throughout the container lifecycle due to the distributed, dynamic nature of a Kubernetes cluster. Different security approaches are required for each of the three phases of an application lifecycle: build, deploy, and runtime. Kubernetes provides innate security advantages. For example, application containers are typically not patched or updated — instead, container images are replaced entirely with new versions. This enables strict version control and permits rapid rollbacks if a vulnerability is uncovered in new code.</p>
+<p>However, since individual pods are transient and ephemeral, the ever-changing runtime environment can present challenges for IT security professionals, as applications and API links to other applications and services are constantly in flux.</p>
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
 <li>Understand about more complicated configurations for architecture components</li>
 <li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
 </ol>
-<p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png" alt=""></p>
 <h4 id="security">Security</h4>
-<p><a href="https://kubernetes.io/docs/concepts/security/overview/">https://kubernetes.io/docs/concepts/security/overview/</a></p>
-<h4 id="securing-a-cluster">Securing a cluster</h4>
-<p><a href="https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/">https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/</a></p>
+<p><img src="/getting_started_with_k8s/images/lesson7/4c.png" alt="4 C&rsquo;s of Cloud Native Security"></p>
+<p>Each layer of the Cloud Native security model builds upon the next outermost layer. The Code layer benefits from strong base (Cloud, Cluster, Container) security layers. You cannot safeguard against poor security standards in the base layers by addressing security at the Code level.</p>
+<p><strong>Cloud</strong></p>
+<p>In many ways, the Cloud (or co-located servers, or the corporate datacenter) is the trusted computing base of a Kubernetes cluster. If the Cloud layer is vulnerable (or configured in a vulnerable way) then there is no guarantee that the components built on top of this base are secure. Each cloud provider makes security recommendations for running workloads securely in their environment.</p>
+<p><strong>Cluster</strong></p>
+<p>There are two areas of concern for securing Kubernetes:</p>
+<ul>
+<li>Securing the cluster components that are configurable</li>
+<li>Securing the applications which run in the cluster</li>
+</ul>
+<p><strong>Container</strong>
+Container security is outside the scope of this guide. Here are general recommendations and links to explore this topic:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Area of Concern for Containers</th>
+<th style="text-align:left">Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Container Vulnerability Scanning and OS Dependency Security</td>
+<td style="text-align:left">As part of an image build step, you should scan your containers for known vulnerabilities.</td>
+</tr>
+<tr>
+<td style="text-align:left">Image Signing and Enforcement</td>
+<td style="text-align:left">Sign container images to maintain a system of trust for the content of your containers.</td>
+</tr>
+<tr>
+<td style="text-align:left">Disallow privileged users</td>
+<td style="text-align:left">When constructing containers, consult your documentation for how to create users inside of the containers that have the least level of operating system privilege necessary in order to carry out the goal of the container.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Code</strong></p>
+<p>Application code is one of the primary attack surfaces over which you have the most control. While securing application code is outside of the Kubernetes security topic, here are recommendations to protect application code:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Area of Concern for Containers</th>
+<th style="text-align:left">Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Access over TLS only</td>
+<td style="text-align:left">If your code needs to communicate by TCP, perform a TLS handshake with the client ahead of time. With the exception of a few cases, encrypt everything in transit. Going one step further, it&rsquo;s a good idea to encrypt network traffic between services. This can be done through a process known as mutual or mTLS which performs a two sided verification of communication between two certificate holding services.</td>
+</tr>
+<tr>
+<td style="text-align:left">Limiting port ranges of communication</td>
+<td style="text-align:left">This recommendation may be a bit self-explanatory, but wherever possible you should only expose the ports on your service that are absolutely essential for communication or metric gathering.</td>
+</tr>
+<tr>
+<td style="text-align:left">3rd Party Dependency Security</td>
+<td style="text-align:left">It is a good practice to regularly scan your application&rsquo;s third party libraries for known security vulnerabilities. Each programming language has a tool for performing this check automatically.</td>
+</tr>
+<tr>
+<td style="text-align:left">Static Code Analysis</td>
+<td style="text-align:left">Most languages provide a way for a snippet of code to be analyzed for any potentially unsafe coding practices. Whenever possible you should perform checks using automated tooling that can scan codebases for common security errors. Some of the tools can be found at: <a href="https://owasp.org/www-community/Source_Code_Analysis_Tools">https://owasp.org/www-community/Source_Code_Analysis_Tools</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Dynamic probing attacks</td>
+<td style="text-align:left">There are a few automated tools that you can run against your service to try some of the well known service attacks. These include SQL injection, CSRF, and XSS. One of the most popular dynamic analysis tools is the OWASP Zed Attack proxy tool.</td>
+</tr>
+</tbody>
+</table>
+<p>ref: <a href="https://kubernetes.io/docs/concepts/security/overview/">https://kubernetes.io/docs/concepts/security/overview/</a></p>
+<h4 id="what-is-a-high-level-kubernetes-security-checklist">What is a high-level Kubernetes security checklist?</h4>
+<p>Best practice recommendations include:</p>
+<ul>
+<li>Begin with minimal, distro-less images and add only what is absolutely necessary. Smaller is safer.</li>
+<li>Use a minimal host OS, end read-only mounts, and use SELinux options for even more control</li>
+<li>Scan images for vulnerabilities top to bottom, including OS images and outside images of any kind. There is no such thing as an outside trusted source.</li>
+<li>Use namespaces and RBAC to segment the cluster and users in a logical manner. If it’s not needed it shouldn’t be visible.</li>
+<li>Kubernetes networking defaults allow any-to-any communications, so network segmentation should be implemented before production. Carefully define ingress and egress policies to ensure connections are routed properly.</li>
+<li>Keep privileges to a minimum, and never run application processes as root. Using a read-only root filesystem prevents any attack that depends on installing software or modifying the file system.</li>
+<li>Integrate security such as image scanning into the CI/CD pipeline. Even better, run CIS Benchmark security tests.</li>
+<li>Secure the cluster itself. Configure RBAC to limit access to the API server and ensure all etcd communications are secured with TLS encryption. Likewise, lockdown kubelet permissions by configuring RBAC for kubelets.</li>
+<li>Take advantage of built-in controls in Kubernetes, such as configuring security context to limit pod access.</li>
+<li>Proactive security should include monitoring of process activity, communications between services, and communications external to the cluster.</li>
+</ul>
+<h4 id="rbac">RBAC</h4>
+<p>Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within your organization.</p>
+<p>RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to dynamically configure policies through the Kubernetes API.</p>
+<p>The RBAC API declares four kinds of Kubernetes object:</p>
+<ul>
+<li>Role</li>
+<li>ClusterRole</li>
+<li>RoleBinding</li>
+<li>ClusterRoleBinding.</li>
+</ul>
+<p>You can describe objects, or amend them, using tools such as kubectl, just like any other Kubernetes object.</p>
+<p>Role and ClusterRole
+An RBAC Role or ClusterRole contains rules that represent a set of permissions. Permissions are purely additive (there are no &ldquo;deny&rdquo; rules).</p>
+<p>A Role always sets permissions within a particular namespace; when you create a Role, you have to specify the namespace it belongs in.</p>
+<p>ClusterRole, by contrast, is a non-namespaced resource. The resources have different names (Role and ClusterRole) because a Kubernetes object always has to be either namespaced or not namespaced; it can&rsquo;t be both.</p>
+<p>ClusterRoles have several uses. You can use a ClusterRole to:</p>
+<ol>
+<li>define permissions on namespaced resources and be granted within individual namespace(s)</li>
+<li>define permissions on namespaced resources and be granted across all namespaces
+define permissions on cluster-scoped resources</li>
+<li>If you want to define a role within a namespace, use a Role; if you want to define a role cluster-wide, use a ClusterRole.</li>
+</ol>
+<p>Grants read permissions to pods (default namespace)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pod-reader</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>] <span style="color:#75715e"># &#34;&#34; indicates the core API group</span>
+  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
+  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
+</code></pre></div><p><strong>RoleBinding and ClusterRoleBinding</strong>
+A role binding grants the permissions defined in a role to a user or set of users. It holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted. A RoleBinding grants permissions within a specific namespace whereas a ClusterRoleBinding grants that access cluster-wide.</p>
+<p>A RoleBinding may reference any Role in the same namespace. Alternatively, a RoleBinding can reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBinding. If you want to bind a ClusterRole to all the namespaces in your cluster, you use a ClusterRoleBinding.</p>
+<p>The name of a RoleBinding or ClusterRoleBinding object must be a valid path segment name.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#75715e"># This role binding allows &#34;jane&#34; to read pods in the &#34;default&#34; namespace.</span>
+<span style="color:#75715e"># You need to already have a Role named &#34;pod-reader&#34; in that namespace.</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">RoleBinding</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">read-pods</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">subjects</span>:
+<span style="color:#75715e"># You can specify more than one &#34;subject&#34;</span>
+- <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">User</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">jane</span> <span style="color:#75715e"># &#34;name&#34; is case sensitive</span>
+  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+<span style="color:#f92672">roleRef</span>:
+  <span style="color:#75715e"># &#34;roleRef&#34; specifies the binding to a Role / ClusterRole</span>
+  <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span> <span style="color:#75715e">#this must be Role or ClusterRole</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pod-reader</span> <span style="color:#75715e"># this must match the name of the Role or ClusterRole you wish to bind to</span>
+  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+</code></pre></div><p><strong>ClusterRole</strong>
+A ClusterRole can be used to grant the same permissions as a Role. Because ClusterRoles are cluster-scoped, you can also use them to grant access to:</p>
+<ul>
+<li>cluster-scoped resources (like nodes)</li>
+<li>non-resource endpoints (like /healthz)</li>
+<li>namespaced resources (like Pods), across all namespaces For example: you can use a ClusterRole to allow a particular user to run kubectl get pods &ndash;all-namespaces.
+Here is an example of a ClusterRole that can be used to grant read access to secrets in any particular namespace, or across all namespaces (depending on how it is bound):</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRole</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#75715e"># &#34;namespace&#34; omitted since ClusterRoles are not namespaced</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">secret-reader</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+  <span style="color:#75715e">#</span>
+  <span style="color:#75715e"># at the HTTP level, the name of the resource for accessing Secret</span>
+  <span style="color:#75715e"># objects is &#34;secrets&#34;</span>
+  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;secrets&#34;</span>]
+  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
+</code></pre></div><p>More Details: <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">https://kubernetes.io/docs/reference/access-authn-authz/rbac/</a></p>
+<h4 id="creating-the-rights-to-access-the-k8s-api">Creating the Rights to Access the K8s API</h4>
+<p><a href="https://medium.com/@nieldw/curling-the-kubernetes-api-server-d7675cfc398c">https://medium.com/@nieldw/curling-the-kubernetes-api-server-d7675cfc398c</a></p>
 
 </div>
 </div>

@@ -80,6 +80,15 @@ Kubernetes provides you with:
 * Secret and configuration management Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens, and SSH keys. You can deploy and update secrets and application configuration without rebuilding your container images, and without exposing secrets in your stack configuration.
 
 
+#### IaaS Providers for k8s
+* Alibaba Cloud:	https://www.alibabacloud.com/
+* Amazon Web Services:	https://aws.amazon.com/
+* Google Cloud Platform:	https://cloud.google.com/
+* IBM Cloud:	https://www.ibm.com/cloud
+* Microsoft Azure:	https://docs.microsoft.com/en-us/azure/security
+* VMWare VSphere:	https://www.vmware.com
+
+
 ### Kubernetes Components
 
 !["Components of Kubernetes"](/getting_started_with_k8s/images/lesson1/components-of-kubernetes.svg)

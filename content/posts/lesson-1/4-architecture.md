@@ -52,8 +52,34 @@ Kubernetes Controllers allow you to run and manage your applications inside a cl
 
 We will interact with our Kubernetes cluster through the Kubernetes API
 
+In Kubernetes, everything is an API call served by the Kubernetes API server (kube-apiserver). The API server is a gateway to an etcd datastore that maintains the desired state of your application cluster. To update the state of a Kubernetes cluster, you make API calls to the API server describing your desired state.
+
 The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources
 
+Two methods to access:
+* kubectl proxy --port=8080
+* Direct Access using Tokens and Certificates
+
+**Example Using kubectl proxy**
+In one terminal, start the proxy
+```bash
+kubectl proxy --port=8080
+```
+
+Either send that process to the background or open another terminal:
+```bash
+kubectl get pods
+```
+```
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-86d687ddfb-d56dp   1/1     Running   0          5h26m
+```
+Call the api
+```bash
+curl localhost:8080/api/v1/namespaces/default/pods/hello-node-86d687ddfb-d56dp | jq
+```
+
+[Kubernetes API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_
 
 ### Scheduler
 

@@ -153,7 +153,7 @@ See your deployment:
 kubectl get pods
 ```
 
-### Declarative vs imperative
+### Declarative vs Imperative
 Our container orchestrator puts a very strong emphasis on being declarative
 
 Declarative: *I would like a cup of tea.*

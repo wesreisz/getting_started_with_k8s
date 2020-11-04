@@ -159,7 +159,7 @@ Notes:
 
 ### Attribution
 
-Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is non-the-less heavily influenced by his container.training material. [He and his contributors](https://github.com/jpetazzo/container.training/graphs/contributors) maintain an [Apache 2 licensed Open Source](https://github.com/jpetazzo/container.training/blob/master/LICENSE) project of his [training material](https://github.com/jpetazzo/container.training/) on github. 
+Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is none-the-less heavily influenced by his container.training material. [He and his contributors](https://github.com/jpetazzo/container.training/graphs/contributors) maintain an [Apache 2 licensed Open Source](https://github.com/jpetazzo/container.training/blob/master/LICENSE) project of his [training material](https://github.com/jpetazzo/container.training/) on github. 
 
 Many additional sources influenced the shape of this project. Those items will be identified throughout.
  

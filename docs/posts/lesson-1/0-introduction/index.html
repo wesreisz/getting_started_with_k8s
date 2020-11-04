@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Course Introduction - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Example Application: DockerCoin</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Example Minikube (or in Kind)</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Pods</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Wrap Up</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 0: Course Introduction and Logistics</h1>
+
+<div class="content ">
+  <p>Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.</p>
+<p>Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand the major goals and objectives of kubernetes</li>
+<li>Learn how kubernetes is architected</li>
+<li>Understand how to deploy and operate a service on kubernetes</li>
+</ol>
+<h3 id="audience">Audience</h3>
+<p>You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Familiarity with containers (don&rsquo;t need to be an expert)</li>
+<li>SSH Terminal and basic Linux commandline knowledge</li>
+<li>Amazon Workspace Client installed (<a href="https://clients.amazonworkspaces.com">https://clients.amazonworkspaces.com</a>)</li>
+</ul>
+<h3 id="questions-well-answer">Questions we&rsquo;ll answer</h3>
+<p>Attend if you want to answer the questions below.</p>
+<ul>
+<li>What is the overall architecture of K8s?</li>
+<li>What problems does K8s solve out of the box vs. expecting users to bring a solution for?</li>
+<li>What are the defacto industry standards that Kubernetes has catalyzed?</li>
+<li>What is a K8s controller and how does it work?</li>
+<li>What kinds of controllers are there, and what roles do they play?</li>
+<li>What processes run on a K8s master node?</li>
+<li>What processes run on a K8s worker node?</li>
+<li>Exactly what is a pod, or a container in a pod?</li>
+<li>What is a container runtime and what role does it play within a k8s cluster?</li>
+<li>How does K8s schedule and launch a container?</li>
+<li>How does pod security and role-based access control (RBAC) work in Kubernetes?</li>
+<li>How does networking in K8s work?</li>
+<li>How does K8s integrate with load balancers? Or other cloud resources?</li>
+</ul>
+<h3 id="agenda">Agenda</h3>
+<ul>
+<li><a href="/getting_started_with_k8s/posts/">Course Agenda</a></li>
+</ul>
+<h3 id="environment">Environment</h3>
+<p>Each student has been created a virtual desktop enviornment. Everything can be run on your own machine if you have docker, docker-compose, kind, and kubectl installed. As this is only a short 3-hour course, I request that you use the virtual desktop environment if you have any problems locally. This will minimize the support time if things are not setup correctly. Feel free to install and run locally, and use the VDI only if there&rsquo;s an issue.</p>
+<p>To access the Amazon VDI, install workplace on your OS. The clients are available here:
+<a href="https://clients.amazonworkspaces.com">https://clients.amazonworkspaces.com</a></p>
+<p>You should have an <a href="/getting_started_with_k8s/images/lesson0/email.png">email</a> that has</p>
+<ul>
+<li>link create your profile for the workspace</li>
+<li>the registration code to your specific workspace</li>
+<li>your userid that I created for you</li>
+</ul>
+<p>Please ask your instructor for a student email account.</p>
+<p>Please install the client, register your Ubuntu profile, and launch your VDI (make sure to use the registration code in your email).</p>
+<p><img src="/getting_started_with_k8s/images/lesson0/desktop.png" alt="Your Amazon VDI" title="Amazon VDI"></p>
+<h3 id="initial-setup">Initial Setup</h3>
+<p>NOTE: If you ran your workstation in the container workshop, the steps in Initial Setup should already be done. Jump to Configure your system for k8s.</p>
+<p>When you start your workspace, Docker most likely will not be running. Check that the daemon is running and if not start it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker info
+</code></pre></div><p>If you see an error, start docker:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo service docker start
+</code></pre></div><p>This takes a minute or two.</p>
+<p>At this point, you should be able to run <code>docker info</code> and not see an error. If you still see an error, run <code>groups</code> and validate that your user is in the docker ground. If it&rsquo;s not, run this command. If this isn&rsquo;t your issue, let the instructor know.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo usermod -a -G docker $USER
+</code></pre></div><p>It won&rsquo;t work until we logoff and log back in, we&rsquo;ll do that in a minute. For now, use <code>sudo</code> when you run docker commands on this VM.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run hello-world
+</code></pre></div><p>You should see something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the <span style="color:#e6db74">&#34;hello-world&#34;</span> image from the Docker Hub.
+    <span style="color:#f92672">(</span>amd64<span style="color:#f92672">)</span>
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+</code></pre></div><p>If so, you&rsquo;re ready to start! If this doesn&rsquo;t work, please install Docker and configure it for your system:
+<a href="https://docs.docker.com/get-docker">https://docs.docker.com/get-docker</a></p>
+<h3 id="configure-your-system-for-k8s">Configure your system for k8s</h3>
+<p>We will be using Kind for this workshop.</p>
+<p><a href="https://github.com/kubernetes-sigs/kind">kind</a> is a tool for running local Kubernetes clusters using Docker container “nodes”.
+kind was primarily designed for testing Kubernetes itself, but may be used for local development or CI.</p>
+<p>To install kind on this workstation (you can also <a href="https://kind.sigs.k8s.io/docs/user/quick-start/">install on your local machine</a>), run:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
+chmod +x kind
+mv kind /usr/local/bin/
+kind version
+</code></pre></div><p>We will talk about this more later, but to interact with a kubernetes cluster (whether that&rsquo;s a cloud managed cluster, a kind instance, or your own custom built k8s cluster) you will use <code>kubectl</code>. Let&rsquo;s install it now as well.</p>
+<p>kubectl is a stand alone binary that only needs to be downloaded for the correct operating system and placed in the path. It will look for configuration in the user&rsquo;s home directory on the target OS.</p>
+<p>The process is the same for installing <code>kubectl</code>. <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">If you want to install locally</a>; otherwise, run:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -LO <span style="color:#e6db74">&#34;https://storage.googleapis.com/kubernetes-release/release/</span><span style="color:#66d9ef">$(</span>curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt<span style="color:#66d9ef">)</span><span style="color:#e6db74">/bin/linux/amd64/kubectl&#34;</span>
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+</code></pre></div><pre><code>Client Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;, GitVersion:&quot;v1.19.3&quot;, GitCommit:&quot;1e11e4a2108024935ecfcb2912226cedeafd99df&quot;, GitTreeState:&quot;clean&quot;, BuildDate:&quot;2020-10-14T12:50:19Z&quot;, GoVersion:&quot;go1.15.2&quot;, Compiler:&quot;gc&quot;, Platform:&quot;darwin/amd64&quot;}
+</code></pre><p>At this point, you should have docker, docker-compose, kubectl, and kind installed. We&rsquo;re ready to begin the course.</p>
+<p>Versions:</p>
+<ul>
+<li>kubectl version: v1.19.3 <code>kubectl version --client</code></li>
+<li>Kubernetes version: 1.19.1 <code>kubectl version</code></li>
+<li>docker-compose version: 1.27.4 <code>docker-compose version</code></li>
+<li>Docker version: 19.03.6-ce &lsquo;19.03.6-ce&rsquo;</li>
+</ul>
+<p><strong>Kubernetes versioning and cadence</strong></p>
+<p>Kubernetes versions are expressed using semantic versioning (a Kubernetes version is expressed as MAJOR.MINOR.PATCH)</p>
+<p>There is a new patch release whenever needed (generally, there is about 2 to 4 weeks between patch releases, except when a critical bug or vulnerability is found: in that case, a patch release will follow as fast as possible)</p>
+<p>There is a new minor release approximately every 3 months</p>
+<p>At any given time, 3 minor releases are maintained (in other words, a given minor release is maintained about 9 months)</p>
+<p>Notes:</p>
+<ul>
+<li>&ldquo;Validates&rdquo; = continuous integration builds with very extensive (and expensive) testing</li>
+<li>The Docker API is versioned, and offers strong backward-compatibility (if a client uses e.g. API v1.25, the Docker Engine will keep behaving the same way)</li>
+</ul>
+<h3 id="just-for-fun">Just for fun</h3>
+<p>Just to validate everything is working correctly, let&rsquo;s spin up a cluster:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster
+</code></pre></div><p>Why kind?</p>
+<ul>
+<li>kind supports multi-node (including HA) clusters</li>
+<li>kind supports building Kubernetes release builds from source</li>
+<li>support for make / bash / docker, or bazel, in addition to pre-published builds</li>
+<li>kind supports Linux, macOS and Windows</li>
+<li>kind is a CNCF certified conformant Kubernetes installer</li>
+</ul>
+<pre><code>Creating cluster &quot;kind&quot; ...
+ ✓ Ensuring node image (kindest/node:v1.19.1) 🖼 
+ ✓ Preparing nodes 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+Set kubectl context to &quot;kind-kind&quot;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind
+</code></pre><p>Success!!!</p>
+<p>Do it again:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --name kind-2
+</code></pre></div><p>Let&rsquo;s look through the <a href="https://kind.sigs.k8s.io/">documentation of kind</a> while this cluster is creating.</p>
+<p>When it&rsquo;s done, type:</p>
+<pre><code>kind get clusters
+</code></pre><p>You should see the two clusters we just created. If you run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat ~/.kube/config 
+</code></pre></div><p>You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster.</p>
+<p>NOTE: Notice that kind prefaces the cluster name with &ldquo;kind-&rdquo;, so your first cluster is &ldquo;kind-kind&rdquo;.</p>
+<p>We can switch between the two clusters using <code>--context</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl cluster-info --context kind-kind
+</code></pre></div><p>or until we change it again with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config kind-kind
+</code></pre></div><p>Congrats, you&rsquo;ve created two clusters with K8s.</p>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

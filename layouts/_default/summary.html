@@ -1,11 +1,12 @@
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="{{ .Permalink }}">{{ .Params.full_title }}</a>
-    {{ if (isset .Params "target_time") }}
-      ({{ .Params.target_time }})
+  <h2 class="title-summary"><a href="{{ .Permalink }}">{{ .Params.full_title }}</a></h2>
+  <p>
+    {{ if (isset .Params "time_estimate") }}
+  <em>Time Estimate: {{ .Params.time_estimate }}</em>
     {{ end }}
-  
-  </h2>
-  <p>{{ .Summary}}
-</p>
+  </p>
+  <p>
+    {{ .Summary}}
+  </p>
   
 </div>

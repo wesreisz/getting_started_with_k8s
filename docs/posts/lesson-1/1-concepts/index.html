@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>K8s Concepts - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Example Application: DockerCoin</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Example Minikube (or in Kind)</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Pods</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Wrap Up</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 1: Kubernetes Background and Concepts</h1>
+
+<div class="content ">
+  <p>Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.</p>
+<p>The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014. Kubernetes combines over 15 years of Google&rsquo;s experience running production workloads at scale with best-of-breed ideas and practices from the community.</p>
+<p>There are a huge number of contributors and <a href="https://k8s.devstats.cncf.io/d/9/companies-table?orgId=1">companies contributing to k8s</a>.</p>
+<p>Some stats:</p>
+<ul>
+<li><strong>84 percent</strong>: In its most recent survey, the Cloud Native Computing Foundation (CNCF) found that in 2019 the vast majority of respondents – 84 percent – were running containers in production.</li>
+<li><strong>56 percent</strong>: Meanwhile, that usage still appears to be growing considerably. 56 percent of the organizations polled for the 2020 edition of The State of Enterprise Open Source report said they expected their use of containers to increase in the next 12 months.</li>
+<li><strong>78 percent</strong>: Kubernetes is not the only option for container orchestration, but it has clearly become the go-to choice: more than three in four firms included in the CNCF report said they were using Kubernetes in some form.</li>
+<li><strong>250+</strong>: In 2019, the percentage of companies running 250 or more containers in production grew by 28 percent, crossing the 50 percent threshold for the first time.</li>
+<li><strong>8/10</strong>: The ratio (81 percent) of companies that have already adopted public cloud that say they’re working with two or more providers, according to Gartner.</li>
+<li><strong>6 years old</strong>: All of these numbers are made more impressive by Kubernetes’ relative youth: The project just celebrated its sixth birthday on June 7.</li>
+</ul>
+<p><a href="https://enterprisersproject.com/article/2020/6/kubernetes-statistics-2020">Kubernetes by the numbers, in 2020: 12 stats to see</a></p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Containers vs virtual machines</li>
+<li>Why is Kubernetes needed</li>
+<li>Understand the Kubernetes Key Components</li>
+<li>Basic Control Plan / Node Components</li>
+</ol>
+<h3 id="container-evolution">Container Evolution</h3>
+<p><img src="/getting_started_with_k8s/images/lesson1/container_evolution.svg" alt="&ldquo;Evolution&rdquo;"></p>
+<p><strong>Traditional deployment era:</strong></p>
+<p>Early on, organizations ran applications on physical servers. There was no way to define resource boundaries for applications in a physical server, and this caused resource allocation issues. For example, if multiple applications run on a physical server, there can be instances where one application would take up most of the resources, and as a result, the other applications would underperform. A solution for this would be to run each application on a different physical server. But this did not scale as resources were underutilized, and it was expensive for organizations to maintain many physical servers.</p>
+<p><strong>Virtualized deployment era:</strong></p>
+<p>As a solution, virtualization was introduced. It allows you to run multiple Virtual Machines (VMs) on a single physical server&rsquo;s CPU. Virtualization allows applications to be isolated between VMs and provides a level of security as the information of one application cannot be freely accessed by another application.</p>
+<p>Virtualization allows better utilization of resources in a physical server and allows better scalability because an application can be added or updated easily, reduces hardware costs, and much more. With virtualization you can present a set of physical resources as a cluster of disposable virtual machines.</p>
+<p>Each VM is a full machine running all the components, including its own operating system, on top of the virtualized hardware.</p>
+<p><strong>Container deployment era:</strong></p>
+<p>Containers are similar to VMs, but they have relaxed isolation properties to share the Operating System (OS) among the applications. Therefore, containers are considered lightweight. Similar to a VM, a container has its own filesystem, share of CPU, memory, process space, and more. As they are decoupled from the underlying infrastructure, they are portable across clouds and OS distributions.</p>
+<p>Containers have become popular because they provide extra benefits, such as:</p>
+<ul>
+<li>Agile application creation and deployment: increased ease and efficiency of container image creation compared to VM image use.</li>
+<li>Continuous development, integration, and deployment: provides for reliable and frequent container image build and deployment with quick and easy rollbacks (due to image immutability).</li>
+<li>Dev and Ops separation of concerns: create application container images at build/release time rather than deployment time, thereby decoupling applications from infrastructure.</li>
+<li>Observability not only surfaces OS-level information and metrics, but also application health and other signals.</li>
+<li>Environmental consistency across development, testing, and production: Runs the same on a laptop as it does in the cloud.</li>
+<li>Cloud and OS distribution portability: Runs on Ubuntu, RHEL, CoreOS, on-premises, on major public clouds, and anywhere else.</li>
+<li>Application-centric management: Raises the level of abstraction from running an OS on virtual hardware to running an application on an OS using logical resources.</li>
+<li>Loosely coupled, distributed, elastic, liberated micro-services: applications are broken into smaller, independent pieces and can be deployed and managed dynamically – not a monolithic stack running on one big single-purpose machine.</li>
+<li>Resource isolation: predictable application performance.</li>
+<li>Resource utilization: high efficiency and density.</li>
+</ul>
+<h2 id="why-you-need-kubernetes-and-what-it-can-do">Why you need Kubernetes and what it can do</h2>
+<p>Containers are a good way to bundle and run your applications. In a production environment, you need to manage the containers that run the applications and ensure that there is no downtime. For example, if a container goes down, another container needs to start. Wouldn&rsquo;t it be easier if this behavior was handled by a system?</p>
+<p>That&rsquo;s how Kubernetes comes to the rescue! Kubernetes provides you with a framework to run distributed systems resiliently. It takes care of scaling and failover for your application, provides deployment patterns, and more. For example, Kubernetes can easily manage a canary deployment for your system.</p>
+<p>Kubernetes provides you with:</p>
+<ul>
+<li>Service discovery and load balancing Kubernetes can expose a container using the DNS name or using their own IP address. If traffic to a container is high, Kubernetes is able to load balance and distribute the network traffic so that the deployment is stable.</li>
+<li>Storage orchestration Kubernetes allows you to automatically mount a storage system of your choice, such as local storages, public cloud providers, and more.</li>
+<li>Automated rollouts and rollbacks You can describe the desired state for your deployed containers using Kubernetes, and it can change the actual state to the desired state at a controlled rate. For example, you can automate Kubernetes to create new containers for your deployment, remove existing containers and adopt all their resources to the new container.</li>
+<li>Automatic bin packing You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks. You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit containers onto your nodes to make the best use of your resources.</li>
+<li>Self-healing Kubernetes restarts containers that fail, replaces containers, kills containers that don&rsquo;t respond to your user-defined health check, and doesn&rsquo;t advertise them to clients until they are ready to serve.</li>
+<li>Secret and configuration management Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens, and SSH keys. You can deploy and update secrets and application configuration without rebuilding your container images, and without exposing secrets in your stack configuration.</li>
+</ul>
+<h3 id="kubernetes-components">Kubernetes Components</h3>
+<p><img src="/getting_started_with_k8s/images/lesson1/components-of-kubernetes.svg" alt="&ldquo;Components of Kubernetes&rdquo;"></p>
+<h4 id="control-plane-components">Control Plane Components</h4>
+<p>The control plane&rsquo;s components make global decisions about the cluster (for example, scheduling), as well as detecting and responding to cluster events (for example, starting up a new pod when a deployment&rsquo;s replicas field is unsatisfied).</p>
+<p>Control plane components can be run on any machine in the cluster. However, for simplicity, set up scripts typically start all control plane components on the same machine, and do not run user containers on this machine.</p>
+<p><strong>kube-apiserver</strong></p>
+<p>The API server is a component of the Kubernetes control plane that exposes the Kubernetes API. The API server is the front end for the Kubernetes control plane.</p>
+<p>The main implementation of a Kubernetes API server is kube-apiserver. kube-apiserver is designed to scale horizontally—that is, it scales by deploying more instances. You can run several instances of kube-apiserver and balance traffic between those instances.</p>
+<p><strong>etcd</strong></p>
+<p>Consistent and highly-available key value store used as Kubernetes' backing store for all cluster data.</p>
+<p>If your Kubernetes cluster uses etcd as its backing store, make sure you have a back up plan for those data.</p>
+<p>You can find in-depth information about etcd in the official documentation.</p>
+<p><strong>kube-scheduler</strong></p>
+<p>Control plane component that watches for newly created Pods with no assigned node, and selects a node for them to run on.</p>
+<p>Factors taken into account for scheduling decisions include: individual and collective resource requirements, hardware/software/policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference, and deadlines.</p>
+<p><strong>kube-controller-manager</strong></p>
+<p>Control Plane component that runs controller processes.</p>
+<p>Logically, each controller is a separate process, but to reduce complexity, they are all compiled into a single binary and run in a single process.</p>
+<p>These controllers include:</p>
+<ul>
+<li>Node controller: Responsible for noticing and responding when nodes go down.
+Replication controller: Responsible for maintaining the correct number of pods for every replication controller object in the system.</li>
+<li>Endpoints controller: Populates the Endpoints object (that is, joins Services &amp; Pods).</li>
+<li>Service Account &amp; Token controllers: Create default accounts and API access tokens for new namespaces.</li>
+</ul>
+<p><strong>cloud-controller-manager</strong></p>
+<p>A Kubernetes control plane component that embeds cloud-specific control logic. The cloud controller manager: lets you link your cluster into your cloud provider&rsquo;s API, and separates out the components that interact with that cloud platform from components that just interact with your cluster.</p>
+<p>The cloud-controller-manager only runs controllers that are specific to your cloud provider. If you are running Kubernetes on your own premises, or in a learning environment inside your own PC, the cluster does not have a cloud controller manager.</p>
+<p>As with the kube-controller-manager, the cloud-controller-manager combines several logically independent control loops into a single binary that you run as a single process. You can scale horizontally (run more than one copy) to improve performance or to help tolerate failures.</p>
+<p>The following controllers can have cloud provider dependencies:</p>
+<ul>
+<li>Node controller: For checking the cloud provider to determine if a node has been deleted in the cloud after it stops responding</li>
+<li>Route controller: For setting up routes in the underlying cloud infrastructure</li>
+<li>Service controller: For creating, updating and deleting cloud provider load balancers</li>
+</ul>
+<h4 id="node-components">Node Components</h4>
+<p>Node components run on every node, maintaining running pods and providing the Kubernetes runtime environment.</p>
+<p><strong>kubelet</strong></p>
+<p>An agent that runs on each node in the cluster. It makes sure that containers are running in a Pod.</p>
+<p>The kubelet takes a set of PodSpecs that are provided through various mechanisms and ensures that the containers described in those PodSpecs are running and healthy. The kubelet doesn&rsquo;t manage containers which were not created by Kubernetes.</p>
+<p><strong>kube-proxy</strong></p>
+<p>kube-proxy is a network proxy that runs on each node in your cluster, implementing part of the Kubernetes Service concept.</p>
+<p>kube-proxy maintains network rules on nodes. These network rules allow network communication to your Pods from network sessions inside or outside of your cluster.</p>
+<p>kube-proxy uses the operating system packet filtering layer if there is one and it&rsquo;s available. Otherwise, kube-proxy forwards the traffic itself.</p>
+<p><strong>Container runtime</strong></p>
+<p>The container runtime is the software that is responsible for running containers.</p>
+<p>Kubernetes supports several container runtimes: Docker, containerd, CRI-O, and any implementation of the Kubernetes CRI (Container Runtime Interface).</p>
+<h4 id="k8s-architecture">K8s Architecture</h4>
+<p><img src="/getting_started_with_k8s/images/lesson1/k8s-arch2.png" alt="&ldquo;K8s Architecture&rdquo;">
+(Courtesy of <a href="https://medium.com/containermind/a-reference-architecture-for-deploying-wso2-middleware-on-kubernetes-d4dee7601e8e">Imesh Gunaratne</a>)</p>
+<h3 id="addons">Addons</h3>
+<p>Addons use Kubernetes resources (DaemonSet, Deployment, etc) to implement cluster features. Because these are providing cluster-level features, namespaced resources for addons belong within the kube-system namespace.</p>
+<p>Selected addons are described below; for an extended list of available addons, please see Addons.</p>
+<p><strong>DNS</strong></p>
+<p>While the other addons are not strictly required, all Kubernetes clusters should have cluster DNS, as many examples rely on it.</p>
+<p>Cluster DNS is a DNS server, in addition to the other DNS server(s) in your environment, which serves DNS records for Kubernetes services.</p>
+<p>Containers started by Kubernetes automatically include this DNS server in their DNS searches.</p>
+<p><strong>Web UI (Dashboard)</strong></p>
+<p>Dashboard is a general purpose, web-based UI for Kubernetes clusters. It allows users to manage and troubleshoot applications running in the cluster, as well as the cluster itself.</p>
+<p><strong>Container Resource Monitoring</strong></p>
+<p>Container Resource Monitoring records generic time-series metrics about containers in a central database, and provides a UI for browsing that data.</p>
+<p><strong>Cluster-level Logging</strong></p>
+<p>A cluster-level logging mechanism is responsible for saving container logs to a central log store with search/browsing interface.</p>
+<h3 id="explore-the-components">Explore the Components</h3>
+<p>How many nodes does your cluster have?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-contexts
+kubectl config use-context kind-kind
+</code></pre></div><p>Let&rsquo;s create more nodes. First which cluster were you on again?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-contexts
+</code></pre></div><p>Create a <code>multinode.yaml</code> file</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+</code></pre></div><p>Now let&rsquo;s build it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config ./multinode.yml  --name kind3
+</code></pre></div><p>Kind is still early alpha and doesn&rsquo;t support adding new nodes to a running cluster (yet).</p>
+<p>To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.</p>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

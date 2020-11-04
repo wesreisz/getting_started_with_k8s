@@ -1,8 +1,8 @@
-baseURL = "http://www.wesleyreisz.com/getting_started_with_containerization"
+baseURL = "http://www.wesleyreisz.com/getting_started_with_k8s"
 languageCode = "en-us"
-title = "Introduction to Containers and Containerization"
+title = "Getting Started with Containerization and Kubernetes"
 enableGitInfo = true
-description = "Workshop on containerization"
+description = "Workshop on k8s"
 publishDir = "docs"
 
 [[menu.main]]

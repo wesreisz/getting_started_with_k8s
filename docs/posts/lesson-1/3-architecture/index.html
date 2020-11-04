@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>K8s Architecture and Components - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Example Application: DockerCoin</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Example Minikube (or in Kind)</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Pods</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Wrap Up</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 2: K8s Architecture and Components</h1>
+
+<div class="content ">
+  <p>So we went through the high-level architecture of k8s. We saw what components run on the master and worker nodes. Let&rsquo;s go just a bit deeper.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand about more complicated configurations for architecture components</li>
+<li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
+</ol>
+<p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png" alt=""></p>
+<h4 id="running-the-control-plane-on-special-nodes">Running the control plane on special nodes</h4>
+<p>It is common to reserve a dedicated node for the control plane (Except for single-node development clusters, like when using minikube).</p>
+<p>This node is then called a &ldquo;master&rdquo; (Yes, this is ambiguous: is the &ldquo;master&rdquo; a node, or the whole control plane?)</p>
+<p>Normal applications are restricted from running on this node (By using a mechanism called &ldquo;<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">taints</a>&quot;)</p>
+<p>When high availability is required, each service of the control plane must be resilient. The control plane is then replicated on multiple nodes(This is sometimes called a &ldquo;multi-master&rdquo; setup)</p>
+<h4 id="running-the-control-plane-outside-containers">Running the control plane outside containers</h4>
+<p>The services of the control plane can run in or out of containers</p>
+<p>For instance: since etcd is a critical service, some people deploy it directly on a dedicated cluster (without containers)</p>
+<p>In some hosted Kubernetes offerings (e.g. AKS, GKE, EKS), the control plane is invisible (we only &ldquo;see&rdquo; a Kubernetes API endpoint). In that case, there is no &ldquo;master node&rdquo;. For this reason, it is more accurate to say &ldquo;control plane&rdquo; rather than &ldquo;master.&rdquo;</p>
+<h4 id="how-many-nodes-should-a-cluster-have">How many nodes should a cluster have?</h4>
+<p>There is no particular constraint (no need to have an odd number of nodes for quorum)</p>
+<p>A cluster can have zero node (but then it won&rsquo;t be able to start any pods)</p>
+<p>For testing and development, having a single node is fine</p>
+<p>For production, make sure that you have extra capacity (so that your workload still fits if you lose a node or a group of nodes)</p>
+<p>Kubernetes is tested with up to 5000 nodes (however, running a cluster of that size requires a lot of tuning).</p>
+<h3 id="cri">CRI</h3>
+<p>At the lowest layers of a Kubernetes node is the software that, among other things, starts and stops containers. We call this the “Container Runtime”. The most widely known container runtime is Docker, but it is not alone in this space. In fact, the container runtime space has been rapidly evolving. As part of the effort to make Kubernetes more extensible, we&rsquo;ve been working on a new plugin API for container runtimes in Kubernetes, called &ldquo;CRI&rdquo;.</p>
+<p><strong>containerd</strong></p>
+<p>maintained by Docker, IBM, and community
+used by Docker Engine, microk8s, k3s, GKE; also standalone
+comes with its own CLI, ctr</p>
+<p><strong>CRI-O</strong></p>
+<p>maintained by Red Hat, SUSE, and community
+used by OpenShift and Kubic
+designed specifically as a minimal runtime for Kubernetes</p>
+<p>And more&hellip; We&rsquo;re using docker (in fact, kind standards for Kubernetes in Docker)</p>
+<p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png" alt=""></p>
+<h4 id="pods">Pods</h4>
+<p>Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.</p>
+<p>A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod&rsquo;s contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific &ldquo;logical host&rdquo;: it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.</p>
+<p>As well as application containers, a Pod can contain init containers that run during Pod startup. You can also inject ephemeral containers for debugging if your cluster offers this.</p>
+<p>The shared context of a Pod is a set of Linux namespaces, cgroups, and potentially other facets of isolation - the same things that isolate a Docker container. Within a Pod&rsquo;s context, the individual applications may have further sub-isolations applied.</p>
+<p>In terms of Docker concepts, a Pod is similar to a group of Docker containers with shared namespaces and shared filesystem volumes.</p>
+<h3 id="pod-lifecycle">Pod Lifecycle</h3>
+<p>A Pod&rsquo;s status field is a PodStatus object, which has a phase field.</p>
+<p>The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle. The phase is not intended to be a comprehensive rollup of observations of container or Pod state, nor is it intended to be a comprehensive state machine.</p>
+<p>The number and meanings of Pod phase values are tightly guarded. Other than what is documented here, nothing should be assumed about Pods that have a given phase value.</p>
+<p>Here are the possible values for phase:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Pending</td>
+<td style="text-align:left">The Pod has been accepted by the Kubernetes cluster, but one or more of the containers has not been set up and made ready to run. This includes time a Pod spends waiting to be scheduled as well as the time spent downloading container images over the network.</td>
+</tr>
+<tr>
+<td style="text-align:center">Running</td>
+<td style="text-align:left">The Pod has been bound to a node, and all of the containers have been created. At least one container is still running, or is in the process of starting or restarting.</td>
+</tr>
+<tr>
+<td style="text-align:center">Succeeded</td>
+<td style="text-align:left">All containers in the Pod have terminated in success, and will not be restarted.</td>
+</tr>
+<tr>
+<td style="text-align:center">Failed</td>
+<td style="text-align:left">All containers in the Pod have terminated, and at least one container has terminated in failure. That is, the container either exited with non-zero status or was terminated by the system.</td>
+</tr>
+<tr>
+<td style="text-align:center">Unknown</td>
+<td style="text-align:left">For some reason the state of the Pod could not be obtained. This phase typically occurs due to an error in communicating with the node where the Pod should be running.</td>
+</tr>
+<tr>
+<td style="text-align:center">If a node dies or is disconnected from the rest of the cluster, Kubernetes applies a policy for setting the phase of all Pods on the lost node to Failed.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="interacting-with-kubernetes">Interacting with Kubernetes</h4>
+<p>We will interact with our Kubernetes cluster through the Kubernetes API</p>
+<p>The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources</p>
+<p>A few common resource types are:</p>
+<ul>
+<li>node (a machine — physical or virtual — in our cluster)</li>
+<li>pod (group of containers running together on a node)</li>
+<li>service (stable network endpoint to connect to one or multiple containers)</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+</code></pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

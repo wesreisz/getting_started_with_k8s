@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Posts - Introduction to Containers and Containerization</title>
+  <title>Posts - Getting Started with Containerization and Kubernetes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_containerization/favicon.png">
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
 
   
   
-  <link rel="stylesheet" href="/getting_started_with_containerization/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
   
 
   
@@ -30,8 +30,8 @@
 
     
     <div style="text-align: center;">
-      <h1 class="title">Introduction to Containers and Containerization</h1>
-      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_containerization/posts">Home</a>
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
     </div>
     <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
       <div class="row">
@@ -43,43 +43,31 @@
   <ul>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Course Introduction</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Why Containers</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">chroot, namespace, &amp; cgroups</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Example Application: DockerCoin</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Docker</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">K8s Architecture and Components</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Dockerfile</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Example Minikube (or in Kind)</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Mounts &amp; Volumes</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Pods</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Build an App</a>
-    </li>
-    
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Docker Compose</a>
-    </li>
-    
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Networking</a>
-    </li>
-    
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/"> Key Takeaways &amp; Wrapup</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Wrap Up</a>
     </li>
     
   </ul>
@@ -93,120 +81,85 @@
 <h2>Agenda</h2>
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/introduction/">Lesson 1: Course Introduction and Logistics</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Lesson 0: Course Introduction and Logistics</a>
     
   
   </h2>
-  <p>Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features.
+  <p>Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.
+Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.
+Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-1/why_containers/">Lesson 1.1: Why Containers</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">Lesson 1: Kubernetes Background and Concepts</a>
     
   
   </h2>
-  <p>A container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another. A Docker container image is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings.
-Container images become containers at runtime and in the case of Docker containers - images become containers when they run on Docker Engine.
+  <p>Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
+The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014. Kubernetes combines over 15 years of Google&rsquo;s experience running production workloads at scale with best-of-breed ideas and practices from the community.
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-2/chroot/">Lesson 2: chroot, namespaces, cgroups</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Lesson 3: Example Application: DockerCoin</a>
     
   
   </h2>
-  <p>There&rsquo;s no magic here. Getting back to first principles. A container is: chroot, namespaces, &amp; cgroups. With the exception of cgroups, these are technologies that have been around for a longtime.
- chroot: A chroot is an operation that changes the apparent root directory for the current running process and their children. A program that is run in such a modified environment cannot access files and commands outside that environmental directory tree namespaces: Namespaces are a feature of the Linux kernel that partitions kernel resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources.
+  <p>The person I first took a container workshop with was Jerome Pettazoni. He&rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&rsquo;re going to use to in the next sections.
+Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  Start Kubernetes Dashboard Launch his slide deck where he discusses the app
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-3/docker/">Lesson 3: Docker</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">Lesson 2: K8s Architecture and Components</a>
     
   
   </h2>
-  <p>Docker is a software platform for building applications based on containers. It is the defacto standard for doing containerization; however, it is not the only product out there (LXC, Hyper-V containers, podman, containerd, RUNC are all alternatives). However, we will use Docker in this course.
-There&rsquo;s alot of different command here. I&rsquo;ll explore some of the ones you&rsquo;ll use the most command and talk through them. We&rsquo;ll also talk about how do get more help and find additional containers.
+  <p>So we went through the high-level architecture of k8s. We saw what components run on the master and worker nodes. Let&rsquo;s go just a bit deeper.
+Key Takeaways  Understand about more complicated configurations for architecture components Explore the CNCF Cloud Native Landscape around Kubernetes  Running the control plane on special nodes It is common to reserve a dedicated node for the control plane (Except for single-node development clusters, like when using minikube).
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-4/docker_file/">Lesson 4: Dockerfile</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Lesson 3: Example Minikube (or in Kind)</a>
     
   
   </h2>
-  <p>Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession.
-Learning Objectives  Understand how the Dockerfile works Build containers Understand how to push containers.  Here is the format of the Dockerfile:
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ex sem. Donec sodales porttitor blandit. Vestibulum congue euismod ligula, sit amet euismod orci molestie sed. Nam tincidunt urna in rhoncus semper. Etiam accumsan ante nec mauris cursus ornare. Maecenas ut dignissim lacus, eget eleifend mauris. Praesent luctus nulla
+Sed aliquet dui vitae leo efficitur fringilla. Mauris vel mi accumsan, egestas augue at, tempus sapien. Nulla mollis ipsum mauris, eget rutrum elit volutpat non.
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/mounts-volumes/">Lesson 5: Mounts &amp; Volumes</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Lesson 4: Pods</a>
     
   
   </h2>
-  <p>Docker containers do not store persistent data. Any data written to a container&rsquo;s writable layer will no longer be available once the container stops running. Also, getting data written to a container back out of it for another process can be difficult. To solve the issue of persisting data from a container, Docker has several options.
-  Bind mounts: A bind mount is a file or folder stored anywhere on the container host filesystem, mounted into a running container.
+  <p>Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
+A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod&rsquo;s contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific &ldquo;logical host&rdquo;: it contains one or more application containers which are relatively tightly coupled.
 </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-5/build-an-app/">Lesson 5.1: Build an App</a>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Lesson 5: Course Wrap-up, Questions, and Additional Resources </a>
     
   
   </h2>
-  <p>At this point, we&rsquo;ve put all the pieces together. Now let&rsquo;s keep going and build an app from the ground up.
-mkdir node_project cd node_project Create a new file package.json and run install
-{ &#34;name&#34;: &#34;nodejs-image-demo&#34;, &#34;version&#34;: &#34;1.0.0&#34;, &#34;description&#34;: &#34;nodejs image demo&#34;, &#34;author&#34;: &#34;Sammy the Shark &lt;sammy@example.com&gt;&#34;, &#34;license&#34;: &#34;MIT&#34;, &#34;main&#34;: &#34;app.js&#34;, &#34;keywords&#34;: [ &#34;nodejs&#34;, &#34;bootstrap&#34;, &#34;express&#34; ], &#34;dependencies&#34;: { &#34;express&#34;: &#34;^4.16.8&#34; } } npm install Let&rsquo;s create and start building up app.
-</p>
-  
-</div>
-
-
-<div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/docker-compose/">Lesson 6: Multi-stage &amp; Docker Compose</a>
-    
-  
-  </h2>
-  <p>Multistage Build With multi-stage builds, you use multiple FROM statements in your Dockerfile. Each FROM instruction can use a different base, and each of them begins a new stage of the build. You can selectively copy artifacts from one stage to another, leaving behind everything you don’t want in the final image. To show how this works, let’s adapt the Dockerfile from the previous section to use multi-stage builds.
-It is used for great clarity, security, and image size.
-</p>
-  
-</div>
-
-
-<div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/networking/">Lesson 6.1: Networking</a>
-    
-  
-  </h2>
-  <p>Docker includes support for networking containers through the use of network drivers. By default, Docker provides two network drivers for you, the bridge and the overlay drivers. You can also write a network driver plugin so that you can create your own drivers but that is an advanced task.
-Every installation of the Docker Engine automatically includes three default networks. You can list them:
-$ docker network ls NETWORK ID NAME DRIVER 18a2866682b8 none null c288470c46f6 host host 7b369448dccb bridge bridge The network named bridge is a special network.
-</p>
-  
-</div>
-
-
-<div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_containerization/posts/lesson-6/key_takeaways/">Key Takeaways &amp; Wrapup</a>
-    
-  
-  </h2>
-  <p>Containers are the new unit of deployment. The reason is simple: containers are a very powerful tool that can streamline development and ops, save companies money by focusing on deploying a packaged unit, and reduce the friction in delivering software. However, the flip side is they’re a new paradigm to understand, many things are abstracted away, and they require apps to be built with a specific architecture to take full advantage of their features.
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ex sem. Donec sodales porttitor blandit. Vestibulum congue euismod ligula, sit amet euismod orci molestie sed. Nam tincidunt urna in rhoncus semper. Etiam accumsan ante nec mauris cursus ornare. Maecenas ut dignissim lacus, eget eleifend mauris. Praesent luctus nulla
+Sed aliquet dui vitae leo efficitur fringilla. Mauris vel mi accumsan, egestas augue at, tempus sapien. Nulla mollis ipsum mauris, eget rutrum elit volutpat non.
 </p>
   
 </div>
@@ -240,7 +193,7 @@ $ docker network ls NETWORK ID NAME DRIVER 18a2866682b8 none null c288470c46f6 h
   
 
   
-  <script type="text/javascript" src="/getting_started_with_containerization/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
   
 
   

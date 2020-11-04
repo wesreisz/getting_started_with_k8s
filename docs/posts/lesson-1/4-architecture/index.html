@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>K8s Architecture and Components - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/">Deploying an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/">Exposing the App</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 4: K8s Architecture and Components</h1>
+
+<div class="content ">
+  <p>This architecture of Kubernetes provides a flexible, loosely-coupled mechanism for service discovery. Like most distributed computing platforms, a Kubernetes cluster consists of at least one master and multiple compute nodes. The master is responsible for exposing the application program interface (API), scheduling the deployments and managing the overall cluster. Each node runs a container runtime, such as Docker or rkt, along with an agent that communicates with the master. The node also runs additional components for logging, monitoring, service discovery and optional add-ons. Nodes are the workhorses of a Kubernetes cluster. They expose compute, networking and storage resources to applications. Nodes can be virtual machines (VMs) running in a cloud or bare metal servers running within the data center.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand about more complicated configurations for architecture components</li>
+<li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
+</ol>
+<p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png" alt=""></p>
+<h4 id="controller-manager">Controller Manager</h4>
+<p>The Kubernetes controller manager is a daemon that embeds the core control loops shipped with Kubernetes. In Kubernetes, controllers are control loops that watch the state of your cluster, then make or request changes where needed. Each controller tries to move the current cluster state closer to the desired state.</p>
+<p><strong>Controller pattern</strong>
+A controller tracks at least one Kubernetes resource type. These objects have a spec field that represents the desired state. The controller(s) for that resource are responsible for making the current state come closer to that desired state.</p>
+<p>The controller might carry the action out itself; more commonly, in Kubernetes, a controller will send messages to the API server that have useful side effects.</p>
+<p>-Kubernetes official documentation, Kube-controller-manager</p>
+<p>The vital role of a Kubernetes controller is to watch objects for the desired state and the actual state, then send instructions to make the actual state be more like the desired state.In order to retrieve an object&rsquo;s information, the controller sends a request to Kubernetes API server.</p>
+<p>Controllers can track many objects including:</p>
+<ul>
+<li>What workloads are running and where</li>
+<li>Resources available to those workloads</li>
+<li>Policies around how the workloads behave (restart, upgrades, fault-tolerance)</li>
+</ul>
+<p>When the controller notices a divergence between the actual state and the desired state, it will send messages to the Kubernetes API server to make any necessary changes.</p>
+<p><strong>Types of Controllers</strong></p>
+<ul>
+<li>ReplicaSet - A ReplicaSet creates a stable set of pods, all running the same workload. You will almost never create this directly.</li>
+<li>Deployment - A Deployment is the most common way to get your app on Kubernetes. It maintains a ReplicaSet with the desired configuration, with some additional configuration for managing updates and rollbacks.</li>
+<li>StatefulSet - A StatefulSet is used to manage stateful applications with persistent storage. Pod names are persistent and are retained when rescheduled (app-0, app-1). Storage stays associated with replacement pods, and volumes persist when pods are deleted.</li>
+<li>Job - A Job creates one or more short-lived Pods and expects them to successfully terminate.</li>
+<li>CronJob - A CronJob creates Jobs on a schedule.</li>
+<li>DaemonSet - A DaemonSet ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected. Common for system processes like CNI, Monitor agents, proxies, etc.</li>
+</ul>
+<p>Kubernetes Controllers allow you to run and manage your applications inside a cluster, and are one of the core concepts you’ll need to understand to be successful with Kubernetes.</p>
+<h3 id="api-server">API Server</h3>
+<p>We will interact with our Kubernetes cluster through the Kubernetes API</p>
+<p>The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources</p>
+<h3 id="scheduler">Scheduler</h3>
+<h3 id="etcd">etcd</h3>
+<h3 id="cni">CNI</h3>
+<h3 id="cri">CRI</h3>
+<h3 id="cri-1">CRI</h3>
+<p>At the lowest layers of a Kubernetes node is the software that, among other things, starts and stops containers. We call this the “Container Runtime”. The most widely known container runtime is Docker, but it is not alone in this space. In fact, the container runtime space has been rapidly evolving. As part of the effort to make Kubernetes more extensible, we&rsquo;ve been working on a new plugin API for container runtimes in Kubernetes, called &ldquo;CRI&rdquo;.</p>
+<p><strong>containerd</strong></p>
+<p>maintained by Docker, IBM, and community
+used by Docker Engine, microk8s, k3s, GKE; also standalone
+comes with its own CLI, ctr</p>
+<p><strong>CRI-O</strong></p>
+<p>maintained by Red Hat, SUSE, and community
+used by OpenShift and Kubic
+designed specifically as a minimal runtime for Kubernetes</p>
+<p>And more&hellip; We&rsquo;re using docker (in fact, kind standards for Kubernetes in Docker)</p>
+<h3 id="oci">OCI</h3>
+<h3 id="protobug-grpc--json">Protobug, gRPC, &amp; JSON</h3>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

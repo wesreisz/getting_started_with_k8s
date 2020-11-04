@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Notes - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/">Deploying an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/">Exposing the App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 2: Example Application: DockerCoin</h1>
+
+<div class="content ">
+  <p>The person I first took a container workshop with was Jerome Pettazoni. He&rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&rsquo;re going to use to in the next sections.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand the sample app</li>
+<li>Understand some of the terminology k8s users to talk about applications</li>
+</ol>
+<p>spin up with docker compose</p>
+<p>talk about kompose
+conf</p>
+<h3 id="create-a-new-multi-node-kind-cluster">Create a new Multi-node kind cluster</h3>
+<p>Kubernetes in Docker supports multi-node clusters. We&rsquo;ll use yaml to create one.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+- <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+  <span style="color:#f92672">extraPortMappings</span>:
+  - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">listenAddress</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span> <span style="color:#75715e"># Optional, defaults to &#34;0.0.0.0&#34;</span>
+    <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">udp</span> <span style="color:#75715e"># Optional, defaults to tcp</span>
+- <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+- <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker    </span>
+</code></pre></div><p>Scale out the app on across the existing nodes.</p>
+<pre><code>kubectl scale --replicas 10 deployment/azure-vote-front
+</code></pre><p>once we did the apply each container pulls the image to it&rsquo;s own local repo just like docker goes.
+get nodes -o wide will tells us where each container is deployed?
+<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/</a></p>
+<p>In fact, let&rsquo;s look at:</p>
+<pre><code>kubectl get pods -o wide
+docker exec -it kind-worker crictl images
+</code></pre><p>Let&rsquo;s get to an app running in kind:
+port forward to a specific app instance</p>
+<p>Port forwarding lets you access a specific pod’s container port directly. If you’ve got just one pod (perhaps because it’s a deployment with a single replica), this is a straightforward way to access it. It’s also the approach to use if you have reason to access a particular pod.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl port-forward azure-vote-front-674f8559d4-c552s 8080:80
+</code></pre></div><p>You can tail a specific instance of the logs in the app by:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl logs -f azure-vote-front-674f8559d4-c552s
+</code></pre></div><p>thx to liz rice:
+<a href="https://medium.com/@lizrice/accessing-an-application-on-kubernetes-in-docker-1054d46b64b1">https://medium.com/@lizrice/accessing-an-application-on-kubernetes-in-docker-1054d46b64b1</a></p>
+<p>If you’re using YAML files from your production deployment, be aware that a service of type LoadBalancer isn’t going to work on your local machine. You can create the service, but the External IP address will stay in Pending state indefinitely. This is because LoadBalancer type relies on an external provider (like your cloud service) setting up a load balancer for sending traffic to the service. You’ll need to set the type to NodePort.</p>
+<p>you can curl a cluster ip from within the cluster&hellip; so if you copy the cluster ip then
+log into one of the pods then you can curl the endpoint</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl expose deployment azure-vote-front --type<span style="color:#f92672">=</span>NodePort --name<span style="color:#f92672">=</span>vote-service
+kubectl get pods
+kubectl exec -it azure-vote-back-7dd7659996-7qntq -- bash
+cat /etc/issue
+apt-get update -y
+apt-get install curl
+curl 10.96.150.77
+</code></pre></div><p>You can also create a</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl expose deployment azure-vote-front --type<span style="color:#f92672">=</span>NodePort --name<span style="color:#f92672">=</span>azure-vote
+kubectl get services
+kubectl port-forward svc/azure-vote 8080:80
+firefox 
+</code></pre></div><p>Can exec into the backend and run redis-cli</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl exec -it azure-vote-back-7dd7659996-vcx4k -- bash
+redis-cli
+GET Dogs
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">- create a new cluster
+- deploy azure app
+- see pending state... discuss lb implementations
+- we can fix by installing our own metalb
+- install metalb
+- docker network ls
+- docker network inspect kind
+- find cidr <span style="color:#66d9ef">for</span> pods and use some of them... this is a work around.
+- configure metalb to use that range
+- check your services
+- firefox 172.20.255.1
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ConfigMap</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">metallb-system</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config</span>
+<span style="color:#f92672">data</span>:
+  <span style="color:#f92672">config</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">    address-pools:
+</span><span style="color:#e6db74">    - name: default
+</span><span style="color:#e6db74">      protocol: layer2
+</span><span style="color:#e6db74">      addresses:
+</span><span style="color:#e6db74">      - 172.20.255.1-172.20.255.250</span>    
+</code></pre></div><p>Maybe install the k8s dashboard</p>
+<p><a href="https://mauilion.dev/posts/kind-metallb/">https://mauilion.dev/posts/kind-metallb/</a></p>
+<h3 id="start-kubernetes-dashboard">Start Kubernetes Dashboard</h3>
+<p><a href="https://pycon2019.container.training/#28">Launch his slide deck where he discusses the app</a></p>
+<h4 id="running-the-control-plane-on-special-nodes">Running the control plane on special nodes</h4>
+<p>It is common to reserve a dedicated node for the control plane (Except for single-node development clusters, like when using minikube).</p>
+<p>This node is then called a &ldquo;master&rdquo; (Yes, this is ambiguous: is the &ldquo;master&rdquo; a node, or the whole control plane?)</p>
+<p>Normal applications are restricted from running on this node (By using a mechanism called &ldquo;<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">taints</a>&quot;)</p>
+<p>When high availability is required, each service of the control plane must be resilient. The control plane is then replicated on multiple nodes(This is sometimes called a &ldquo;multi-master&rdquo; setup)</p>
+<h4 id="running-the-control-plane-outside-containers">Running the control plane outside containers</h4>
+<p>The services of the control plane can run in or out of containers</p>
+<p>For instance: since etcd is a critical service, some people deploy it directly on a dedicated cluster (without containers)</p>
+<p>In some hosted Kubernetes offerings (e.g. AKS, GKE, EKS), the control plane is invisible (we only &ldquo;see&rdquo; a Kubernetes API endpoint). In that case, there is no &ldquo;master node&rdquo;. For this reason, it is more accurate to say &ldquo;control plane&rdquo; rather than &ldquo;master.&rdquo;</p>
+<h4 id="how-many-nodes-should-a-cluster-have">How many nodes should a cluster have?</h4>
+<p>There is no particular constraint (no need to have an odd number of nodes for quorum)</p>
+<p>A cluster can have zero node (but then it won&rsquo;t be able to start any pods)</p>
+<p>For testing and development, having a single node is fine</p>
+<p>For production, make sure that you have extra capacity (so that your workload still fits if you lose a node or a group of nodes)</p>
+<p>Kubernetes is tested with up to 5000 nodes (however, running a cluster of that size requires a lot of tuning).</p>
+
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

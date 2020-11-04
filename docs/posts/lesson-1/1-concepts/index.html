@@ -51,23 +51,39 @@
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/">Example Application: DockerCoin</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/">Deploying an App</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/">K8s Architecture and Components</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/">Exposing the App</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/">Example Minikube (or in Kind)</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/">K8s Architecture and Components</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/">Pods</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/">Networking</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/">Wrap Up</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
     </li>
     
   </ul>
@@ -216,7 +232,116 @@ kubectl config use-context kind-kind
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config ./multinode.yml  --name kind3
 </code></pre></div><p>Kind is still early alpha and doesn&rsquo;t support adding new nodes to a running cluster (yet).</p>
 <p>To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.</p>
+<h4 id="pods">Pods</h4>
+<p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png" alt=""></p>
+<p>Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.</p>
+<p>A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod&rsquo;s contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific &ldquo;logical host&rdquo;: it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.</p>
+<p>As well as application containers, a Pod can contain init containers that run during Pod startup. You can also inject ephemeral containers for debugging if your cluster offers this.</p>
+<p><strong>Pod networking</strong>
+Each Pod is assigned a unique IP address for each address family. Every container in a Pod shares the network namespace, including the IP address and network ports. Inside a Pod (and only then), the containers that belong to the Pod can communicate with one another using localhost.</p>
+<p>When containers in a Pod communicate with entities outside the Pod, they must coordinate how they use the shared network resources (such as ports). Within a Pod, containers share an IP address and port space, and can find each other via localhost. The containers in a Pod can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory.</p>
+<p>Containers in different Pods have distinct IP addresses and can not communicate by IPC without special configuration. Containers that want to interact with a container running in a different Pod can use IP networking to communicate.</p>
+<p>Containers within the Pod see the system hostname as being the same as the configured name for the Pod. There&rsquo;s more about this in the networking section.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods 
+kubectl describe pods hello-node-86d687ddfb-d56dp
+</code></pre></div><pre><code>Name:         hello-node-86d687ddfb-d56dp
+Namespace:    default
+Priority:     0
+Node:         kind-worker2/172.20.0.4
+Start Time:   Tue, 03 Nov 2020 19:07:15 -0500
+Labels:       io.kompose.service=hello-node
+              pod-template-hash=86d687ddfb
+Annotations:  kompose.cmd: kompose convert -f docker-compose.yml
+              kompose.version: 1.22.0 (955b78124)
+Status:       Running
+IP:           10.244.2.2
+IPs:
+  IP:           10.244.2.2
+Controlled By:  ReplicaSet/hello-node-86d687ddfb
+Containers:
+  hello-node:
+    Container ID:   containerd://110c5a8955f939d95e98ae19d8599ccf4e3becf58be4e6894895653e51f35efb
+    Image:          wesreisz/hello-node:v1
+    Image ID:       docker.io/wesreisz/hello-node@sha256:4e76af1ff781e96743af84b9904b53f0bba5b0c80b63b2d6617f148c71a51f1f
+    Port:           3000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 03 Nov 2020 19:07:44 -0500
+    Ready:          True
+    Restart Count:  0
+    Environment:    &lt;none&gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ktxxq (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-ktxxq:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-ktxxq
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  &lt;none&gt;
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:          &lt;none&gt;
+</code></pre><h4 id="namespace">Namespace</h4>
+<p>Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces. Namespaces are intended for use in environments with many users spread across multiple teams, or projects.</p>
+<p>Namespaces provide:</p>
+<ul>
+<li>A scope for Names.</li>
+<li>A mechanism to attach authorization and policy to a subsection of the cluster.</li>
+</ul>
+<p>Get the namespaces on your cluster. Note: this will be all namespaces including the ones that run pods kubernetes uses.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get namespaces
+</code></pre></div><pre><code>NAME                 STATUS   AGE
+default              Active   3h2m
+kube-node-lease      Active   3h2m
+kube-public          Active   3h2m
+kube-system          Active   3h2m
+local-path-storage   Active   3h2m
 
+</code></pre><p>You can also see them if you use:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
+</code></pre></div><p>Create a namespaces for dev and prod</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace dev
+kubectl create namespace prod
+</code></pre></div><p>You can also use yaml and <code>kubectl apply -f </code> it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
+</code></pre></div><p>Deploy our demo app into each namespace</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl run nginx --image<span style="color:#f92672">=</span>nginx --namespace<span style="color:#f92672">=</span>dev
+kubectl apply -f hello-node-deployment.yaml --namespace<span style="color:#f92672">=</span>prod
+</code></pre></div><p>Now when you run <code>kubectl get pods</code> you need to add <code>-A</code> or you wont see everything:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl get pods -A
+</code></pre></div><p>In addition, the namespace is &ldquo;part&rdquo; of the name now. It will fail if you, don&rsquo;t include it:
+Try these:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl exec pods nginx --bash
+kubectl exec pods -n dev nginx --bash
+kubectl exec pods -n prod nginx --bash
+</code></pre></div><p>&hellip;and, of course, you can also set this up in yaml:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">prod</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">containers</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
+</code></pre></div><p>To list only the pods in a given namespace, try this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods --namespace<span style="color:#f92672">=</span>dev
+</code></pre></div>
 </div>
 </div>
 

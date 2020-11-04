@@ -29,53 +29,90 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
     </item>
     
     <item>
-      <title>Example Application: DockerCoin</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/</link>
+      <title>Deploying an App</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app/</guid>
-      <description>The person I first took a container workshop with was Jerome Pettazoni. He&amp;rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&amp;rsquo;re going to use to in the next sections.
-Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  Start Kubernetes Dashboard Launch his slide deck where he discusses the app</description>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/</guid>
+      <description>Now that we have a basic understanding of what Kubernetes is and how it operates. We&amp;rsquo;re going to deploy a simple application and interact with it. We will write this app locally, buld it, push it to Dockerhub. Then we&amp;rsquo;ll create a docker-compose file and run it. Then we&amp;rsquo;ll use Kompose and discuss how it can help you go from a docker-compose.yaml file to a deployment yaml file for Kubernetes. We&amp;rsquo;ll deploy this file with the kubectl apply -f command.</description>
+    </item>
+    
+    <item>
+      <title>Exposing the App</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/</guid>
+      <description>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods. A Service is defined using YAML (preferred) or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a LabelSelector (see below for why you might want a Service without including selector in the spec).</description>
     </item>
     
     <item>
       <title>K8s Architecture and Components</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/</link>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-architecture/</guid>
-      <description>So we went through the high-level architecture of k8s. We saw what components run on the master and worker nodes. Let&amp;rsquo;s go just a bit deeper.
-Key Takeaways  Understand about more complicated configurations for architecture components Explore the CNCF Cloud Native Landscape around Kubernetes  Running the control plane on special nodes It is common to reserve a dedicated node for the control plane (Except for single-node development clusters, like when using minikube).</description>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/</guid>
+      <description>This architecture of Kubernetes provides a flexible, loosely-coupled mechanism for service discovery. Like most distributed computing platforms, a Kubernetes cluster consists of at least one master and multiple compute nodes. The master is responsible for exposing the application program interface (API), scheduling the deployments and managing the overall cluster. Each node runs a container runtime, such as Docker or rkt, along with an agent that communicates with the master. The node also runs additional components for logging, monitoring, service discovery and optional add-ons.</description>
     </item>
     
     <item>
-      <title>Example Minikube (or in Kind)</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/</link>
+      <title>Networking</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-walk-through/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ex sem. Donec sodales porttitor blandit. Vestibulum congue euismod ligula, sit amet euismod orci molestie sed. Nam tincidunt urna in rhoncus semper. Etiam accumsan ante nec mauris cursus ornare. Maecenas ut dignissim lacus, eget eleifend mauris. Praesent luctus nulla
-Sed aliquet dui vitae leo efficitur fringilla. Mauris vel mi accumsan, egestas augue at, tempus sapien. Nulla mollis ipsum mauris, eget rutrum elit volutpat non.</description>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/</guid>
+      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat.</description>
     </item>
     
     <item>
-      <title>Pods</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/</link>
+      <title>Ingress</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-pods/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/</guid>
+      <description>We can install an ingress-controller
+kubectl expose deployment azure-vote-front --type=NodePort --name=azure-vote kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml Then apply this yaml:
+apiVersion: networking.k8s.io/v1 kind: Ingress metadata: name: example-ingress spec: rules: - http: paths: - path: / backend: serviceName: azure-vote servicePort: 80 kubectl get ingress </description>
+    </item>
+    
+    <item>
+      <title>Security</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/</guid>
       <description>Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
 A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod&amp;rsquo;s contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific &amp;ldquo;logical host&amp;rdquo;: it contains one or more application containers which are relatively tightly coupled.</description>
     </item>
     
     <item>
-      <title>Wrap Up</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/</link>
+      <title>22 Essential Concepts</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-wrapup/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/</guid>
+      <description>Cloud native represents a paradigm shift in the way infrastructure is deployed. If you are new to cloud native and Kubernetes, there are 22 essential Kubernetes concepts you’ll need to wrap your head around.
+Key Takeaways  Reiterate k8s core concepts  Workloads  Node - A node may be a virtual or physical machine, depending on the cluster. Each node contains the services necessary to run Pods, managed by the control plane.</description>
+    </item>
+    
+    <item>
+      <title>Wrap Up</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/</guid>
       <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ex sem. Donec sodales porttitor blandit. Vestibulum congue euismod ligula, sit amet euismod orci molestie sed. Nam tincidunt urna in rhoncus semper. Etiam accumsan ante nec mauris cursus ornare. Maecenas ut dignissim lacus, eget eleifend mauris. Praesent luctus nulla
 Sed aliquet dui vitae leo efficitur fringilla. Mauris vel mi accumsan, egestas augue at, tempus sapien. Nulla mollis ipsum mauris, eget rutrum elit volutpat non.</description>
+    </item>
+    
+    <item>
+      <title>Notes</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/</guid>
+      <description>The person I first took a container workshop with was Jerome Pettazoni. He&amp;rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&amp;rsquo;re going to use to in the next sections.
+Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose</description>
     </item>
     
   </channel>

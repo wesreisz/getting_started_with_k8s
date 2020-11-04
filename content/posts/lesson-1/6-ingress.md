@@ -7,7 +7,40 @@ date: 2020-10-23T1:00:00-00:98
 draft: true
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat. Duis feugiat sed nisi eu molestie. Nam aliquam nisi ut luctus pharetra. Sed quis risus ultrices, congue justo in, ornare odio.
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
+
+An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses a service of type Service.Type=NodePort or Service.Type=LoadBalancer.
+
+There are several popular implementations of ingress controller:
+* NGINX, Inc. offers support and maintenance for the NGINX Ingress Controller for Kubernetes.
+* Contour is an Envoy based ingress controller provided and supported by VMware.
+* Ambassador API Gateway is an Envoy based ingress controller with community or commercial support from Ambassador Labs (previously Datawire).
+* others: https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+
+
+This is what the ingress resource looks like.
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+```
+
 
 We can install an ingress-controller
 ```bash

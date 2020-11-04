@@ -1,6 +1,6 @@
 ---
 title: "Wrap Up"
-full_title: "Lesson 8: Course Wrap-up, Questions, and Additional Resources "
+full_title: "Lesson 9: Course Wrap-up, Questions, and Additional Resources "
 time_estimate: "10 Minutes"
 weight: 9
 date: 2020-10-23T1:00:00-00:98

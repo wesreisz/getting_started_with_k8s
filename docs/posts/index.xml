@@ -61,7 +61,8 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
       <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat.</description>
+      <description>The Kubernetes network model Every Pod gets its own IP address. This means you do not need to explicitly create links between Pods and you almost never need to deal with mapping container ports to host ports. This creates a clean, backwards-compatible model where Pods can be treated much like VMs or physical hosts from the perspectives of port allocation, naming, service discovery, load balancing, application configuration, and migration.
+Key Takeaways  Understand about more complicated configurations for architecture components Explore the CNCF Cloud Native Landscape around Kubernetes  Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):</description>
     </item>
     
     <item>
@@ -70,7 +71,8 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
       <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat.</description>
+      <description>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.</description>
     </item>
     
     <item>
@@ -108,8 +110,10 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
       <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/</guid>
-      <description>The person I first took a container workshop with was Jerome Pettazoni. He&amp;rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&amp;rsquo;re going to use to in the next sections.
-Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose</description>
+      <description>Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose
+talk about kompose conf
+Create a new Multi-node kind cluster Kubernetes in Docker supports multi-node clusters. We&amp;rsquo;ll use yaml to create one.
+kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane - role: worker - role: worker - role: worker kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane extraPortMappings: - containerPort: 80 hostPort: 80 listenAddress: &amp;#34;0.</description>
     </item>
     
   </channel>

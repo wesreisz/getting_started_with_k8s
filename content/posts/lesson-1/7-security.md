@@ -1,6 +1,6 @@
 ---
 title: "Security"
-full_title: "Lesson 5: Security"
+full_title: "Lesson 7: Security"
 time_estimate: "20 minutes"
 weight: 7
 date: 2020-10-23T1:00:00-00:98

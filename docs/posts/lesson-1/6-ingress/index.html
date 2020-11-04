@@ -96,8 +96,35 @@
 <h1>Lesson 6: Ingress</h1>
 
 <div class="content ">
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat. Duis feugiat sed nisi eu molestie. Nam aliquam nisi ut luctus pharetra. Sed quis risus ultrices, congue justo in, ornare odio.</p>
-<p>We can install an ingress-controller</p>
+  <p>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.</p>
+<p>An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.</p>
+<p>An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses a service of type Service.Type=NodePort or Service.Type=LoadBalancer.</p>
+<p>There are several popular implementations of ingress controller:</p>
+<ul>
+<li>NGINX, Inc. offers support and maintenance for the NGINX Ingress Controller for Kubernetes.</li>
+<li>Contour is an Envoy based ingress controller provided and supported by VMware.</li>
+<li>Ambassador API Gateway is an Envoy based ingress controller with community or commercial support from Ambassador Labs (previously Datawire).</li>
+<li>others: <a href="https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/">https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/</a></li>
+</ul>
+<p>This is what the ingress resource looks like.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minimal-ingress</span>
+  <span style="color:#f92672">annotations</span>:
+    <span style="color:#f92672">nginx.ingress.kubernetes.io/rewrite-target</span>: <span style="color:#ae81ff">/</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">rules</span>:
+  - <span style="color:#f92672">http</span>:
+      <span style="color:#f92672">paths</span>:
+      - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/testpath</span>
+        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
+        <span style="color:#f92672">backend</span>:
+          <span style="color:#f92672">service</span>:
+            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
+            <span style="color:#f92672">port</span>:
+              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
+</code></pre></div><p>We can install an ingress-controller</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl expose deployment azure-vote-front --type<span style="color:#f92672">=</span>NodePort --name<span style="color:#f92672">=</span>azure-vote
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 </code></pre></div><p>Then apply this yaml:</p>

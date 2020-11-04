@@ -81,37 +81,78 @@ curl localhost:8080/api/v1/namespaces/default/pods/hello-node-86d687ddfb-d56dp |
 
 [Kubernetes API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_
 
-### Scheduler
+#### Scheduler
+
+A scheduler watches for newly created Pods that have no Node assigned. For every Pod that the scheduler discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on. 
+
+kube-scheduler is the default scheduler for Kubernetes and runs as part of the control plane. kube-scheduler is designed so that, if you want and need to, you can write your own scheduling component and use that instead.
+
+Node selection in kube-scheduler
+
+kube-scheduler selects a node for the pod in a 2-step operation:
+* Filtering
+* Scoring
+
+The filtering step finds the set of Nodes where it's feasible to schedule the Pod. For example, the PodFitsResources filter checks whether a candidate Node has enough available resource to meet a Pod's specific resource requests. After this step, the node list contains any suitable Nodes; often, there will be more than one. If the list is empty, that Pod isn't (yet) schedulable.
+
+In the scoring step, the scheduler ranks the remaining nodes to choose the most suitable Pod placement. The scheduler assigns a score to each Node that survived filtering, basing this score on the active scoring rules.
+
+Finally, kube-scheduler assigns the Pod to the Node with the highest ranking. If there is more than one node with equal scores, kube-scheduler selects one of these at random.
+
+**Taints and Tolerations**
+Node affinity, is a property of Pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite -- they allow a node to repel a set of pods.
+
+Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.
+
+Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.
+
+#### etcd
+etcd is a consistent and highly-available key value store used as Kubernetes' backing store for all cluster data.
+
+If your Kubernetes cluster uses etcd as its backing store, make sure you have a back up plan for those data.
+
+https://etcd.io/docs/
+
+
+### Cloud Controller Manager (not shown)
+Cloud infrastructure technologies let you run Kubernetes on public, private, and hybrid clouds. Kubernetes believes in automated, API-driven infrastructure without tight coupling between components.
+
+The cloud-controller-manager is a Kubernetes control plane component that embeds cloud-specific control logic. The cloud controller manager lets you link your cluster into your cloud provider's API, and separates out the components that interact with that cloud platform from components that just interact with your cluster.
+
+By decoupling the interoperability logic between Kubernetes and the underlying cloud infrastructure, the cloud-controller-manager component enables cloud providers to release features at a different pace compared to the main Kubernetes project.
+
+The cloud-controller-manager is structured using a plugin mechanism that allows different cloud providers to integrate their platforms with Kubernetes.
+
+NOTE: This is how the loadbalancer service obtains an external IP.
 
 
 
-### etcd
 
+#### CNI
+CNI (Container Network Interface), a Cloud Native Computing Foundation project, consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. CNI concerns itself only with network connectivity of containers and removing allocated resources when the container is deleted. Because of this focus, CNI has a wide range of support and the specification is simple to implement.
 
-### CNI
+https://kubernetes.io/docs/concepts/cluster-administration/networking/
 
-
-### CRI
-
-### CRI
+#### CRI
 At the lowest layers of a Kubernetes node is the software that, among other things, starts and stops containers. We call this the “Container Runtime”. The most widely known container runtime is Docker, but it is not alone in this space. In fact, the container runtime space has been rapidly evolving. As part of the effort to make Kubernetes more extensible, we've been working on a new plugin API for container runtimes in Kubernetes, called "CRI".
 
-**containerd**
+The most common CRI is Docker; however, there others (including containerd and CRI-O)
 
-maintained by Docker, IBM, and community
-used by Docker Engine, microk8s, k3s, GKE; also standalone
-comes with its own CLI, ctr
+* containerd: maintained by Docker, IBM, and community. Used by Docker Engine, microk8s, k3s, GKE; also standalone comes with its own CLI, ctr
 
-**CRI-O**
-
-maintained by Red Hat, SUSE, and community
-used by OpenShift and Kubic
+* CRI-O: maintained by Red Hat, SUSE, and community. Used by OpenShift and Kubic
 designed specifically as a minimal runtime for Kubernetes
 
-And more... We're using docker (in fact, kind standards for Kubernetes in Docker)
+And more... 
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/
 
-### OCI
+We're using docker  
 
+#### OCI
+Open Container Initative: The Open Container Initiative is an open governance structure for the express purpose of creating open industry standards around container formats and runtimes. Runtime specification defining what it means to run an image or container. Enables interoperability between container runtimes.
+https://www.youtube.com/watch?v=RyXL1zOa8Bw
 
-
-### Protobug, gRPC, & JSON
+#### Protobuf, gRPC, & JSON
+* Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler.
+* gRPC is an OSS remote procedure call system that uses Protobuf. It's a binary protocol that uses HTTP/2. These are internal APIs
+* User facing API uses JSON for easy parsing.

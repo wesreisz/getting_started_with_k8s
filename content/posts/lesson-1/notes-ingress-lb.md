@@ -1,13 +1,11 @@
 ---
 title: "Notes"
-full_title: "Lesson 2: Example Application: DockerCoin"
+full_title: "Notes"
 time_estimate: "60 Minutes"
 weight: 13
 date: 2020-10-23T1:00:00-00:98
 draft: true
 ---
-
-The person I first took a container workshop with was Jerome Pettazoni. He's been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we're going to use to in the next sections.
 
 ### Key Takeaways
 1. Understand the sample app

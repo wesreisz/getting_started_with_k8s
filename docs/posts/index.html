@@ -177,7 +177,8 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
     
   </p>
   <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat.
+    The Kubernetes network model Every Pod gets its own IP address. This means you do not need to explicitly create links between Pods and you almost never need to deal with mapping container ports to host ports. This creates a clean, backwards-compatible model where Pods can be treated much like VMs or physical hosts from the perspectives of port allocation, naming, service discovery, load balancing, application configuration, and migration.
+Key Takeaways  Understand about more complicated configurations for architecture components Explore the CNCF Cloud Native Landscape around Kubernetes  Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):
   </p>
   
 </div>
@@ -191,14 +192,15 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
     
   </p>
   <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat.
+    Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
   </p>
   
 </div>
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Lesson 5: Security</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Lesson 7: Security</a></h2>
   <p>
     
       <em>Time Estimate: 20 minutes</em>
@@ -212,7 +214,7 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">Lesson 5: 22 Essential Kubernetes Concepts</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">Lesson 8: 22 Essential Kubernetes Concepts</a></h2>
   <p>
     
       <em>Time Estimate: 10 minutes</em>
@@ -227,7 +229,7 @@ Key Takeaways  Reiterate k8s core concepts  Workloads  Node - A node may be a vi
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Lesson 8: Course Wrap-up, Questions, and Additional Resources </a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Lesson 9: Course Wrap-up, Questions, and Additional Resources </a></h2>
   <p>
     
       <em>Time Estimate: 10 Minutes</em>
@@ -242,15 +244,17 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Lesson 2: Example Application: DockerCoin</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a></h2>
   <p>
     
       <em>Time Estimate: 60 Minutes</em>
     
   </p>
   <p>
-    The person I first took a container workshop with was Jerome Pettazoni. He&rsquo;s been a trusted trainer for QCon and me personally for at least four years now. He uses an application in his Kubernetes training course that we&rsquo;re going to use to in the next sections.
-Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose
+    Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose
+talk about kompose conf
+Create a new Multi-node kind cluster Kubernetes in Docker supports multi-node clusters. We&rsquo;ll use yaml to create one.
+kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane - role: worker - role: worker - role: worker kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane extraPortMappings: - containerPort: 80 hostPort: 80 listenAddress: &#34;0.
   </p>
   
 </div>

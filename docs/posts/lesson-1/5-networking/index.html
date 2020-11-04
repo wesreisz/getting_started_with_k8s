@@ -96,12 +96,30 @@
 <h1>Lesson 5: Networking</h1>
 
 <div class="content ">
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu sollicitudin purus. Nam efficitur leo a finibus accumsan. Cras finibus tempus leo ac gravida. Suspendisse faucibus hendrerit felis eget sagittis. Cras molestie sollicitudin neque ut porta. Donec volutpat lobortis tempus. Curabitur non nisi placerat, posuere velit ut, porta lacus. Nulla eu congue nulla, id porttitor risus. Vestibulum metus massa, fermentum sagittis enim eget, tempor commodo odio. Nunc suscipit euismod diam sit amet feugiat. Duis feugiat sed nisi eu molestie. Nam aliquam nisi ut luctus pharetra. Sed quis risus ultrices, congue justo in, ornare odio.</p>
+  <h3 id="the-kubernetes-network-model">The Kubernetes network model</h3>
+<p>Every Pod gets its own IP address. This means you do not need to explicitly create links between Pods and you almost never need to deal with mapping container ports to host ports. This creates a clean, backwards-compatible model where Pods can be treated much like VMs or physical hosts from the perspectives of port allocation, naming, service discovery, load balancing, application configuration, and migration.</p>
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
 <li>Understand about more complicated configurations for architecture components</li>
 <li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
 </ol>
+<p>Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):</p>
+<ul>
+<li>
+<p>pods on a node can communicate with all pods on all nodes without NAT
+agents on a node (e.g. system daemons, kubelet) can communicate with all pods on that node
+Note: For those platforms that support Pods running in the host network (e.g. Linux):</p>
+</li>
+<li>
+<p>pods in the host network of a node can communicate with all pods on all nodes without NAT
+This model is not only less complex overall, but it is principally compatible with the desire for Kubernetes to enable low-friction porting of apps from VMs to containers. If your job previously ran in a VM, your VM had an IP and could talk to other VMs in your project. This is the same basic model.</p>
+</li>
+<li>
+<p>Kubernetes IP addresses exist at the Pod scope - containers within a Pod share their network namespaces - including their IP address. This means that containers within a Pod can all reach each other&rsquo;s ports on localhost. This also means that containers within a Pod must coordinate port usage, but this is no different from processes in a VM. This is called the &ldquo;IP-per-pod&rdquo; model.</p>
+</li>
+</ul>
+<p>How this is implemented is a detail of the particular container runtime in use.</p>
+<p>It is possible to request ports on the Node itself which forward to your Pod (called host ports), but this is a very niche operation. How that forwarding is implemented is also a detail of the container runtime. The Pod itself is blind to the existence or non-existence of host ports.</p>
 <h4 id="networking">Networking</h4>
 <p><a href="https://www.stackrox.com/post/2020/01/kubernetes-networking-demystified/">https://www.stackrox.com/post/2020/01/kubernetes-networking-demystified/</a></p>
 

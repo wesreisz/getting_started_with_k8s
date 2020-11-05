@@ -54,7 +54,7 @@ docker image ls
 docker run -p 3000:3000 hello-node:v1
 ```
 
-push it to dockerhub:
+push it to dockerhub (NOTE: you'll need to replace your username on dockerhub to push it there). However, you can skip this step, and just pull the image from my repo.
 ```bash
 docker login
 docker push wesreisz/hello-node:v1
@@ -90,7 +90,7 @@ See if it's installed:
 kompose version
 ```
 
-If not install it:
+If not, install it:
 ```bash
 curl -L https://github.com/kubernetes/kompose/releases/download/v1.22.0/kompose-linux-amd64 -o kompose
 chmod +x kompose
@@ -151,6 +151,21 @@ kubectl apply -f hello-node-deployment.yaml
 See your deployment:
 ```bash
 kubectl get pods
+```
+
+#### Pods
+
+![](/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png)
+
+Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
+
+A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod's contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific "logical host": it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.
+
+As well as application containers, a Pod can contain init containers that run during Pod startup. You can also inject ephemeral containers for debugging if your cluster offers this.
+
+Take a look at all of the pods, including the k8s system level pods
+```bash
+kubectl get pods -A
 ```
 
 ### Declarative vs Imperative

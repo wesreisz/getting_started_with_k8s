@@ -17,7 +17,7 @@ Understanding how Kubernetes works makes you an effective power user for buildin
 1. Understand how to deploy and operate a service on kubernetes
 
 ### Audience
-You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes
+You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes. This is a Kubernetes Day 1 class. What that means is it's an introductory topic to k8s. Day 2 concerns are not part of this 3 hour class.
 
 ### Prerequisites
 * Familiarity with containers (don't need to be an expert)
@@ -206,7 +206,7 @@ You should see the two clusters we just created. If you run
 ```bash
 cat ~/.kube/config 
 ```
-You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster.
+You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster. We talk more about this file in security.
 
 NOTE: Notice that kind prefaces the cluster name with "kind-", so your first cluster is "kind-kind".
 

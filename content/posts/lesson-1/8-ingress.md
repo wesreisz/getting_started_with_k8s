@@ -1,8 +1,8 @@
 ---
 title: "Ingress"
-full_title: "Lesson 6: Ingress"
+full_title: "Lesson 7: Ingress-Controller"
 time_estimate: "20 minutes"
-weight: 6
+weight: 8
 date: 2020-10-23T1:00:00-00:98
 draft: true
 ---

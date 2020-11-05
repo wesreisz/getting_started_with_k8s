@@ -28,7 +28,6 @@ Services match a set of Pods using labels and selectors, a grouping primitive th
 ![Services](/getting_started_with_k8s/images/lesson3/services.svg)
 
 
-
 Services can be exposed in different ways by specifying a type in the ServiceSpec:
 
 * **ClusterIP** (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
@@ -105,6 +104,13 @@ Try this:
 kubectl get nodes -o wide
 ```
 Using and of the `kind-worker` internal-ips, curl the the ip using the port `31117`. It should work.
+
+Before we move to the next section, let's get the yaml from `kubectl` for this NodePort. We can use `kubectl` to do that:
+```bash
+kubectl get services hello-node-port -o yaml  > hello-node-port.yaml
+```
+
+NOTE: This is not really for saving off configuration. It's more for getting and grep values if you need it. The yaml this generates is not always small is structured very easily. You can also use `-o json`.
 
 
 #### type: loadbalancer

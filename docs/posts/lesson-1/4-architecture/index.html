@@ -67,23 +67,27 @@
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Security</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">RBAC</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Ingress</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">22 Essential Concepts</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
     </li>
     
   </ul>
@@ -102,6 +106,81 @@
 <li>Understand about more complicated configurations for architecture components</li>
 <li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
 </ol>
+<p>Let&rsquo;s deploy a new app. First, we&rsquo;ll tear down the kind server</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind delete cluster
+</code></pre></div><p>Let&rsquo;s check what kind thinks are clusters. It&rsquo;s all cleaned up</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind get clusters
+docker ps
+</code></pre></div><p>Let&rsquo;s create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config multinode.yml 
+</code></pre></div><p>Note: you can also run something like: <code>kubectl delete --all namespaces</code> to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it&rsquo;s just easier for me to recreate the cluster.</p>
+<p>In our new cluster, let&rsquo;s create two namespaces. We&rsquo;ll call one <code>dev</code> and another <code>prod</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace dev
+kubectl create namespace prod
+</code></pre></div><h4 id="namespace">Namespace</h4>
+<p>Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces. Namespaces are intended for use in environments with many users spread across multiple teams, or projects.</p>
+<p>Namespaces provide:</p>
+<ul>
+<li>A scope for Names.</li>
+<li>A mechanism to attach authorization and policy to a subsection of the cluster.</li>
+</ul>
+<p>Get the namespaces on your cluster. Note: this will be all namespaces including the ones that run pods kubernetes uses.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get namespaces
+</code></pre></div><pre><code>[CORP\student2@a-3ronkozj3vcn8 hello-node]$ kubectl get namespaces
+NAME              STATUS   AGE
+default           Active   8m9s
+dev               Active   116s
+kube-node-lease   Active   3m10s
+kube-public       Active   8m10s
+kube-system       Active   8m10s
+prod              Active   113s
+</code></pre><p>You can also see them if you use:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
+</code></pre></div><p>You can also use yaml and <code>kubectl apply -f </code> it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
+</code></pre></div><p>let&rsquo;s clone an different app and load into the dev and prod namespace.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/wesreisz/azure-voting-app-redis.git
+kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace<span style="color:#f92672">=</span>dev
+kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace<span style="color:#f92672">=</span>prod
+</code></pre></div><p>Now type: <code>kubectl get pods</code> Where is your deployment?</p>
+<p>By default, <code>get pods</code> is only showing the default namespace so you&rsquo;ll need to add <code>-A</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
+</code></pre></div><p>In addition, the namespace is &ldquo;part&rdquo; of the name now. It will fail if you, don&rsquo;t include it:
+Try these:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl exec pods nginx --bash
+kubectl exec pods -n dev nginx --bash
+kubectl exec pods -n prod nginx --bash
+</code></pre></div><p>&hellip;and, of course, you can also set this up in yaml:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">prod</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">containers</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypod</span>
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
+</code></pre></div><p>To list only the pods in a given namespace, try this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods --namespace<span style="color:#f92672">=</span>dev
+</code></pre></div><p>Let&rsquo;s scale up production to five nodes:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl scale --replicas <span style="color:#ae81ff">5</span> -n prod          deployment/azure-vote-front
+</code></pre></div><p>Another way we can do this is to use contexts. Try these steps:</p>
+<p>find the cluster and user name by running:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config view
+</code></pre></div><p>This create two contexts</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config set-context dev --namespace<span style="color:#f92672">=</span>dev --cluster<span style="color:#f92672">=</span>kind-kind --user<span style="color:#f92672">=</span>kind-kind
+kubectl config set-context prod --namespace<span style="color:#f92672">=</span>prod --cluster<span style="color:#f92672">=</span>kind-kind --user<span style="color:#f92672">=</span>kind-kind
+</code></pre></div><p>Now you can view and then apply the context like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config view
+kubectl config use-context prod
+</code></pre></div><h3 id="deeper-into-k8s-architecture">Deeper into K8s Architecture</h3>
 <p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png" alt=""></p>
 <h4 id="controller-manager">Controller Manager</h4>
 <p>The Kubernetes controller manager is a daemon that embeds the core control loops shipped with Kubernetes. In Kubernetes, controllers are control loops that watch the state of your cluster, then make or request changes where needed. Each controller tries to move the current cluster state closer to the desired state.</p>
@@ -145,6 +224,29 @@ In one terminal, start the proxy</p>
 hello-node-86d687ddfb-d56dp   1/1     Running   0          5h26m
 </code></pre><p>Call the api</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl localhost:8080/api/v1/namespaces/default/pods/hello-node-86d687ddfb-d56dp | jq
+</code></pre></div><p>Another approach is to pass an authentication token:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Check all possible clusters, as your .KUBECONFIG may have multiple contexts:</span>
+kubectl config view -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{&#34;Cluster name\tServer\n&#34;}{range .clusters[*]}{.name}{&#34;\t&#34;}{.cluster.server}{&#34;\n&#34;}{end}&#39;</span>
+<span style="color:#75715e"># Select name of cluster you want to interact with from above output:</span>
+export CLUSTER_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;kind-kind&#34;</span>
+<span style="color:#75715e"># Point to the API server referring the cluster name</span>
+APISERVER<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl config view -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.clusters[?(@.name==\&#34;</span>$CLUSTER_NAME<span style="color:#e6db74">\&#34;)].cluster.server}&#34;</span><span style="color:#66d9ef">)</span>
+<span style="color:#75715e"># Gets the token value</span>
+TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl get secrets -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.items[?(@.metadata.annotations[&#39;kubernetes\.io/service-account\.name&#39;]==&#39;default&#39;)].data.token}&#34;</span>|base64 --decode<span style="color:#66d9ef">)</span>
+<span style="color:#75715e"># Explore the API with TOKEN</span>
+curl -X GET $APISERVER/api --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> --insecure
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;kind&#34;</span>: <span style="color:#e6db74">&#34;APIVersions&#34;</span>,
+  <span style="color:#f92672">&#34;versions&#34;</span>: [
+    <span style="color:#e6db74">&#34;v1&#34;</span>
+  ],
+  <span style="color:#f92672">&#34;serverAddressByClientCIDRs&#34;</span>: [
+    {
+      <span style="color:#f92672">&#34;clientCIDR&#34;</span>: <span style="color:#e6db74">&#34;0.0.0.0/0&#34;</span>,
+      <span style="color:#f92672">&#34;serverAddress&#34;</span>: <span style="color:#e6db74">&#34;10.0.1.149:443&#34;</span>
+    }
+  ]
+}
 </code></pre></div><p>[Kubernetes API Reference](<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_</a></p>
 <h4 id="scheduler">Scheduler</h4>
 <p>A scheduler watches for newly created Pods that have no Node assigned. For every Pod that the scheduler discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on.</p>
@@ -158,7 +260,15 @@ hello-node-86d687ddfb-d56dp   1/1     Running   0          5h26m
 <p>The filtering step finds the set of Nodes where it&rsquo;s feasible to schedule the Pod. For example, the PodFitsResources filter checks whether a candidate Node has enough available resource to meet a Pod&rsquo;s specific resource requests. After this step, the node list contains any suitable Nodes; often, there will be more than one. If the list is empty, that Pod isn&rsquo;t (yet) schedulable.</p>
 <p>In the scoring step, the scheduler ranks the remaining nodes to choose the most suitable Pod placement. The scheduler assigns a score to each Node that survived filtering, basing this score on the active scoring rules.</p>
 <p>Finally, kube-scheduler assigns the Pod to the Node with the highest ranking. If there is more than one node with equal scores, kube-scheduler selects one of these at random.</p>
-<p><strong>Taints and Tolerations</strong>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -o wide
+</code></pre></div><pre><code>NAME                                READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
+azure-vote-back-7dd7659996-jvbkm    1/1     Running   0          94m   10.244.3.2   kind-worker2   &lt;none&gt;           &lt;none&gt;
+azure-vote-front-674f8559d4-62l5p   1/1     Running   0          94m   10.244.1.3   kind-worker3   &lt;none&gt;           &lt;none&gt;
+azure-vote-front-674f8559d4-7fpj2   1/1     Running   0          85m   10.244.3.3   kind-worker2   &lt;none&gt;           &lt;none&gt;
+azure-vote-front-674f8559d4-852pn   1/1     Running   0          85m   10.244.3.4   kind-worker2   &lt;none&gt;           &lt;none&gt;
+azure-vote-front-674f8559d4-d4zk2   1/1     Running   0          85m   10.244.1.4   kind-worker3   &lt;none&gt;           &lt;none&gt;
+azure-vote-front-674f8559d4-q25mh   1/1     Running   0          85m   10.244.2.3   kind-worker    &lt;none&gt;           &lt;none&gt;
+</code></pre><p><strong>Taints and Tolerations</strong>
 Node affinity, is a property of Pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite &ndash; they allow a node to repel a set of pods.</p>
 <p>Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.</p>
 <p>Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.</p>
@@ -199,6 +309,9 @@ designed specifically as a minimal runtime for Kubernetes</p>
 <li>gRPC is an OSS remote procedure call system that uses Protobuf. It&rsquo;s a binary protocol that uses HTTP/2. These are internal APIs</li>
 <li>User facing API uses JSON for easy parsing.</li>
 </ul>
+<h3 id="cncf-landscape">CNCF Landscape</h3>
+<p>The CNCF Cloud Native Landscape Project is intended as a map through the previously uncharted terrain of cloud native technologies. This attempts to categorize most of the projects and product offerings in the cloud native space. There are many routes to deploying a cloud native application, with CNCF Projects representing a particularly well-traveled path.</p>
+<p><a href="https://landscape.cncf.io/">CNCF Cloud Native Interactive Landscape</a></p>
 
 </div>
 </div>

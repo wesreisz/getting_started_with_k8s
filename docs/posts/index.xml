@@ -15,7 +15,7 @@
       <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/</guid>
       <description>Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.
-Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes</description>
+Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes.</description>
     </item>
     
     <item>
@@ -66,50 +66,61 @@ Key Takeaways  Understand about more complicated configurations for architecture
     </item>
     
     <item>
-      <title>Ingress</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/</link>
+      <title>Security</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/</guid>
+      <description>Kubernetes security is important throughout the container lifecycle due to the distributed, dynamic nature of a Kubernetes cluster. Different security approaches are required for each of the three phases of an application lifecycle: build, deploy, and runtime. Kubernetes provides innate security advantages. For example, application containers are typically not patched or updated — instead, container images are replaced entirely with new versions. This enables strict version control and permits rapid rollbacks if a vulnerability is uncovered in new code.</description>
+    </item>
+    
+    <item>
+      <title>RBAC</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/</guid>
+      <description>Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within your organization.
+RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to dynamically configure policies through the Kubernetes API.
+Key Takeaways  Understand the basic idea of how k8s handles authentication and authorization. Understand how Roles/ClusterRoles and RoleBinding/ClusterRoleBinding works. Practice using roles/rolebinding.  Authorization and Authentication in K8s Authentication is the act of validating that users are whom they claim to be.</description>
+    </item>
+    
+    <item>
+      <title>Ingress</title>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/</link>
+      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
+      
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/</guid>
       <description>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
 An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.</description>
     </item>
     
     <item>
-      <title>Security</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/</link>
-      <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
-      
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/</guid>
-      <description>Kubernetes security is important throughout the container lifecycle due to the distributed, dynamic nature of a Kubernetes cluster. Different security approaches are required for each of the three phases of an application lifecycle: build, deploy, and runtime. Kubernetes provides innate security advantages. For example, application containers are typically not patched or updated — instead, container images are replaced entirely with new versions. This enables strict version control and permits rapid rollbacks if a vulnerability is uncovered in new code.</description>
-    </item>
-    
-    <item>
       <title>22 Essential Concepts</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/</link>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/</guid>
       <description>Cloud native represents a paradigm shift in the way infrastructure is deployed. If you are new to cloud native and Kubernetes, there are 22 essential Kubernetes concepts you’ll need to wrap your head around.
 Key Takeaways  Reiterate k8s core concepts  Workloads  Node - A node may be a virtual or physical machine, depending on the cluster. Each node contains the services necessary to run Pods, managed by the control plane.</description>
     </item>
     
     <item>
       <title>Wrap Up</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/</link>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/</guid>
       <description>Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
 The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014. Kubernetes combines over 15 years of Google&amp;rsquo;s experience running production workloads at scale with best-of-breed ideas and practices from the community.</description>
     </item>
     
     <item>
       <title>Notes</title>
-      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/</link>
+      <link>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/</link>
       <pubDate>Fri, 23 Oct 2020 01:00:00 -0138</pubDate>
       
-      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/</guid>
+      <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/</guid>
       <description>Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose
 talk about kompose conf
 Create a new Multi-node kind cluster Kubernetes in Docker supports multi-node clusters. We&amp;rsquo;ll use yaml to create one.

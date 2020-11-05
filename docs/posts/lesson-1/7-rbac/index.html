@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>RBAC - Getting Started with Containerization and Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="http://www.wesleyreisz.com/getting_started_with_k8s/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/getting_started_with_k8s/css/style.min.8233fdfc7a93c2ef840b660ee55f7b305ba6cf8ae0985ebf018e072cb94eb3ac.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div class="wrapper">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <div style="text-align: center;">
+      <h1 class="title">Getting Started With Kubernetes and Container Orchestration</h1>
+      <a class="home_link" href="http://www.wesleyreisz.com/getting_started_with_k8s/posts">Home</a>
+    </div>
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Posts</h4>
+  <ul>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/">Course Introduction</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/">K8s Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/">Deploying an App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/">Exposing the App</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/">K8s Architecture and Components</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/">Networking</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Security</a>
+    </li>
+    
+    <li class="active ">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">RBAC</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Ingress</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">22 Essential Concepts</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1>Lesson 7: RBAC</h1>
+
+<div class="content ">
+  <p>Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within your organization.</p>
+<p>RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to dynamically configure policies through the Kubernetes API.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand the basic idea of how k8s handles authentication and authorization.</li>
+<li>Understand how Roles/ClusterRoles and RoleBinding/ClusterRoleBinding works.</li>
+<li>Practice using roles/rolebinding.</li>
+</ol>
+<h3 id="authorization-and-authentication-in-k8s">Authorization and Authentication in K8s</h3>
+<p>Authentication is the act of validating that users are whom they claim to be. This is the first step in any security process.</p>
+<p>Authorization in a system security is the process of giving the user permission to access a specific resource or function. This term is often used interchangeably with access control or client privilege.</p>
+<p><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">https://kubernetes.io/docs/reference/access-authn-authz/authentication/</a></p>
+<h4 id="rbac">RBAC</h4>
+<p>The RBAC API declares four kinds of Kubernetes object:</p>
+<ul>
+<li>Role</li>
+<li>ClusterRole</li>
+<li>RoleBinding</li>
+<li>ClusterRoleBinding.</li>
+</ul>
+<p>You can describe objects, or amend them, using tools such as kubectl, just like any other Kubernetes object.</p>
+<h4 id="role-and-clusterrole">Role and ClusterRole</h4>
+<p>An RBAC Role or ClusterRole contains rules that represent a set of permissions. Permissions are purely additive (there are no &ldquo;deny&rdquo; rules).</p>
+<p>A Role always sets permissions within a particular namespace; when you create a Role, you have to specify the namespace it belongs in.</p>
+<p>ClusterRole, by contrast, is a non-namespaced resource. The resources have different names (Role and ClusterRole) because a Kubernetes object always has to be either namespaced or not namespaced; it can&rsquo;t be both.</p>
+<p>ClusterRoles have several uses. You can use a ClusterRole to:</p>
+<ol>
+<li>define permissions on namespaced resources and be granted within individual namespace(s)</li>
+<li>define permissions on namespaced resources and be granted across all namespaces
+define permissions on cluster-scoped resources</li>
+<li>If you want to define a role within a namespace, use a Role; if you want to define a role cluster-wide, use a ClusterRole.</li>
+</ol>
+<p>Grants read permissions to pods (default namespace)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pod-reader</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>] <span style="color:#75715e"># &#34;&#34; indicates the core API group</span>
+  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
+  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
+</code></pre></div><h4 id="rolebinding-and-clusterrolebinding">RoleBinding and ClusterRoleBinding</h4>
+<p>A role binding grants the permissions defined in a role to a user or set of users. It holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted. A RoleBinding grants permissions within a specific namespace whereas a ClusterRoleBinding grants that access cluster-wide.</p>
+<p>A RoleBinding may reference any Role in the same namespace. Alternatively, a RoleBinding can reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBinding. If you want to bind a ClusterRole to all the namespaces in your cluster, you use a ClusterRoleBinding.</p>
+<p>The name of a RoleBinding or ClusterRoleBinding object must be a valid path segment name.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#75715e"># This role binding allows &#34;jane&#34; to read pods in the &#34;default&#34; namespace.</span>
+<span style="color:#75715e"># You need to already have a Role named &#34;pod-reader&#34; in that namespace.</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">RoleBinding</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">read-pods</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">subjects</span>:
+<span style="color:#75715e"># You can specify more than one &#34;subject&#34;</span>
+- <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">User</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">jane</span> <span style="color:#75715e"># &#34;name&#34; is case sensitive</span>
+  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+<span style="color:#f92672">roleRef</span>:
+  <span style="color:#75715e"># &#34;roleRef&#34; specifies the binding to a Role / ClusterRole</span>
+  <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span> <span style="color:#75715e">#this must be Role or ClusterRole</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pod-reader</span> <span style="color:#75715e"># this must match the name of the Role or ClusterRole you wish to bind to</span>
+  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+</code></pre></div><p><strong>ClusterRole</strong></p>
+<p>A ClusterRole can be used to grant the same permissions as a Role. Because ClusterRoles are cluster-scoped, you can also use them to grant access to:</p>
+<ul>
+<li>cluster-scoped resources (like nodes)</li>
+<li>non-resource endpoints (like /healthz)</li>
+<li>namespaced resources (like Pods), across all namespaces For example: you can use a ClusterRole to allow a particular user to run kubectl get pods &ndash;all-namespaces.
+Here is an example of a ClusterRole that can be used to grant read access to secrets in any particular namespace, or across all namespaces (depending on how it is bound):</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRole</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#75715e"># &#34;namespace&#34; omitted since ClusterRoles are not namespaced</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">secret-reader</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+  <span style="color:#75715e">#</span>
+  <span style="color:#75715e"># at the HTTP level, the name of the resource for accessing Secret</span>
+  <span style="color:#75715e"># objects is &#34;secrets&#34;</span>
+  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;secrets&#34;</span>]
+  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
+</code></pre></div><p>More Details: <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">https://kubernetes.io/docs/reference/access-authn-authz/rbac/</a></p>
+<p><strong>The key to understanding RBAC in Kubernetes</strong></p>
+<p>In order to fully grasp the idea of RBAC, we must understand that three elements are involved:</p>
+<ul>
+<li>Subjects: The set of users and processes that want to access the Kubernetes API.</li>
+<li>Resources: The set of Kubernetes API Objects available in the cluster. Examples include Pods,  Deployments, Services, Nodes, and PersistentVolumes, among others.</li>
+<li>Verbs: The set of operations that can be executed to the resources above. Different verbs are available (examples: get, watch, create, delete, etc.), but ultimately all of them are Create, Read, Update or Delete (CRUD) operations.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1 </span>
+<span style="color:#f92672">metadata</span>:
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
+   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">rules</span>:
+ - <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+   <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
+   <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>]
+</code></pre></div><p>We want to connect subjects, API resources, and operations. In other words, we want to specify, given a user, which operations can be executed over a set of resources.</p>
+<p><strong>Lab Exercise</strong></p>
+<p>Create a new cluster</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config singlenode.yml 
+</code></pre></div><p>Create an a production namespace. Deploy an app into the default and prod namespace.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get namespaces
+kubectl create namespace prod
+
+kubectl run nginx --image<span style="color:#f92672">=</span>nginx
+kubectl run nginx --image<span style="color:#f92672">=</span>nginx -n prod
+</code></pre></div><p>Create a new serviceaccount</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl api-versions
+kubectl create serviceaccount udef-pod-reader -n default
+kubectl get serviceaccount
+</code></pre></div><p>Create a role that can only read/list/watch the default namespace:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; default-pod-role.yaml</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1 </span>
+<span style="color:#f92672">metadata</span>:
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
+   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">rules</span>:
+ - <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+   <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
+   <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>]
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f default-pod-role.yaml 
+</code></pre></div><p>Create a rolebinding to associate the serviceaccount with the role:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; default-pod-binding.yaml</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">RoleBinding</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">metadata</span>:
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonlybinding</span>
+   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">subjects</span>:
+ - <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udef-pod-reader</span>
+   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">roleRef</span>:
+   <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
+   <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f default-pod-binding.yaml
+</code></pre></div><p>Setup your context to access and test.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl describe secrets <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>kubectl describe serviceaccount udef-pod-reader -n default| grep -i Tokens | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> -n default | grep token: | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+kubectl config set-credentials test-user --token<span style="color:#f92672">=</span>$TOKEN
+kubectl config set-context udefpodreader --cluster<span style="color:#f92672">=</span>kind-kind --user<span style="color:#f92672">=</span>test-user
+kubectl config contexts
+kubectl config use-context udefpodreader
+</code></pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li><a href="https://www.wesleyreisz.com">www.wesleyreisz.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/getting_started_with_k8s/js/scripts.min.1237ff71925bb8625c97a9af8db4c54525258bedfd7c47493daaff723bea755e.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

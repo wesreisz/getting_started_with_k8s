@@ -67,23 +67,27 @@
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Security</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">RBAC</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Ingress</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">22 Essential Concepts</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
     </li>
     
   </ul>
@@ -106,7 +110,7 @@
   <p>
     Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.
-Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes
+Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes.
   </p>
   
 </div>
@@ -185,7 +189,37 @@ Key Takeaways  Understand about more complicated configurations for architecture
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Lesson 6: Ingress</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Lesson 6: Security</a></h2>
+  <p>
+    
+      <em>Time Estimate: 20 minutes</em>
+    
+  </p>
+  <p>
+    Kubernetes security is important throughout the container lifecycle due to the distributed, dynamic nature of a Kubernetes cluster. Different security approaches are required for each of the three phases of an application lifecycle: build, deploy, and runtime. Kubernetes provides innate security advantages. For example, application containers are typically not patched or updated — instead, container images are replaced entirely with new versions. This enables strict version control and permits rapid rollbacks if a vulnerability is uncovered in new code.
+  </p>
+  
+</div>
+
+
+<div class="summary mb-2">
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">Lesson 7: RBAC</a></h2>
+  <p>
+    
+      <em>Time Estimate: 20 minutes</em>
+    
+  </p>
+  <p>
+    Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within your organization.
+RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to dynamically configure policies through the Kubernetes API.
+Key Takeaways  Understand the basic idea of how k8s handles authentication and authorization. Understand how Roles/ClusterRoles and RoleBinding/ClusterRoleBinding works. Practice using roles/rolebinding.  Authorization and Authentication in K8s Authentication is the act of validating that users are whom they claim to be.
+  </p>
+  
+</div>
+
+
+<div class="summary mb-2">
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Lesson 7: Ingress-Controller</a></h2>
   <p>
     
       <em>Time Estimate: 20 minutes</em>
@@ -200,21 +234,7 @@ An Ingress may be configured to give Services externally-reachable URLs, load ba
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Lesson 7: Security</a></h2>
-  <p>
-    
-      <em>Time Estimate: 20 minutes</em>
-    
-  </p>
-  <p>
-    Kubernetes security is important throughout the container lifecycle due to the distributed, dynamic nature of a Kubernetes cluster. Different security approaches are required for each of the three phases of an application lifecycle: build, deploy, and runtime. Kubernetes provides innate security advantages. For example, application containers are typically not patched or updated — instead, container images are replaced entirely with new versions. This enables strict version control and permits rapid rollbacks if a vulnerability is uncovered in new code.
-  </p>
-  
-</div>
-
-
-<div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">Lesson 8: 22 Essential Kubernetes Concepts</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">Lesson 8: 22 Essential Kubernetes Concepts</a></h2>
   <p>
     
       <em>Time Estimate: 10 minutes</em>
@@ -229,7 +249,7 @@ Key Takeaways  Reiterate k8s core concepts  Workloads  Node - A node may be a vi
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Lesson 9: Course Wrap-up, Questions, and Additional Resources </a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Lesson 9: Course Wrap-up, Questions, and Additional Resources </a></h2>
   <p>
     
       <em>Time Estimate: 10 Minutes</em>
@@ -244,7 +264,7 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
 
 
 <div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a></h2>
+  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a></h2>
   <p>
     
       <em>Time Estimate: 60 Minutes</em>

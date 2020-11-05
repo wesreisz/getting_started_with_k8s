@@ -67,23 +67,27 @@
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Security</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">RBAC</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Ingress</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">22 Essential Concepts</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
     </li>
     
   </ul>
@@ -105,7 +109,7 @@
 <li>Understand how to deploy and operate a service on kubernetes</li>
 </ol>
 <h3 id="audience">Audience</h3>
-<p>You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes</p>
+<p>You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes. This is a Kubernetes Day 1 class. What that means is it&rsquo;s an introductory topic to k8s. Day 2 concerns are not part of this 3 hour class.</p>
 <h3 id="prerequisites">Prerequisites</h3>
 <ul>
 <li>Familiarity with containers (don&rsquo;t need to be an expert)</li>
@@ -239,7 +243,7 @@ kubectl cluster-info --context kind-kind
 <pre><code>kind get clusters
 </code></pre><p>You should see the two clusters we just created. If you run</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat ~/.kube/config 
-</code></pre></div><p>You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster.</p>
+</code></pre></div><p>You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster. We talk more about this file in security.</p>
 <p>NOTE: Notice that kind prefaces the cluster name with &ldquo;kind-&rdquo;, so your first cluster is &ldquo;kind-kind&rdquo;.</p>
 <p>We can switch between the two clusters using <code>--context</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl cluster-info --context kind-kind

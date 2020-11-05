@@ -2,7 +2,7 @@
 title: "Notes"
 full_title: "Notes"
 time_estimate: "60 Minutes"
-weight: 13
+weight: 99
 date: 2020-10-23T1:00:00-00:98
 draft: true
 ---

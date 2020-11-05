@@ -2,7 +2,7 @@
 title: "22 Essential Concepts"
 full_title: "Lesson 8: 22 Essential Kubernetes Concepts"
 time_estimate: "10 minutes"
-weight: 8
+weight: 9
 date: 2020-10-23T1:00:00-00:98
 draft: true
 ---

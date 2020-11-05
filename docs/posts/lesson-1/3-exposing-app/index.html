@@ -67,23 +67,27 @@
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-ingress/">Ingress</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/">Security</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-security/">Security</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/">RBAC</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-22-essential/">22 Essential Concepts</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/">Ingress</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-wrapup/">Wrap Up</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/">22 Essential Concepts</a>
     </li>
     
     <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/notes-ingress-lb/">Notes</a>
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
+    </li>
+    
+    <li class="">
+      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
     </li>
     
   </ul>
@@ -166,6 +170,9 @@ kubernetes        ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP       
 <p>Try this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get nodes -o wide
 </code></pre></div><p>Using and of the <code>kind-worker</code> internal-ips, curl the the ip using the port <code>31117</code>. It should work.</p>
+<p>Before we move to the next section, let&rsquo;s get the yaml from <code>kubectl</code> for this NodePort. We can use <code>kubectl</code> to do that:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get services hello-node-port -o yaml  &gt; hello-node-port.yaml
+</code></pre></div><p>NOTE: This is not really for saving off configuration. It&rsquo;s more for getting and grep values if you need it. The yaml this generates is not always small is structured very easily. You can also use <code>-o json</code>.</p>
 <h4 id="type-loadbalancer">type: loadbalancer</h4>
 <p>If you’re using YAML files from your production deployment, be aware that a service of type LoadBalancer isn’t going to work on your local machine. You can create the service, but the External IP address will stay in Pending state indefinitely. This is because LoadBalancer type relies on an external provider (like your cloud service) setting up a load balancer for sending traffic to the service. You’ll need to set the type to NodePort.</p>
 <p>Using loadbalancer with any of the cloud providers will working this out. If you&rsquo;re doing this on kind (like we are), you will see an external IP address of pending. You will need to expose a different service or install something like Metallb for this to resolve.</p>

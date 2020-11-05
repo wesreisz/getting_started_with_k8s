@@ -72,12 +72,12 @@ That's how Kubernetes comes to the rescue! Kubernetes provides you with a framew
 
 Kubernetes provides you with:
 
-* Service discovery and load balancing Kubernetes can expose a container using the DNS name or using their own IP address. If traffic to a container is high, Kubernetes is able to load balance and distribute the network traffic so that the deployment is stable.
-* Storage orchestration Kubernetes allows you to automatically mount a storage system of your choice, such as local storages, public cloud providers, and more.
-* Automated rollouts and rollbacks You can describe the desired state for your deployed containers using Kubernetes, and it can change the actual state to the desired state at a controlled rate. For example, you can automate Kubernetes to create new containers for your deployment, remove existing containers and adopt all their resources to the new container.
-* Automatic bin packing You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks. You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit containers onto your nodes to make the best use of your resources.
-* Self-healing Kubernetes restarts containers that fail, replaces containers, kills containers that don't respond to your user-defined health check, and doesn't advertise them to clients until they are ready to serve.
-* Secret and configuration management Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens, and SSH keys. You can deploy and update secrets and application configuration without rebuilding your container images, and without exposing secrets in your stack configuration.
+* **Service discovery and load balancing**: Kubernetes can expose a container using the DNS name or using their own IP address. If traffic to a container is high, Kubernetes is able to load balance and distribute the network traffic so that the deployment is stable.
+* **Storage orchestration**: Kubernetes allows you to automatically mount a storage system of your choice, such as local storages, public cloud providers, and more.
+* **Automated rollouts and rollbacks**: You can describe the desired state for your deployed containers using Kubernetes, and it can change the actual state to the desired state at a controlled rate. For example, you can automate Kubernetes to create new containers for your deployment, remove existing containers and adopt all their resources to the new container.
+* **Automatic bin packing**: You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks. You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit containers onto your nodes to make the best use of your resources.
+* **Self-healing Kubernetes**: restarts containers that fail, replaces containers, kills containers that don't respond to your user-defined health check, and doesn't advertise them to clients until they are ready to serve.
+* **Secret and configuration management**: Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens, and SSH keys. You can deploy and update secrets and application configuration without rebuilding your container images, and without exposing secrets in your stack configuration.
 
 
 #### IaaS Providers for k8s
@@ -231,157 +231,4 @@ kind create cluster --config ./multinode.yml  --name kind3
 Kind is still early alpha and doesn't support adding new nodes to a running cluster (yet).
 
 To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.
-
-#### Pods
-
-![](/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png)
-
-Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
-
-A Pod (as in a pod of whales or pea pod) is a group of one or more containers, with shared storage/network resources, and a specification for how to run the containers. A Pod's contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific "logical host": it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.
-
-As well as application containers, a Pod can contain init containers that run during Pod startup. You can also inject ephemeral containers for debugging if your cluster offers this.
-
-**Pod networking**
-Each Pod is assigned a unique IP address for each address family. Every container in a Pod shares the network namespace, including the IP address and network ports. Inside a Pod (and only then), the containers that belong to the Pod can communicate with one another using localhost. 
-
-When containers in a Pod communicate with entities outside the Pod, they must coordinate how they use the shared network resources (such as ports). Within a Pod, containers share an IP address and port space, and can find each other via localhost. The containers in a Pod can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. 
-
-Containers in different Pods have distinct IP addresses and can not communicate by IPC without special configuration. Containers that want to interact with a container running in a different Pod can use IP networking to communicate.
-
-Containers within the Pod see the system hostname as being the same as the configured name for the Pod. There's more about this in the networking section.
-
-```bash
-kubectl get pods 
-kubectl describe pods hello-node-86d687ddfb-d56dp
-```
-```
-Name:         hello-node-86d687ddfb-d56dp
-Namespace:    default
-Priority:     0
-Node:         kind-worker2/172.20.0.4
-Start Time:   Tue, 03 Nov 2020 19:07:15 -0500
-Labels:       io.kompose.service=hello-node
-              pod-template-hash=86d687ddfb
-Annotations:  kompose.cmd: kompose convert -f docker-compose.yml
-              kompose.version: 1.22.0 (955b78124)
-Status:       Running
-IP:           10.244.2.2
-IPs:
-  IP:           10.244.2.2
-Controlled By:  ReplicaSet/hello-node-86d687ddfb
-Containers:
-  hello-node:
-    Container ID:   containerd://110c5a8955f939d95e98ae19d8599ccf4e3becf58be4e6894895653e51f35efb
-    Image:          wesreisz/hello-node:v1
-    Image ID:       docker.io/wesreisz/hello-node@sha256:4e76af1ff781e96743af84b9904b53f0bba5b0c80b63b2d6617f148c71a51f1f
-    Port:           3000/TCP
-    Host Port:      0/TCP
-    State:          Running
-      Started:      Tue, 03 Nov 2020 19:07:44 -0500
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ktxxq (ro)
-Conditions:
-  Type              Status
-  Initialized       True 
-  Ready             True 
-  ContainersReady   True 
-  PodScheduled      True 
-Volumes:
-  default-token-ktxxq:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  default-token-ktxxq
-    Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:          <none>
-```
-
-
-#### Namespace
-Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces. Namespaces are intended for use in environments with many users spread across multiple teams, or projects.
-
-Namespaces provide:
-* A scope for Names.
-* A mechanism to attach authorization and policy to a subsection of the cluster.
-
-Get the namespaces on your cluster. Note: this will be all namespaces including the ones that run pods kubernetes uses.
-```bash
-kubectl get namespaces
-```
-```
-NAME                 STATUS   AGE
-default              Active   3h2m
-kube-node-lease      Active   3h2m
-kube-public          Active   3h2m
-kube-system          Active   3h2m
-local-path-storage   Active   3h2m
-
-```
-
-You can also see them if you use:
-```bash
-kubectl get pods -A
-```
-
-Create a namespaces for dev and prod
-```bash
-kubectl create namespace dev
-kubectl create namespace prod
-```
-
-You can also use yaml and `kubectl apply -f ` it.
-```yaml
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: test
-  labels:
-    name: test
-```
-
-Deploy our demo app into each namespace
-```bash
-kubectl run nginx --image=nginx --namespace=dev
-kubectl apply -f hello-node-deployment.yaml --namespace=prod
-```
-
-Now when you run `kubectl get pods` you need to add `-A` or you wont see everything:
-```bash
-kubectl get pods
-kubectl get pods -A
-```
-
-In addition, the namespace is "part" of the name now. It will fail if you, don't include it:
-Try these:
-```bash
-kubectl exec pods nginx --bash
-kubectl exec pods -n dev nginx --bash
-kubectl exec pods -n prod nginx --bash
-```
-
-...and, of course, you can also set this up in yaml:
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mypod
-  namespace: prod
-  labels:
-    name: mypod
-spec:
-  containers:
-  - name: mypod
-    image: nginx
-```
-
-To list only the pods in a given namespace, try this:
-```bash
-kubectl get pods --namespace=dev
-```
 

@@ -14,6 +14,134 @@ This architecture of Kubernetes provides a flexible, loosely-coupled mechanism f
 1. Understand about more complicated configurations for architecture components
 1. Explore the CNCF Cloud Native Landscape around Kubernetes
 
+Let's deploy a new app. First, we'll tear down the kind server
+```bash
+kind delete cluster
+```
+
+Let's check what kind thinks are clusters. It's all cleaned up
+```bash
+kind get clusters
+docker ps
+```
+
+Let's create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster. 
+```bash
+kind create cluster --config multinode.yml 
+```
+
+Note: you can also run something like: `kubectl delete --all namespaces` to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it's just easier for me to recreate the cluster.
+
+In our new cluster, let's create two namespaces. We'll call one `dev` and another `prod`
+```bash
+kubectl create namespace dev
+kubectl create namespace prod
+```
+
+#### Namespace
+Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces. Namespaces are intended for use in environments with many users spread across multiple teams, or projects.
+
+Namespaces provide:
+* A scope for Names.
+* A mechanism to attach authorization and policy to a subsection of the cluster.
+
+Get the namespaces on your cluster. Note: this will be all namespaces including the ones that run pods kubernetes uses.
+```bash
+kubectl get namespaces
+```
+```
+[CORP\student2@a-3ronkozj3vcn8 hello-node]$ kubectl get namespaces
+NAME              STATUS   AGE
+default           Active   8m9s
+dev               Active   116s
+kube-node-lease   Active   3m10s
+kube-public       Active   8m10s
+kube-system       Active   8m10s
+prod              Active   113s
+```
+
+You can also see them if you use:
+```bash
+kubectl get pods -A
+```
+
+You can also use yaml and `kubectl apply -f ` it.
+```yaml
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: test
+  labels:
+    name: test
+```
+let's clone an different app and load into the dev and prod namespace.
+```bash
+git clone https://github.com/wesreisz/azure-voting-app-redis.git
+kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace=dev
+kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace=prod
+```
+
+Now type: `kubectl get pods` Where is your deployment?
+
+By default, `get pods` is only showing the default namespace so you'll need to add `-A`
+```bash
+kubectl get pods -A
+```
+
+In addition, the namespace is "part" of the name now. It will fail if you, don't include it:
+Try these:
+```bash
+kubectl exec pods nginx --bash
+kubectl exec pods -n dev nginx --bash
+kubectl exec pods -n prod nginx --bash
+```
+
+...and, of course, you can also set this up in yaml:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  namespace: prod
+  labels:
+    name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx
+```
+
+To list only the pods in a given namespace, try this:
+```bash
+kubectl get pods --namespace=dev
+```
+
+Let's scale up production to five nodes:
+```bash
+kubectl scale --replicas 5 -n prod          deployment/azure-vote-front
+```
+
+Another way we can do this is to use contexts. Try these steps:
+
+find the cluster and user name by running:
+```bash
+kubectl config view
+```
+
+This create two contexts
+```bash
+kubectl config set-context dev --namespace=dev --cluster=kind-kind --user=kind-kind
+kubectl config set-context prod --namespace=prod --cluster=kind-kind --user=kind-kind
+```
+
+Now you can view and then apply the context like this:
+```bash
+kubectl config view
+kubectl config use-context prod
+```
+
+### Deeper into K8s Architecture
+
 ![](/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png)
 
 #### Controller Manager
@@ -79,6 +207,35 @@ Call the api
 curl localhost:8080/api/v1/namespaces/default/pods/hello-node-86d687ddfb-d56dp | jq
 ```
 
+Another approach is to pass an authentication token:
+```bash
+# Check all possible clusters, as your .KUBECONFIG may have multiple contexts:
+kubectl config view -o jsonpath='{"Cluster name\tServer\n"}{range .clusters[*]}{.name}{"\t"}{.cluster.server}{"\n"}{end}'
+# Select name of cluster you want to interact with from above output:
+export CLUSTER_NAME="kind-kind"
+# Point to the API server referring the cluster name
+APISERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
+# Gets the token value
+TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 --decode)
+# Explore the API with TOKEN
+curl -X GET $APISERVER/api --header "Authorization: Bearer $TOKEN" --insecure
+```
+```json
+{
+  "kind": "APIVersions",
+  "versions": [
+    "v1"
+  ],
+  "serverAddressByClientCIDRs": [
+    {
+      "clientCIDR": "0.0.0.0/0",
+      "serverAddress": "10.0.1.149:443"
+    }
+  ]
+}
+```
+
+
 [Kubernetes API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_
 
 #### Scheduler
@@ -98,6 +255,19 @@ The filtering step finds the set of Nodes where it's feasible to schedule the Po
 In the scoring step, the scheduler ranks the remaining nodes to choose the most suitable Pod placement. The scheduler assigns a score to each Node that survived filtering, basing this score on the active scoring rules.
 
 Finally, kube-scheduler assigns the Pod to the Node with the highest ranking. If there is more than one node with equal scores, kube-scheduler selects one of these at random.
+
+```bash
+kubectl get pods -o wide
+```
+```
+NAME                                READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
+azure-vote-back-7dd7659996-jvbkm    1/1     Running   0          94m   10.244.3.2   kind-worker2   <none>           <none>
+azure-vote-front-674f8559d4-62l5p   1/1     Running   0          94m   10.244.1.3   kind-worker3   <none>           <none>
+azure-vote-front-674f8559d4-7fpj2   1/1     Running   0          85m   10.244.3.3   kind-worker2   <none>           <none>
+azure-vote-front-674f8559d4-852pn   1/1     Running   0          85m   10.244.3.4   kind-worker2   <none>           <none>
+azure-vote-front-674f8559d4-d4zk2   1/1     Running   0          85m   10.244.1.4   kind-worker3   <none>           <none>
+azure-vote-front-674f8559d4-q25mh   1/1     Running   0          85m   10.244.2.3   kind-worker    <none>           <none>
+```
 
 **Taints and Tolerations**
 Node affinity, is a property of Pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite -- they allow a node to repel a set of pods.
@@ -156,3 +326,10 @@ https://www.youtube.com/watch?v=RyXL1zOa8Bw
 * Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler.
 * gRPC is an OSS remote procedure call system that uses Protobuf. It's a binary protocol that uses HTTP/2. These are internal APIs
 * User facing API uses JSON for easy parsing.
+
+
+### CNCF Landscape
+
+The CNCF Cloud Native Landscape Project is intended as a map through the previously uncharted terrain of cloud native technologies. This attempts to categorize most of the projects and product offerings in the cloud native space. There are many routes to deploying a cloud native application, with CNCF Projects representing a particularly well-traveled path. 
+
+[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)

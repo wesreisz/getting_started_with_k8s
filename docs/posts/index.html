@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -110,7 +106,7 @@
   <p>
     Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.
-Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes  Audience You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes.
+Signin for the registration link to the VM:
   </p>
   
 </div>
@@ -181,8 +177,8 @@ The name Kubernetes originates from Greek, meaning helmsman or pilot. Google ope
     
   </p>
   <p>
-    The Kubernetes network model Every Pod gets its own IP address. This means you do not need to explicitly create links between Pods and you almost never need to deal with mapping container ports to host ports. This creates a clean, backwards-compatible model where Pods can be treated much like VMs or physical hosts from the perspectives of port allocation, naming, service discovery, load balancing, application configuration, and migration.
-Key Takeaways  Understand about more complicated configurations for architecture components Explore the CNCF Cloud Native Landscape around Kubernetes  Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):
+    Kubernetes was built to run distributed systems over a cluster of machines. The very nature of distributed systems makes networking a central and necessary component of Kubernetes deployment, and understanding the Kubernetes networking model will allow you to correctly run, monitor and troubleshoot your applications running on Kubernetes.
+Key Takeaways  Get introduced to the k8s networking model. Get a glimpse at fundamental network behaviors the Kubernetes network model defines. How DNS works within Kubernetes.
   </p>
   
 </div>
@@ -258,23 +254,6 @@ Key Takeaways  Reiterate k8s core concepts  Workloads  Node - A node may be a vi
   <p>
     Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
 The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014. Kubernetes combines over 15 years of Google&rsquo;s experience running production workloads at scale with best-of-breed ideas and practices from the community.
-  </p>
-  
-</div>
-
-
-<div class="summary mb-2">
-  <h2 class="title-summary"><a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a></h2>
-  <p>
-    
-      <em>Time Estimate: 60 Minutes</em>
-    
-  </p>
-  <p>
-    Key Takeaways  Understand the sample app Understand some of the terminology k8s users to talk about applications  spin up with docker compose
-talk about kompose conf
-Create a new Multi-node kind cluster Kubernetes in Docker supports multi-node clusters. We&rsquo;ll use yaml to create one.
-kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane - role: worker - role: worker - role: worker kind: Cluster apiVersion: kind.x-k8s.io/v1alpha4 nodes: - role: control-plane extraPortMappings: - containerPort: 80 hostPort: 80 listenAddress: &#34;0.
   </p>
   
 </div>

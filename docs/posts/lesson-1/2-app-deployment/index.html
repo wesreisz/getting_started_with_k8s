@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -209,6 +205,10 @@ sudo mv ./kompose /usr/local/bin/kompose
 <p>As well as application containers, a Pod can contain init containers that run during Pod startup. You can also inject ephemeral containers for debugging if your cluster offers this.</p>
 <p>Take a look at all of the pods, including the k8s system level pods</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
+</code></pre></div><p>See your deployment:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl get deployment
+kubectl describe hello-node-7887c44b77-mnthh
 </code></pre></div><h3 id="declarative-vs-imperative">Declarative vs Imperative</h3>
 <p>Our container orchestrator puts a very strong emphasis on being declarative</p>
 <p>Declarative: <em>I would like a cup of tea.</em></p>
@@ -222,11 +222,28 @@ sudo mv ./kompose /usr/local/bin/kompose
 <li>Kubernetes will then converge that resource</li>
 </ul>
 <p>Replace replica count in the deployment descriptor with 10 and then get the pods again. You can also do it directly using a command like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get deployment
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl get deployment
+kubectl describe hello-node-7887c44b77-mnthh
 kubectl scale --replicas <span style="color:#ae81ff">1</span> deployment/hello-node
+kubectl get pods -o wide
 </code></pre></div><p>Each node maintains a docker image repo (just like you&rsquo;re used to with docker on your machine). Take a look, by finding the machine and then asking <code>crictl</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get nodes
 docker exec -it kind-worker crictl images
+</code></pre></div><p>Let&rsquo;s show k8s keeps things running by killing some pods:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl delete pod hello-node-7887c44b77-7ckzj
+</code></pre></div><p>Say we have some maintenace that needs to happen on a node or a problem: Let&rsquo;s remove traffic:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl cordon kind3-worker3
+kubectl cordon kind3-worker3
+</code></pre></div><p>This doesn&rsquo;t remove traffic it marks it unschedulable</p>
+<p>Now let&rsquo;s <code>drain</code> traffic</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl drain kind3-worker3
+</code></pre></div><p><strong>DaemonSet?</strong></p>
+<p>DaemonSets are used to ensure that some or all of your K8S nodes run a copy of a pod, which allows you to run a daemon on every node.</p>
+<p>Let&rsquo;s reschedule workloads</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl uncordon kind3-worker3
+kubectl scale --replicas <span style="color:#ae81ff">2</span> deployment/hello-node
+kubectl scale --replicas <span style="color:#ae81ff">5</span> deployment/hello-node
 </code></pre></div>
 </div>
 </div>

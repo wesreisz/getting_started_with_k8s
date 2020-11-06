@@ -4,72 +4,67 @@
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/</loc>
-    <lastmod>2020-11-04T06:25:26-05:00</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/1-concepts/</loc>
-    <lastmod>2020-11-04T06:10:48-05:00</lastmod>
+    <lastmod>2020-11-05T23:52:53-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/2-app-deployment/</loc>
-    <lastmod>2020-11-04T06:10:48-05:00</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/3-exposing-app/</loc>
-    <lastmod>2020-11-03T23:12:52-05:00</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/4-architecture/</loc>
-    <lastmod>2020-11-04T07:08:28-05:00</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/5-networking/</loc>
-    <lastmod>2020-11-04T07:08:28-05:00</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/6-security/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/7-rbac/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
+    <lastmod>2020-11-05T21:48:44-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/8-ingress/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
+    <lastmod>2020-11-05T23:52:53-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/9-22-essential/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
+    <lastmod>2020-11-05T11:43:25-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/</loc>
-    <lastmod>2020-10-23T01:00:00-01:38</lastmod>
+    <lastmod>2020-11-05T11:43:25-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/</loc>
-    <lastmod>2020-11-04T07:08:28-05:00</lastmod>
+    <lastmod>2020-11-05T23:52:53-05:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.wesleyreisz.com/getting_started_with_k8s/posts/</loc>
-    <lastmod>2020-11-04T07:08:28-05:00</lastmod>
+    <lastmod>2020-11-05T23:52:53-05:00</lastmod>
   </url>
   
   <url>

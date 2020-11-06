@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -104,9 +100,9 @@
 <p>However, since individual pods are transient and ephemeral, the ever-changing runtime environment can present challenges for IT security professionals, as applications and API links to other applications and services are constantly in flux.</p>
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
-<li>Understand about more complicated configurations for architecture components.</li>
-<li>Explore the CNCF Cloud Native Landscape around Kubernetes.</li>
-<li>Understand how pod security and role-based access control (RBAC) work in Kubernetes.</li>
+<li>Discuss the 4 C&rsquo;s of Cloud Native Security</li>
+<li>Review a high-level overview of K8s security</li>
+<li>Understand a bit about the idea of a software supply chain.</li>
 </ol>
 <h4 id="security">Security</h4>
 <p><img src="/getting_started_with_k8s/images/lesson7/4c.png" alt="4 C&rsquo;s of Cloud Native Security"></p>
@@ -118,6 +114,7 @@
 <ul>
 <li>Securing the cluster components that are configurable</li>
 <li>Securing the applications which run in the cluster</li>
+<li>Look</li>
 </ul>
 <p><strong>Container</strong>
 Container security is outside the scope of this guide. Here are general recommendations and links to explore this topic:</p>
@@ -190,8 +187,15 @@ Container security is outside the scope of this guide. Here are general recommen
 <li>Take advantage of built-in controls in Kubernetes, such as configuring security context to limit pod access.</li>
 <li>Proactive security should include monitoring of process activity, communications between services, and communications external to the cluster.</li>
 </ul>
-<h4 id="scp-kubeconfig-via-a-bastion">scp kubeconfig via a bastion</h4>
-<p>scp -i $SSH_KEY -o ProxyCommand=&ldquo;ssh -i &quot;${SSH_KEY}&quot; <a href="mailto:ubuntu@54.202.174.97">ubuntu@54.202.174.97</a> nc %h %p&rdquo; <a href="mailto:ubuntu@10.0.8.199">ubuntu@10.0.8.199</a>:~/kubeconfig ./kubeconfig</p>
+<h3 id="software-supply-chain">Software Supply Chain</h3>
+<p>The supply chain starts with the idea that you can coordinate all production and nonproduction activities as a single system. Supply chain management is often misunderstood as being simply “supplier management,” when really that is only one aspect of supply chain management (though a critical one).</p>
+<ul>
+<li>Planning: In the traditional supply chain, planning activities involve coordinating assets and optimizing the flow of processes to balance supply of materials with demand for products. In the software supply chain, that coordination involves making sure the right code is being developed for the product features that are needed the most. At large scale, with hundreds of applications and thousands of software developers, this is a monumental endeavor.</li>
+<li>Sourcing: Software also relies heavily on sourced components—according to recent research by Sonatype, open source now forms the majority of software products: as much as 80 to 90 percent of the code in modern applications is from open source components. And these components create unique management challenges.</li>
+<li>Distribution: How software is delivered (ci/cd) pipeline. Is it secure through the process.</li>
+<li>Tools: The software supply chain involves a class of tools (variously called ALM tools, life cycle tools, or devops tools) that are used to manage the various stages of software delivery.</li>
+</ul>
+<p><a href="https://www.infoworld.com/article/3245800/building-a-model-of-the-software-supply-chain.html">https://www.infoworld.com/article/3245800/building-a-model-of-the-software-supply-chain.html</a></p>
 
 </div>
 </div>

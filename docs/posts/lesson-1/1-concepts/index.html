@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -118,7 +114,7 @@
 <li>Containers vs virtual machines</li>
 <li>Why is Kubernetes needed</li>
 <li>Understand the Kubernetes Key Components</li>
-<li>Basic Control Plan / Node Components</li>
+<li>Basic Control Plane / Node Components</li>
 </ol>
 <h3 id="container-evolution">Container Evolution</h3>
 <p><img src="/getting_started_with_k8s/images/lesson1/container_evolution.svg" alt="&ldquo;Evolution&rdquo;"></p>
@@ -230,21 +226,33 @@ Replication controller: Responsible for maintaining the correct number of pods f
 <h3 id="explore-the-components">Explore the Components</h3>
 <p>How many nodes does your cluster have?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-contexts
-kubectl config use-context kind-kind
 </code></pre></div><p>Let&rsquo;s create more nodes. First which cluster were you on again?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-contexts
 </code></pre></div><p>Create a <code>multinode.yaml</code> file</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; multinode.yaml</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
 <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
 <span style="color:#f92672">nodes</span>:
   - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
   - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
   - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
   - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+<span style="color:#ae81ff">EOF</span>
 </code></pre></div><p>Now let&rsquo;s build it:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config ./multinode.yml  --name kind3
 </code></pre></div><p>Kind is still early alpha and doesn&rsquo;t support adding new nodes to a running cluster (yet).</p>
 <p>To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.</p>
+<p><strong>Nodes</strong></p>
+<p>Nodes are the machines running the Kubernetes cluster. These can be bare metal, virtual machines, or anything else. The word hosts is often used interchangeably with Nodes. I will try and use the term Nodes with consistency but will sometimes use the word Virtual Machine to refer to Nodes depending on context.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get nodes
+docker ps
+docker exec -it kind3-control-plane bash
+</code></pre></div><h4 id="how-many-nodes-should-a-cluster-have">How many nodes should a cluster have?</h4>
+<p>There is no particular constraint (no need to have an odd number of nodes for quorum)</p>
+<p>A cluster can have zero node (but then it won&rsquo;t be able to start any pods)</p>
+<p>For testing and development, having a single node is fine</p>
+<p>For production, make sure that you have extra capacity (so that your workload still fits if you lose a node or a group of nodes)</p>
+<p>Kubernetes is tested with up to 5000 nodes (however, running a cluster of that size requires a lot of tuning).</p>
 
 </div>
 </div>

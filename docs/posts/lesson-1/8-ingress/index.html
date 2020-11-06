@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -103,6 +99,12 @@
   <p>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.</p>
 <p>An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.</p>
 <p>An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses a service of type Service.Type=NodePort or Service.Type=LoadBalancer.</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>Understand how to use a tool like Metallb to get an exteralip in your local cluster.</li>
+<li>See an ingres in action.</li>
+<li>Understand a bit about Helm as a package manager for k8s.</li>
+</ol>
 <p>There are several popular implementations of ingress controller:</p>
 <ul>
 <li>NGINX, Inc. offers support and maintenance for the NGINX Ingress Controller for Kubernetes.</li>
@@ -128,11 +130,79 @@
             <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
             <span style="color:#f92672">port</span>:
               <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
-</code></pre></div><p>We can install an ingress-controller</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl expose deployment azure-vote-front --type<span style="color:#f92672">=</span>NodePort --name<span style="color:#f92672">=</span>azure-vote
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
-</code></pre></div><p>Then apply this yaml:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</code></pre></div><p>NOTE: It still needs something like the cloud or metallb to give us an ip.</p>
+<p>Let&rsquo;s go through install metallb and then install an nginx ingress-controller.
+<strong>Let&rsquo;s Install It</strong>
+Create a cluster</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat <span style="color:#e6db74">&lt;&lt;EOF &gt; singlenode.yaml
+</span><span style="color:#e6db74">kind: Cluster
+</span><span style="color:#e6db74">apiVersion: kind.x-k8s.io/v1alpha4
+</span><span style="color:#e6db74">nodes:
+</span><span style="color:#e6db74">- role: control-plane
+</span><span style="color:#e6db74">- role: worker
+</span><span style="color:#e6db74">EOF</span>
+</code></pre></div><pre><code>
+There's some configuration we have to tell metallb. It has to know what ip's it can give out. I'm going to do a simple, demo configuration:
+```bash
+docker network ls
+docker network inspect kind | jq .[0].IPAM
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;default&#34;</span>,
+  <span style="color:#f92672">&#34;Options&#34;</span>: {},
+  <span style="color:#f92672">&#34;Config&#34;</span>: [
+    {
+      <span style="color:#f92672">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;172.22.0.0/16&#34;</span>,
+      <span style="color:#f92672">&#34;Gateway&#34;</span>: <span style="color:#e6db74">&#34;172.22.0.1&#34;</span>
+    },
+    {
+      <span style="color:#f92672">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;fc00:f853:ccd:e793::/64&#34;</span>
+    }
+  ]
+}
+</code></pre></div><p>&ldquo;Subnet&rdquo;: &ldquo;172.22.0.0/16&rdquo; on the network. So I&rsquo;m going to claim 100 ip&rsquo;s in the range or 172.22.255.1-172.22.255.250. There better ways to config this.</p>
+<p>metallb configuration</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; metallb.yaml</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ConfigMap</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">metallb-system</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config</span>
+<span style="color:#f92672">data</span>:
+  <span style="color:#f92672">config</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">    address-pools:
+</span><span style="color:#e6db74">    - name: default
+</span><span style="color:#e6db74">      protocol: layer2
+</span><span style="color:#e6db74">      addresses:
+</span><span style="color:#e6db74">      - 172.22.255.150-172.22.255.250</span>    
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>BTW&hellip; this is a configmap. A ConfigMap is an API object that lets you store configuration for other objects to use. Unlike most Kubernetes objects that have a spec , a ConfigMap has data and binaryData fields. These fields accepts key-value pairs as their values</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f metallb.yaml
+</code></pre></div><p>Now deploy our azure app:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/wesreisz/azure-voting-app-redis.git
+kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace prod
+</code></pre></div><p>Take a look at services now. This is what it looks like when you deploy a loadbalancer service on a public cloud like AKS or EKS</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get services
+</code></pre></div><pre><code>NAME               TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)        AGE
+azure-vote-back    ClusterIP      10.96.127.21   &lt;none&gt;           6379/TCP       3m51s
+azure-vote-front   LoadBalancer   10.96.89.216   172.22.255.150   80:30087/TCP   3m51s
+kubernetes         ClusterIP      10.96.0.1      &lt;none&gt;           443/TCP        9m35s
+</code></pre><p>Let&rsquo;s install the nginx ingress-controller now, but let&rsquo;s use Helm.</p>
+<h4 id="helm">Helm</h4>
+<p>Helm is the best way to find, share, and use software built for Kubernetes. It&rsquo;s a package manager for k8s.</p>
+<p>Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.</p>
+<p>Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.</p>
+<p>Helm is a graduated project in the CNCF and is maintained by the Helm community.</p>
+<p>First install Helm</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod <span style="color:#ae81ff">700</span> get_helm.sh
+./get_helm.sh
+helm version
+</code></pre></div><p>Then we can install inginx ingress-controller:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-release bitnami/nginx-ingress-controller
+</code></pre></div><p>Then apply an ingress yaml to configure the route into the service:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; ingress.yaml</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
 <span style="color:#f92672">metadata</span>:
   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">example-ingress</span>
@@ -141,11 +211,22 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/mast
   - <span style="color:#f92672">http</span>:
       <span style="color:#f92672">paths</span>:
       - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
         <span style="color:#f92672">backend</span>:
-          <span style="color:#f92672">serviceName</span>: <span style="color:#ae81ff">azure-vote</span>
-          <span style="color:#f92672">servicePort</span>: <span style="color:#ae81ff">80</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get ingress
-</code></pre></div>
+          <span style="color:#f92672">service</span>:
+            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">azure-vote</span>
+            <span style="color:#f92672">port</span>:
+              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>   
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Apply it</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f ingress.yaml
+</code></pre></div><pre><code>NAME                                                  TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                      AGE
+azure-vote-back                                       ClusterIP      10.96.127.21    &lt;none&gt;           6379/TCP                     9m52s
+azure-vote-front                                      LoadBalancer   10.96.89.216    172.22.255.150   80:30087/TCP                 9m52s
+kubernetes                                            ClusterIP      10.96.0.1       &lt;none&gt;           443/TCP                      15m
+my-release-nginx-ingress-controller                   LoadBalancer   10.96.13.103    172.22.255.151   80:30086/TCP,443:32473/TCP   8s
+my-release-nginx-ingress-controller-default-backend   ClusterIP      10.96.156.159   &lt;none&gt;           80/TCP                       8s
+</code></pre>
 </div>
 </div>
 

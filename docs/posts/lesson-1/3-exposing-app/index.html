@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -117,6 +113,11 @@
 <li>Learn more about how the overlay networks work in Kubernetes.</li>
 </ol>
 <h3 id="services-and-labels">Services and Labels</h3>
+<p>Explore the IPs that were created:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 10.244.1.3
+kubectl exec -it hello-node-7887c44b77-4bw6v  -- bash
+ping 10.244.3.11
+</code></pre></div><p>These addresses are only routable inside the cluster, not outside&hellip; services address this.</p>
 <p><img src="/getting_started_with_k8s/images/lesson3/services.svg" alt="Services"></p>
 <p>Services can be exposed in different ways by specifying a type in the ServiceSpec:</p>
 <ul>

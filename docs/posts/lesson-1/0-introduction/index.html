@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -102,11 +98,14 @@
 <div class="content ">
   <p>Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.</p>
 <p>Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.</p>
+<p>Signin for the registration link to the VM:</p>
+<p><a href="http://bit.ly/qconplus">http://bit.ly/qconplus</a> (This is not marketing&hellip; I&rsquo;ll delete the emails afterward.)</p>
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
 <li>Understand the major goals and objectives of kubernetes</li>
 <li>Learn how kubernetes is architected</li>
 <li>Understand how to deploy and operate a service on kubernetes</li>
+<li>Login to your workspace</li>
 </ol>
 <h3 id="audience">Audience</h3>
 <p>You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes. This is a Kubernetes Day 1 class. What that means is it&rsquo;s an introductory topic to k8s. Day 2 concerns are not part of this 3 hour class.</p>
@@ -124,9 +123,9 @@
 <li>What are the defacto industry standards that Kubernetes has catalyzed?</li>
 <li>What is a K8s controller and how does it work?</li>
 <li>What kinds of controllers are there, and what roles do they play?</li>
-<li>What processes run on a K8s master node?</li>
-<li>What processes run on a K8s worker node?</li>
-<li>Exactly what is a pod, or a container in a pod?</li>
+<li>What processes run on the control plan?</li>
+<li>What processes run on worker node?</li>
+<li>Exactly what is a pod or a container in a pod?</li>
 <li>What is a container runtime and what role does it play within a k8s cluster?</li>
 <li>How does K8s schedule and launch a container?</li>
 <li>How does pod security and role-based access control (RBAC) work in Kubernetes?</li>
@@ -210,9 +209,6 @@ kubectl version --client
 <li>&ldquo;Validates&rdquo; = continuous integration builds with very extensive (and expensive) testing</li>
 <li>The Docker API is versioned, and offers strong backward-compatibility (if a client uses e.g. API v1.25, the Docker Engine will keep behaving the same way)</li>
 </ul>
-<h3 id="attribution">Attribution</h3>
-<p>Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is none-the-less heavily influenced by his container.training material. <a href="https://github.com/jpetazzo/container.training/graphs/contributors">He and his contributors</a> maintain an <a href="https://github.com/jpetazzo/container.training/blob/master/LICENSE">Apache 2 licensed Open Source</a> project of his <a href="https://github.com/jpetazzo/container.training/">training material</a> on github.</p>
-<p>Many additional sources influenced the shape of this project. Those items will be identified throughout.</p>
 <h3 id="just-for-fun">Just for fun</h3>
 <p>Just to validate everything is working correctly, let&rsquo;s spin up a cluster:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster
@@ -231,25 +227,36 @@ kubectl version --client
  ✓ Starting control-plane 🕹️ 
  ✓ Installing CNI 🔌 
  ✓ Installing StorageClass 💾 
-Set kubectl context to &quot;kind-kind&quot;
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-kind
 </code></pre><p>Success!!!</p>
 <p>Do it again:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --name kind-2
 </code></pre></div><p>Let&rsquo;s look through the <a href="https://kind.sigs.k8s.io/">documentation of kind</a> while this cluster is creating.</p>
 <p>When it&rsquo;s done, type:</p>
-<pre><code>kind get clusters
-</code></pre><p>You should see the two clusters we just created. If you run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind get clusters
+</code></pre></div><p>If you get stuck, and need help <code>--help</code> is great</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind --help
+</code></pre></div><p>You should see the two clusters we just created. If you run</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat ~/.kube/config 
+kubectl config view
 </code></pre></div><p>You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster. We talk more about this file in security.</p>
 <p>NOTE: Notice that kind prefaces the cluster name with &ldquo;kind-&rdquo;, so your first cluster is &ldquo;kind-kind&rdquo;.</p>
 <p>We can switch between the two clusters using <code>--context</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl cluster-info --context kind-kind
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-contexts
+</code></pre></div><p><strong>kubectl</strong></p>
+<p>The kubectl command line tool lets you control Kubernetes clusters. For configuration, kubectl looks for a file named config in the $HOME/.kube directory. You can specify other kubeconfig files by setting the KUBECONFIG environment variable or by setting the &ndash;kubeconfig flag.</p>
+<p>It follows the form:</p>
+<pre><code>kubectl [command] [TYPE] [NAME] [flags]
+</code></pre><p><code>--help</code> works in kubectl the same way</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl --help
+kubectl config --help
+kubectl config use-context kind-kind
+kubectl cluster-info --context kind-test
 </code></pre></div><p>or until we change it again with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config kind-kind
 </code></pre></div><p>Congrats, you&rsquo;ve created two clusters with K8s.</p>
+<h3 id="attribution">Attribution</h3>
+<p>Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is none-the-less heavily influenced by his container.training material. <a href="https://github.com/jpetazzo/container.training/graphs/contributors">He and his contributors</a> maintain an <a href="https://github.com/jpetazzo/container.training/blob/master/LICENSE">Apache 2 licensed Open Source</a> project of his <a href="https://github.com/jpetazzo/container.training/">training material</a> on github.</p>
+<p>Many additional sources influenced the shape of this project. Those items will be identified throughout.</p>
 
 </div>
 </div>

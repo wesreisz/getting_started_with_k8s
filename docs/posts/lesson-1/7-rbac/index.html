@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -185,35 +181,27 @@ Here is an example of a ClusterRole that can be used to grant read access to sec
   <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;secrets&#34;</span>]
   <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
 </code></pre></div><p>More Details: <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">https://kubernetes.io/docs/reference/access-authn-authz/rbac/</a></p>
-<p><strong>The key to understanding RBAC in Kubernetes</strong></p>
-<p>In order to fully grasp the idea of RBAC, we must understand that three elements are involved:</p>
-<ul>
-<li>Subjects: The set of users and processes that want to access the Kubernetes API.</li>
-<li>Resources: The set of Kubernetes API Objects available in the cluster. Examples include Pods,  Deployments, Services, Nodes, and PersistentVolumes, among others.</li>
-<li>Verbs: The set of operations that can be executed to the resources above. Different verbs are available (examples: get, watch, create, delete, etc.), but ultimately all of them are Create, Read, Update or Delete (CRUD) operations.</li>
-</ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
-<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1 </span>
-<span style="color:#f92672">metadata</span>:
-   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
-   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
-<span style="color:#f92672">rules</span>:
- - <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
-   <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
-   <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>]
-</code></pre></div><p>We want to connect subjects, API resources, and operations. In other words, we want to specify, given a user, which operations can be executed over a set of resources.</p>
 <p><strong>Lab Exercise</strong></p>
-<p>Create a new cluster</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config singlenode.yml 
+<p>Let&rsquo;s create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; singlenode.yaml</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Create a new cluster</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config singlenode.yaml
+</code></pre></div><p>Let&rsquo;s look at what apis are available:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl api-versions
 </code></pre></div><p>Create an a production namespace. Deploy an app into the default and prod namespace.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get namespaces
 kubectl create namespace prod
 
-kubectl run nginx --image<span style="color:#f92672">=</span>nginx
-kubectl run nginx --image<span style="color:#f92672">=</span>nginx -n prod
+kubectl run nginx --image<span style="color:#f92672">=</span>nginx --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+kubectl run nginx --image<span style="color:#f92672">=</span>nginx --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> --namespace prod
 </code></pre></div><p>Create a new serviceaccount</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl api-versions
-kubectl create serviceaccount udef-pod-reader -n default
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create serviceaccount udef-pod-reader -n default
 kubectl get serviceaccount
 </code></pre></div><p>Create a role that can only read/list/watch the default namespace:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; default-pod-role.yaml</span>
@@ -243,14 +231,38 @@ kubectl get serviceaccount
    <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
    <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+<span style="color:#ae81ff">EOF</span>
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f default-pod-binding.yaml
 </code></pre></div><p>Setup your context to access and test.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl describe secrets <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>kubectl describe serviceaccount udef-pod-reader -n default| grep -i Tokens | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> -n default | grep token: | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
 kubectl config set-credentials test-user --token<span style="color:#f92672">=</span>$TOKEN
+kubectl config get-clusters
 kubectl config set-context udefpodreader --cluster<span style="color:#f92672">=</span>kind-kind --user<span style="color:#f92672">=</span>test-user
-kubectl config contexts
+kubectl config view
+kubectl config get-contexts
 kubectl config use-context udefpodreader
-</code></pre></div>
+</code></pre></div><p>Now let&rsquo;s test it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl get pods -n prod
+kubectl get pods -A
+</code></pre></div><p><strong>The key to understanding RBAC in Kubernetes</strong></p>
+<p>In order to fully grasp the idea of RBAC, we must understand that three elements are involved:</p>
+<ul>
+<li>Subjects: The set of users and processes that want to access the Kubernetes API.</li>
+<li>Resources: The set of Kubernetes API Objects available in the cluster. Examples include Pods,  Deployments, Services, Nodes, and PersistentVolumes, among others.</li>
+<li>Verbs: The set of operations that can be executed to the resources above. Different verbs are available (examples: get, watch, create, delete, etc.), but ultimately all of them are Create, Read, Update or Delete (CRUD) operations.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1 </span>
+<span style="color:#f92672">metadata</span>:
+   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">udefreadonly</span>
+   <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">rules</span>:
+ - <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+   <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>]
+   <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>]
+</code></pre></div><p>We want to connect subjects, API resources, and operations. In other words, we want to specify, given a user, which operations can be executed over a set of resources.</p>
+
 </div>
 </div>
 

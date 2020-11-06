@@ -86,10 +86,6 @@
       <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/10-wrapup/">Wrap Up</a>
     </li>
     
-    <li class="">
-      <a href="http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/99-notes-ingress-lb/">Notes</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -107,14 +103,22 @@
 <li>Explore the CNCF Cloud Native Landscape around Kubernetes</li>
 </ol>
 <p>Let&rsquo;s deploy a new app. First, we&rsquo;ll tear down the kind server</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind delete cluster
-</code></pre></div><p>Let&rsquo;s check what kind thinks are clusters. It&rsquo;s all cleaned up</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind get clusters
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config get-clusters
+kind get clusters
+kind delete cluster --name kind3
 docker ps
-</code></pre></div><p>Let&rsquo;s create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config multinode.yml 
 </code></pre></div><p>Note: you can also run something like: <code>kubectl delete --all namespaces</code> to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it&rsquo;s just easier for me to recreate the cluster.</p>
-<p>In our new cluster, let&rsquo;s create two namespaces. We&rsquo;ll call one <code>dev</code> and another <code>prod</code></p>
+<p>Let&rsquo;s create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; singlenode.yaml</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+  - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Build the cluster.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config singlenode.yaml
+</code></pre></div><p>In our new cluster, let&rsquo;s create two namespaces. We&rsquo;ll call one <code>dev</code> and another <code>prod</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace dev
 kubectl create namespace prod
 </code></pre></div><h4 id="namespace">Namespace</h4>
@@ -143,7 +147,7 @@ prod              Active   113s
   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
   <span style="color:#f92672">labels</span>:
     <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test</span>
-</code></pre></div><p>let&rsquo;s clone an different app and load into the dev and prod namespace.</p>
+</code></pre></div><p>Let&rsquo;s clone an different app and load into the dev and prod namespace.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/wesreisz/azure-voting-app-redis.git
 kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace<span style="color:#f92672">=</span>dev
 kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace<span style="color:#f92672">=</span>prod
@@ -183,33 +187,8 @@ kubectl config use-context prod
 </code></pre></div><h3 id="deeper-into-k8s-architecture">Deeper into K8s Architecture</h3>
 <p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png" alt=""></p>
 <h4 id="controller-manager">Controller Manager</h4>
+<p>Controllers are the core abstraction used to build Kubernetes. Once you’ve declared the desired state of your cluster using the API server, controllers ensure that the cluster’s current state matches the desired state by continuously watching the state of the API server and reacting to any changes.</p>
 <p>The Kubernetes controller manager is a daemon that embeds the core control loops shipped with Kubernetes. In Kubernetes, controllers are control loops that watch the state of your cluster, then make or request changes where needed. Each controller tries to move the current cluster state closer to the desired state.</p>
-<p><strong>Controller pattern</strong>
-A controller tracks at least one Kubernetes resource type. These objects have a spec field that represents the desired state. The controller(s) for that resource are responsible for making the current state come closer to that desired state.</p>
-<p>The controller might carry the action out itself; more commonly, in Kubernetes, a controller will send messages to the API server that have useful side effects.</p>
-<p>-Kubernetes official documentation, Kube-controller-manager</p>
-<p>The vital role of a Kubernetes controller is to watch objects for the desired state and the actual state, then send instructions to make the actual state be more like the desired state.In order to retrieve an object&rsquo;s information, the controller sends a request to Kubernetes API server.</p>
-<p>Controllers can track many objects including:</p>
-<ul>
-<li>What workloads are running and where</li>
-<li>Resources available to those workloads</li>
-<li>Policies around how the workloads behave (restart, upgrades, fault-tolerance)</li>
-</ul>
-<p>When the controller notices a divergence between the actual state and the desired state, it will send messages to the Kubernetes API server to make any necessary changes.</p>
-<p><strong>Types of Controllers</strong></p>
-<ul>
-<li>ReplicaSet - A ReplicaSet creates a stable set of pods, all running the same workload. You will almost never create this directly.</li>
-<li>Deployment - A Deployment is the most common way to get your app on Kubernetes. It maintains a ReplicaSet with the desired configuration, with some additional configuration for managing updates and rollbacks.</li>
-<li>StatefulSet - A StatefulSet is used to manage stateful applications with persistent storage. Pod names are persistent and are retained when rescheduled (app-0, app-1). Storage stays associated with replacement pods, and volumes persist when pods are deleted.</li>
-<li>Job - A Job creates one or more short-lived Pods and expects them to successfully terminate.</li>
-<li>CronJob - A CronJob creates Jobs on a schedule.</li>
-<li>DaemonSet - A DaemonSet ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected. Common for system processes like CNI, Monitor agents, proxies, etc.</li>
-</ul>
-<p>Kubernetes Controllers allow you to run and manage your applications inside a cluster, and are one of the core concepts you’ll need to understand to be successful with Kubernetes.</p>
-<h3 id="api-server">API Server</h3>
-<p>We will interact with our Kubernetes cluster through the Kubernetes API</p>
-<p>In Kubernetes, everything is an API call served by the Kubernetes API server (kube-apiserver). The API server is a gateway to an etcd datastore that maintains the desired state of your application cluster. To update the state of a Kubernetes cluster, you make API calls to the API server describing your desired state.</p>
-<p>The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources</p>
 <p>Two methods to access:</p>
 <ul>
 <li>kubectl proxy &ndash;port=8080</li>
@@ -247,7 +226,42 @@ curl -X GET $APISERVER/api --header <span style="color:#e6db74">&#34;Authorizati
     }
   ]
 }
-</code></pre></div><p>[Kubernetes API Reference](<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_</a></p>
+</code></pre></div><h4 id="api-versioning">API versioning</h4>
+<p>The JSON and Protobuf serialization schemas follow the same guidelines for schema changes. The following descriptions cover both formats.</p>
+<p>The API versioning and software versioning are indirectly related. The API and release versioning proposal describes the relationship between API versioning and software versioning.</p>
+<p>Different API versions indicate different levels of stability and support. You can find more information about the criteria for each level in the API Changes documentation.</p>
+<p>Here&rsquo;s a summary of each level:</p>
+<p><strong>Alpha:</strong></p>
+<ul>
+<li>The version names contain alpha (for example, v1alpha1).</li>
+<li>The software may contain bugs. Enabling a feature may expose bugs. A feature may be disabled by default.</li>
+<li>The support for a feature may be dropped at any time without notice.</li>
+<li>The API may change in incompatible ways in a later software release without notice.</li>
+<li>The software is recommended for use only in short-lived testing clusters, due to increased risk of bugs and lack of long-term support.</li>
+</ul>
+<p><strong>Beta:</strong></p>
+<p>The version names contain beta (for example, v2beta3).</p>
+<p>The software is well tested. Enabling a feature is considered safe. Features are enabled by default.</p>
+<p>The support for a feature will not be dropped, though the details may change.</p>
+<p>The schema and/or semantics of objects may change in incompatible ways in a subsequent beta or stable release. When this happens, migration instructions are provided. Schema changes may require deleting, editing, and re-creating API objects. The editing process may not be straightforward. The migration may require downtime for applications that rely on the feature.</p>
+<p>The software is not recommended for production uses. Subsequent releases may introduce incompatible changes. If you have multiple clusters which can be upgraded independently, you may be able to relax this restriction.</p>
+<p>Note: Please try beta features and provide feedback. After the features exit beta, it may not be practical to make more changes.</p>
+<p><strong>Stable:</strong></p>
+<p>The version name is vX where X is an integer.
+The stable versions of features appear in released software for many subsequent versions.
+API groups
+API groups make it easier to extend the Kubernetes API. The API group is specified in a REST path and in the apiVersion field of a serialized object.</p>
+<p>There are several API groups in Kubernetes:</p>
+<p>The core (also called legacy) group is found at REST path /api/v1. The core group is not specified as part of the apiVersion field, for example, apiVersion: v1.
+The named groups are at REST path /apis/$GROUP_NAME/$VERSION and use apiVersion: $GROUP_NAME/$VERSION (for example, apiVersion: batch/v1). You can find the full list of supported API groups in Kubernetes API reference.
+Enabling or disabling API groups
+Certain resources and API groups are enabled by default. You can enable or disable them by setting &ndash;runtime-config on the API server. The &ndash;runtime-config flag accepts comma separated <!-- raw HTML omitted -->[=<!-- raw HTML omitted -->] pairs describing the runtime configuration of the API server. If the =<!-- raw HTML omitted --> part is omitted, it is treated as if =true is specified.</p>
+<p>For example:</p>
+<ul>
+<li>to disable batch/v1, set &ndash;runtime-config=batch/v1=false</li>
+<li>to enable batch/v2alpha1, set &ndash;runtime-config=batch/v2alpha1</li>
+</ul>
+<p>[Kubernetes API Reference](<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_</a></p>
 <h4 id="scheduler">Scheduler</h4>
 <p>A scheduler watches for newly created Pods that have no Node assigned. For every Pod that the scheduler discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on.</p>
 <p>kube-scheduler is the default scheduler for Kubernetes and runs as part of the control plane. kube-scheduler is designed so that, if you want and need to, you can write your own scheduling component and use that instead.</p>

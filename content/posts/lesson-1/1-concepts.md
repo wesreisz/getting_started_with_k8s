@@ -243,3 +243,14 @@ docker ps
 docker exec -it kind3-control-plane bash
 ```
 
+#### How many nodes should a cluster have?
+There is no particular constraint (no need to have an odd number of nodes for quorum)
+
+A cluster can have zero node (but then it won't be able to start any pods)
+
+For testing and development, having a single node is fine
+
+For production, make sure that you have extra capacity (so that your workload still fits if you lose a node or a group of nodes)
+
+Kubernetes is tested with up to 5000 nodes (however, running a cluster of that size requires a lot of tuning).
+

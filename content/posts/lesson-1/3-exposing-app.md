@@ -25,8 +25,16 @@ Services match a set of Pods using labels and selectors, a grouping primitive th
 1. Learn more about how the overlay networks work in Kubernetes.
 
 ### Services and Labels
-![Services](/getting_started_with_k8s/images/lesson3/services.svg)
 
+Explore the IPs that were created:
+```bash
+ping 10.244.1.3
+kubectl exec -it hello-node-7887c44b77-4bw6v  -- bash
+ping 10.244.3.11
+```
+These addresses are only routable inside the cluster, not outside... services address this.
+
+![Services](/getting_started_with_k8s/images/lesson3/services.svg)
 
 Services can be exposed in different ways by specifying a type in the ServiceSpec:
 

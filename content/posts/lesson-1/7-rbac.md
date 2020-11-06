@@ -116,35 +116,27 @@ rules:
 
 More Details: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 
-
-**The key to understanding RBAC in Kubernetes**
-
-In order to fully grasp the idea of RBAC, we must understand that three elements are involved:
-
-* Subjects: The set of users and processes that want to access the Kubernetes API.
-* Resources: The set of Kubernetes API Objects available in the cluster. Examples include Pods,  Deployments, Services, Nodes, and PersistentVolumes, among others.
-* Verbs: The set of operations that can be executed to the resources above. Different verbs are available (examples: get, watch, create, delete, etc.), but ultimately all of them are Create, Read, Update or Delete (CRUD) operations.
-
-```yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1 
-metadata:
-   name: udefreadonly
-   namespace: default
-rules:
- - apiGroups: [""]
-   resources: ["pods"]
-   verbs: ["get", "list", "watch"]
-```
-
-We want to connect subjects, API resources, and operations. In other words, we want to specify, given a user, which operations can be executed over a set of resources.
-
-
 **Lab Exercise**
+
+Let's create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster. 
+```yaml
+cat <<EOF > singlenode.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+EOF
+```
 
 Create a new cluster
 ```bash
-kind create cluster --config singlenode.yml 
+kind create cluster --config singlenode.yaml
+```
+
+Let's look at what apis are available:
+```bash
+kubectl api-versions
 ```
 
 Create an a production namespace. Deploy an app into the default and prod namespace.
@@ -152,13 +144,12 @@ Create an a production namespace. Deploy an app into the default and prod namesp
 kubectl get namespaces
 kubectl create namespace prod
 
-kubectl run nginx --image=nginx
-kubectl run nginx --image=nginx -n prod
+kubectl run nginx --image=nginx --replicas=1
+kubectl run nginx --image=nginx --replicas=1 --namespace prod
 ```
 
 Create a new serviceaccount
 ```bash
-kubectl api-versions
 kubectl create serviceaccount udef-pod-reader -n default
 kubectl get serviceaccount
 ```
@@ -197,6 +188,7 @@ roleRef:
    kind: Role
    name: udefreadonly
    apiGroup: rbac.authorization.k8s.io
+EOF
 ```
 
 ```bash
@@ -207,7 +199,40 @@ Setup your context to access and test.
 ```bash
 TOKEN=$(kubectl describe secrets "$(kubectl describe serviceaccount udef-pod-reader -n default| grep -i Tokens | awk '{print $2}')" -n default | grep token: | awk '{print $2}')
 kubectl config set-credentials test-user --token=$TOKEN
+kubectl config get-clusters
 kubectl config set-context udefpodreader --cluster=kind-kind --user=test-user
-kubectl config contexts
+kubectl config view
+kubectl config get-contexts
 kubectl config use-context udefpodreader
 ```
+
+Now let's test it:
+```bash
+kubectl get pods
+kubectl get pods -n prod
+kubectl get pods -A
+```
+
+
+**The key to understanding RBAC in Kubernetes**
+
+In order to fully grasp the idea of RBAC, we must understand that three elements are involved:
+
+* Subjects: The set of users and processes that want to access the Kubernetes API.
+* Resources: The set of Kubernetes API Objects available in the cluster. Examples include Pods,  Deployments, Services, Nodes, and PersistentVolumes, among others.
+* Verbs: The set of operations that can be executed to the resources above. Different verbs are available (examples: get, watch, create, delete, etc.), but ultimately all of them are Create, Read, Update or Delete (CRUD) operations.
+
+```yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1 
+metadata:
+   name: udefreadonly
+   namespace: default
+rules:
+ - apiGroups: [""]
+   resources: ["pods"]
+   verbs: ["get", "list", "watch"]
+```
+
+We want to connect subjects, API resources, and operations. In other words, we want to specify, given a user, which operations can be executed over a set of resources.
+

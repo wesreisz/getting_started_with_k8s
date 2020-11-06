@@ -168,6 +168,13 @@ Take a look at all of the pods, including the k8s system level pods
 kubectl get pods -A
 ```
 
+See your deployment:
+```bash
+kubectl get pods
+kubectl get deployment
+kubectl describe hello-node-7887c44b77-mnthh
+```
+
 ### Declarative vs Imperative
 Our container orchestrator puts a very strong emphasis on being declarative
 
@@ -187,8 +194,11 @@ Declarative seems simpler at first ...as long as you know how to brew tea
 
 Replace replica count in the deployment descriptor with 10 and then get the pods again. You can also do it directly using a command like:
 ```bash
+kubectl get pods
 kubectl get deployment
+kubectl describe hello-node-7887c44b77-mnthh
 kubectl scale --replicas 1 deployment/hello-node
+kubectl get pods -o wide
 ```
 
 Each node maintains a docker image repo (just like you're used to with docker on your machine). Take a look, by finding the machine and then asking `crictl`
@@ -197,4 +207,31 @@ kubectl get nodes
 docker exec -it kind-worker crictl images
 ```
 
+Let's show k8s keeps things running by killing some pods:
+```bash
+kubectl delete pod hello-node-7887c44b77-7ckzj
+```
+
+Say we have some maintenace that needs to happen on a node or a problem: Let's remove traffic:
+ ```bash
+kubectl cordon kind3-worker3
+kubectl cordon kind3-worker3
+ ```
+This doesn't remove traffic it marks it unschedulable
+
+Now let's `drain` traffic
+```bash
+kubectl drain kind3-worker3
+```
+
+**DaemonSet?**
+
+DaemonSets are used to ensure that some or all of your K8S nodes run a copy of a pod, which allows you to run a daemon on every node.
+
+Let's reschedule workloads
+```bash
+kubectl uncordon kind3-worker3
+kubectl scale --replicas 2 deployment/hello-node
+kubectl scale --replicas 5 deployment/hello-node
+```
 

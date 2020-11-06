@@ -13,9 +13,9 @@ However, since individual pods are transient and ephemeral, the ever-changing ru
 
 ### Key Takeaways
 
-1. Understand about more complicated configurations for architecture components.
-1. Explore the CNCF Cloud Native Landscape around Kubernetes.
-1. Understand how pod security and role-based access control (RBAC) work in Kubernetes.
+1. Discuss the 4 C's of Cloud Native Security
+1. Review a high-level overview of K8s security
+1. Understand a bit about the idea of a software supply chain.
 
 #### Security
 ![4 C's of Cloud Native Security](/getting_started_with_k8s/images/lesson7/4c.png)
@@ -32,6 +32,7 @@ There are two areas of concern for securing Kubernetes:
 
 * Securing the cluster components that are configurable
 * Securing the applications which run in the cluster
+* Look 
 
 **Container**
 Container security is outside the scope of this guide. Here are general recommendations and links to explore this topic:
@@ -73,8 +74,15 @@ Best practice recommendations include:
 * Proactive security should include monitoring of process activity, communications between services, and communications external to the cluster.
 
 
-#### scp kubeconfig via a bastion
-scp -i $SSH_KEY -o ProxyCommand="ssh -i \"${SSH_KEY}\" ubuntu@54.202.174.97 nc %h %p" ubuntu@10.0.8.199:~/kubeconfig ./kubeconfig 
+### Software Supply Chain
+
+The supply chain starts with the idea that you can coordinate all production and nonproduction activities as a single system. Supply chain management is often misunderstood as being simply “supplier management,” when really that is only one aspect of supply chain management (though a critical one).
+* Planning: In the traditional supply chain, planning activities involve coordinating assets and optimizing the flow of processes to balance supply of materials with demand for products. In the software supply chain, that coordination involves making sure the right code is being developed for the product features that are needed the most. At large scale, with hundreds of applications and thousands of software developers, this is a monumental endeavor.
+* Sourcing: Software also relies heavily on sourced components—according to recent research by Sonatype, open source now forms the majority of software products: as much as 80 to 90 percent of the code in modern applications is from open source components. And these components create unique management challenges.
+* Distribution: How software is delivered (ci/cd) pipeline. Is it secure through the process.
+* Tools: The software supply chain involves a class of tools (variously called ALM tools, life cycle tools, or devops tools) that are used to manage the various stages of software delivery.
+
+https://www.infoworld.com/article/3245800/building-a-model-of-the-software-supply-chain.html
 
 
 

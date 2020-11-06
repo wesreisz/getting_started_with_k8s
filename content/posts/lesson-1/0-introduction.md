@@ -11,10 +11,15 @@ Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating
 
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session. 
 
+Signin for the registration link to the VM: 
+
+http://bit.ly/qconplus (This is not marketing... I'll delete the emails afterward.)
+
 ### Key Takeaways
 1. Understand the major goals and objectives of kubernetes
 1. Learn how kubernetes is architected
 1. Understand how to deploy and operate a service on kubernetes
+1. Login to your workspace 
 
 ### Audience
 You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes. This is a Kubernetes Day 1 class. What that means is it's an introductory topic to k8s. Day 2 concerns are not part of this 3 hour class.
@@ -32,9 +37,9 @@ Attend if you want to answer the questions below.
 * What are the defacto industry standards that Kubernetes has catalyzed?
 * What is a K8s controller and how does it work?  
 * What kinds of controllers are there, and what roles do they play?  
-* What processes run on a K8s master node?
-* What processes run on a K8s worker node?
-* Exactly what is a pod, or a container in a pod?
+* What processes run on the control plan?
+* What processes run on worker node?
+* Exactly what is a pod or a container in a pod?
 * What is a container runtime and what role does it play within a k8s cluster?
 * How does K8s schedule and launch a container?
 * How does pod security and role-based access control (RBAC) work in Kubernetes?
@@ -156,12 +161,6 @@ At any given time, 3 minor releases are maintained (in other words, a given mino
 Notes:
 * "Validates" = continuous integration builds with very extensive (and expensive) testing
 * The Docker API is versioned, and offers strong backward-compatibility (if a client uses e.g. API v1.25, the Docker Engine will keep behaving the same way)
-
-### Attribution
-
-Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is none-the-less heavily influenced by his container.training material. [He and his contributors](https://github.com/jpetazzo/container.training/graphs/contributors) maintain an [Apache 2 licensed Open Source](https://github.com/jpetazzo/container.training/blob/master/LICENSE) project of his [training material](https://github.com/jpetazzo/container.training/) on github. 
-
-Many additional sources influenced the shape of this project. Those items will be identified throughout.
  
 ### Just for fun
 
@@ -185,10 +184,6 @@ Creating cluster "kind" ...
  ✓ Starting control-plane 🕹️ 
  ✓ Installing CNI 🔌 
  ✓ Installing StorageClass 💾 
-Set kubectl context to "kind-kind"
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-kind
 ```
 Success!!!
 
@@ -199,12 +194,18 @@ kind create cluster --name kind-2
 Let's look through the [documentation of kind](https://kind.sigs.k8s.io/) while this cluster is creating. 
 
 When it's done, type:
-```
+```bash
 kind get clusters
+```
+
+If you get stuck, and need help `--help` is great
+```bash
+kind --help
 ```
 You should see the two clusters we just created. If you run
 ```bash
 cat ~/.kube/config 
+kubectl config view
 ```
 You will see the kubeconfig file information. Use kubeconfig files to organize information about clusters, users, namespaces, and authentication mechanisms. The kubectl command-line tool uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster. We talk more about this file in security.
 
@@ -212,7 +213,26 @@ NOTE: Notice that kind prefaces the cluster name with "kind-", so your first clu
 
 We can switch between the two clusters using `--context`
 ```bash
-kubectl cluster-info --context kind-kind
+kubectl config get-contexts
+```
+
+
+
+**kubectl**
+
+The kubectl command line tool lets you control Kubernetes clusters. For configuration, kubectl looks for a file named config in the $HOME/.kube directory. You can specify other kubeconfig files by setting the KUBECONFIG environment variable or by setting the --kubeconfig flag.
+
+It follows the form:
+```
+kubectl [command] [TYPE] [NAME] [flags]
+```
+
+`--help` works in kubectl the same way
+```bash
+kubectl --help
+kubectl config --help
+kubectl config use-context kind-kind
+kubectl cluster-info --context kind-test
 ```
 
 or until we change it again with:
@@ -221,3 +241,9 @@ kubectl config kind-kind
 ```
 
 Congrats, you've created two clusters with K8s.
+
+### Attribution
+
+Much of this workshop is heavily influenced by the awesome container and kubernetes workshops from Jerome Petazzoni. While I take a different approach, the material is none-the-less heavily influenced by his container.training material. [He and his contributors](https://github.com/jpetazzo/container.training/graphs/contributors) maintain an [Apache 2 licensed Open Source](https://github.com/jpetazzo/container.training/blob/master/LICENSE) project of his [training material](https://github.com/jpetazzo/container.training/) on github. 
+
+Many additional sources influenced the shape of this project. Those items will be identified throughout.

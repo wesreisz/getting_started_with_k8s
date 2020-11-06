@@ -16,21 +16,30 @@ This architecture of Kubernetes provides a flexible, loosely-coupled mechanism f
 
 Let's deploy a new app. First, we'll tear down the kind server
 ```bash
-kind delete cluster
-```
-
-Let's check what kind thinks are clusters. It's all cleaned up
-```bash
+kubectl config get-clusters
 kind get clusters
+kind delete cluster --name kind3
 docker ps
 ```
 
+Note: you can also run something like: `kubectl delete --all namespaces` to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it's just easier for me to recreate the cluster.
+
+
 Let's create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster. 
-```bash
-kind create cluster --config multinode.yml 
+```yaml
+cat <<EOF > singlenode.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+EOF
 ```
 
-Note: you can also run something like: `kubectl delete --all namespaces` to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it's just easier for me to recreate the cluster.
+Build the cluster.
+```bash
+kind create cluster --config singlenode.yaml
+```
 
 In our new cluster, let's create two namespaces. We'll call one `dev` and another `prod`
 ```bash
@@ -74,7 +83,8 @@ metadata:
   labels:
     name: test
 ```
-let's clone an different app and load into the dev and prod namespace.
+
+Let's clone an different app and load into the dev and prod namespace.
 ```bash
 git clone https://github.com/wesreisz/azure-voting-app-redis.git
 kubectl apply -f azure-vote-all-in-one-redis.yaml --namespace=dev
@@ -145,44 +155,9 @@ kubectl config use-context prod
 ![](/getting_started_with_k8s/images/lesson3/k8s-arch4-thanks-luxas.png)
 
 #### Controller Manager
+Controllers are the core abstraction used to build Kubernetes. Once you’ve declared the desired state of your cluster using the API server, controllers ensure that the cluster’s current state matches the desired state by continuously watching the state of the API server and reacting to any changes. 
+
 The Kubernetes controller manager is a daemon that embeds the core control loops shipped with Kubernetes. In Kubernetes, controllers are control loops that watch the state of your cluster, then make or request changes where needed. Each controller tries to move the current cluster state closer to the desired state.
-
-**Controller pattern**
-A controller tracks at least one Kubernetes resource type. These objects have a spec field that represents the desired state. The controller(s) for that resource are responsible for making the current state come closer to that desired state.
-
-The controller might carry the action out itself; more commonly, in Kubernetes, a controller will send messages to the API server that have useful side effects. 
-
--Kubernetes official documentation, Kube-controller-manager
-
-The vital role of a Kubernetes controller is to watch objects for the desired state and the actual state, then send instructions to make the actual state be more like the desired state.In order to retrieve an object's information, the controller sends a request to Kubernetes API server.
-
-Controllers can track many objects including:
-
-* What workloads are running and where
-* Resources available to those workloads
-* Policies around how the workloads behave (restart, upgrades, fault-tolerance)
-
-When the controller notices a divergence between the actual state and the desired state, it will send messages to the Kubernetes API server to make any necessary changes.
-
-**Types of Controllers**
-
-* ReplicaSet - A ReplicaSet creates a stable set of pods, all running the same workload. You will almost never create this directly.
-* Deployment - A Deployment is the most common way to get your app on Kubernetes. It maintains a ReplicaSet with the desired configuration, with some additional configuration for managing updates and rollbacks.
-* StatefulSet - A StatefulSet is used to manage stateful applications with persistent storage. Pod names are persistent and are retained when rescheduled (app-0, app-1). Storage stays associated with replacement pods, and volumes persist when pods are deleted.
-* Job - A Job creates one or more short-lived Pods and expects them to successfully terminate.
-* CronJob - A CronJob creates Jobs on a schedule.
-* DaemonSet - A DaemonSet ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected. Common for system processes like CNI, Monitor agents, proxies, etc.
-
-Kubernetes Controllers allow you to run and manage your applications inside a cluster, and are one of the core concepts you’ll need to understand to be successful with Kubernetes.
-
-
-### API Server
-
-We will interact with our Kubernetes cluster through the Kubernetes API
-
-In Kubernetes, everything is an API call served by the Kubernetes API server (kube-apiserver). The API server is a gateway to an etcd datastore that maintains the desired state of your application cluster. To update the state of a Kubernetes cluster, you make API calls to the API server describing your desired state.
-
-The Kubernetes API is (mostly) RESTful. It allows us to create, read, update, delete resources
 
 Two methods to access:
 * kubectl proxy --port=8080
@@ -234,6 +209,55 @@ curl -X GET $APISERVER/api --header "Authorization: Bearer $TOKEN" --insecure
   ]
 }
 ```
+
+#### API versioning
+The JSON and Protobuf serialization schemas follow the same guidelines for schema changes. The following descriptions cover both formats.
+
+The API versioning and software versioning are indirectly related. The API and release versioning proposal describes the relationship between API versioning and software versioning.
+
+Different API versions indicate different levels of stability and support. You can find more information about the criteria for each level in the API Changes documentation.
+
+Here's a summary of each level:
+
+**Alpha:**
+
+* The version names contain alpha (for example, v1alpha1).
+* The software may contain bugs. Enabling a feature may expose bugs. A feature may be disabled by default.
+* The support for a feature may be dropped at any time without notice.
+* The API may change in incompatible ways in a later software release without notice.
+* The software is recommended for use only in short-lived testing clusters, due to increased risk of bugs and lack of long-term support.
+
+**Beta:**
+
+The version names contain beta (for example, v2beta3).
+
+The software is well tested. Enabling a feature is considered safe. Features are enabled by default.
+
+The support for a feature will not be dropped, though the details may change.
+
+The schema and/or semantics of objects may change in incompatible ways in a subsequent beta or stable release. When this happens, migration instructions are provided. Schema changes may require deleting, editing, and re-creating API objects. The editing process may not be straightforward. The migration may require downtime for applications that rely on the feature.
+
+The software is not recommended for production uses. Subsequent releases may introduce incompatible changes. If you have multiple clusters which can be upgraded independently, you may be able to relax this restriction.
+
+Note: Please try beta features and provide feedback. After the features exit beta, it may not be practical to make more changes.
+
+**Stable:**
+
+The version name is vX where X is an integer.
+The stable versions of features appear in released software for many subsequent versions.
+API groups
+API groups make it easier to extend the Kubernetes API. The API group is specified in a REST path and in the apiVersion field of a serialized object.
+
+There are several API groups in Kubernetes:
+
+The core (also called legacy) group is found at REST path /api/v1. The core group is not specified as part of the apiVersion field, for example, apiVersion: v1.
+The named groups are at REST path /apis/$GROUP_NAME/$VERSION and use apiVersion: $GROUP_NAME/$VERSION (for example, apiVersion: batch/v1). You can find the full list of supported API groups in Kubernetes API reference.
+Enabling or disabling API groups
+Certain resources and API groups are enabled by default. You can enable or disable them by setting --runtime-config on the API server. The --runtime-config flag accepts comma separated <key>[=<value>] pairs describing the runtime configuration of the API server. If the =<value> part is omitted, it is treated as if =true is specified. 
+
+For example:
+* to disable batch/v1, set --runtime-config=batch/v1=false
+* to enable batch/v2alpha1, set --runtime-config=batch/v2alpha1
 
 
 [Kubernetes API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/_

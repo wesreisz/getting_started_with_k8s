@@ -29,7 +29,7 @@ Some stats:
 1. Containers vs virtual machines
 1. Why is Kubernetes needed
 1. Understand the Kubernetes Key Components
-1. Basic Control Plan / Node Components
+1. Basic Control Plane / Node Components
 
 
 ### Container Evolution
@@ -204,7 +204,6 @@ A cluster-level logging mechanism is responsible for saving container logs to a 
 How many nodes does your cluster have?
 ```bash
 kubectl config get-contexts
-kubectl config use-context kind-kind
 ```
 
 Let's create more nodes. First which cluster were you on again?
@@ -214,6 +213,7 @@ kubectl config get-contexts
 
 Create a `multinode.yaml` file
 ```yaml
+cat <<EOF > multinode.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -221,6 +221,7 @@ nodes:
   - role: worker
   - role: worker
   - role: worker
+EOF
 ```
 
 Now let's build it: 
@@ -231,4 +232,14 @@ kind create cluster --config ./multinode.yml  --name kind3
 Kind is still early alpha and doesn't support adding new nodes to a running cluster (yet).
 
 To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.
+
+
+**Nodes**
+
+Nodes are the machines running the Kubernetes cluster. These can be bare metal, virtual machines, or anything else. The word hosts is often used interchangeably with Nodes. I will try and use the term Nodes with consistency but will sometimes use the word Virtual Machine to refer to Nodes depending on context.
+```bash
+kubectl get nodes
+docker ps
+docker exec -it kind3-control-plane bash
+```
 

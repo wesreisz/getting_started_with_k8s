@@ -15,7 +15,7 @@
       <guid>http://www.wesleyreisz.com/getting_started_with_k8s/posts/lesson-1/0-introduction/</guid>
       <description>Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating and automating the deployment and management of networked applications.
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session.
-Signin for the registration link to the VM:</description>
+Key Takeaways  Understand the major goals and objectives of kubernetes Learn how kubernetes is architected Understand how to deploy and operate a service on kubernetes Login to your workspace  Start here  Please sign in to get your VM: http://bit.</description>
     </item>
     
     <item>

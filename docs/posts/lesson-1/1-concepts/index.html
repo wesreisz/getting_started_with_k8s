@@ -239,7 +239,7 @@ Replication controller: Responsible for maintaining the correct number of pods f
   - <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
 <span style="color:#ae81ff">EOF</span>
 </code></pre></div><p>Now let&rsquo;s build it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config ./multinode.yml  --name kind3
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kind create cluster --config ./multinode.yaml  --name kind3
 </code></pre></div><p>Kind is still early alpha and doesn&rsquo;t support adding new nodes to a running cluster (yet).</p>
 <p>To configure kind cluster creation, you will need to create a YAML config file. This file follows Kubernetes conventions for versioning etc.</p>
 <p><strong>Nodes</strong></p>

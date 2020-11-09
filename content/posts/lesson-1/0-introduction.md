@@ -11,15 +11,15 @@ Kubernetes (K8s) is a very powerful tool, primarily concerned with orchestrating
 
 Understanding how Kubernetes works makes you an effective power user for building higher-level platforms. This workshop is aimed at technologists and team leads looking to lift up the hood and understand what are all the major parts of k8s in a fast-paces half-day session. 
 
-Signin for the registration link to the VM: 
-
-http://bit.ly/qconplus (This is not marketing... I'll delete the emails afterward.)
-
 ### Key Takeaways
 1. Understand the major goals and objectives of kubernetes
 1. Learn how kubernetes is architected
 1. Understand how to deploy and operate a service on kubernetes
 1. Login to your workspace 
+
+### Start here
+1. Please sign in to get your VM: http://bit.ly/qconplus
+2. Please start downloading/installing: https://clients.amazonworkspaces.com
 
 ### Audience
 You should have a familiarity with containers and want to learn more about their orchestration on top of Kubernetes. This is a Kubernetes Day 1 class. What that means is it's an introductory topic to k8s. Day 2 concerns are not part of this 3 hour class.

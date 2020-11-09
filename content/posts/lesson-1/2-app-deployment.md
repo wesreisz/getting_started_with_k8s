@@ -60,9 +60,9 @@ docker login
 docker push wesreisz/hello-node:v1
 ```
 
-Create a docker-compose.yml file
+Create a docker-compose.yaml file
 ```yaml
-cat <<EOF > docker-compose.yml
+cat <<EOF > docker-compose.yaml
 version: '3'
 services:
   hello-node:
@@ -97,7 +97,7 @@ chmod +x kompose
 sudo mv ./kompose /usr/local/bin/kompose
 ```
 
-Convert your `docker-compose.yml` to a kubernetes.yml file for deployment.
+Convert your `docker-compose.yaml` to a kubernetes.yaml file for deployment.
 ```bash
 kompose convert -f docker-compose.yaml
 ```
@@ -112,7 +112,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.cmd: kompose convert -f docker-compose.yaml
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
@@ -127,7 +127,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.cmd: kompose convert -f docker-compose.yaml
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:

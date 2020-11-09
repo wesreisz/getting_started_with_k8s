@@ -25,7 +25,7 @@ docker ps
 Note: you can also run something like: `kubectl delete --all namespaces` to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it's just easier for me to recreate the cluster.
 
 
-Let's create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster. 
+Let's create a new cluster. Remember, we created a new yaml file before. We can use it for the new cluster. 
 ```yaml
 cat <<EOF > singlenode.yaml
 kind: Cluster

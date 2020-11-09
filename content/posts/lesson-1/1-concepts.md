@@ -226,7 +226,7 @@ EOF
 
 Now let's build it: 
 ```bash
-kind create cluster --config ./multinode.yml  --name kind3
+kind create cluster --config ./multinode.yaml  --name kind3
 ```
 
 Kind is still early alpha and doesn't support adding new nodes to a running cluster (yet).

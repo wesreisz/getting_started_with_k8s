@@ -134,8 +134,8 @@ docker run -p 3000:3000 hello-node:v1
 </code></pre></div><p>push it to dockerhub (NOTE: you&rsquo;ll need to replace your username on dockerhub to push it there). However, you can skip this step, and just pull the image from my repo.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker login
 docker push wesreisz/hello-node:v1
-</code></pre></div><p>Create a docker-compose.yml file</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; docker-compose.yml</span>
+</code></pre></div><p>Create a docker-compose.yaml file</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; docker-compose.yaml</span>
 <span style="color:#f92672">version</span>: <span style="color:#e6db74">&#39;3&#39;</span>
 <span style="color:#f92672">services</span>:
   <span style="color:#f92672">hello-node</span>:
@@ -156,7 +156,7 @@ docker push wesreisz/hello-node:v1
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -L https://github.com/kubernetes/kompose/releases/download/v1.22.0/kompose-linux-amd64 -o kompose
 chmod +x kompose
 sudo mv ./kompose /usr/local/bin/kompose
-</code></pre></div><p>Convert your <code>docker-compose.yml</code> to a kubernetes.yml file for deployment.</p>
+</code></pre></div><p>Convert your <code>docker-compose.yaml</code> to a kubernetes.yaml file for deployment.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kompose convert -f docker-compose.yaml
 </code></pre></div><h4 id="deploy-to-your-cluster">Deploy to your Cluster</h4>
 <p>A Deployment provides declarative updates for Pods and ReplicaSets.</p>
@@ -165,7 +165,7 @@ sudo mv ./kompose /usr/local/bin/kompose
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
 <span style="color:#f92672">metadata</span>:
   <span style="color:#f92672">annotations</span>:
-    <span style="color:#f92672">kompose.cmd</span>: <span style="color:#ae81ff">kompose convert -f docker-compose.yml</span>
+    <span style="color:#f92672">kompose.cmd</span>: <span style="color:#ae81ff">kompose convert -f docker-compose.yaml</span>
     <span style="color:#f92672">kompose.version</span>: <span style="color:#ae81ff">1.22.0</span> <span style="color:#ae81ff">(955b78124)</span>
   <span style="color:#f92672">creationTimestamp</span>: <span style="color:#66d9ef">null</span>
   <span style="color:#f92672">labels</span>:
@@ -180,7 +180,7 @@ sudo mv ./kompose /usr/local/bin/kompose
   <span style="color:#f92672">template</span>:
     <span style="color:#f92672">metadata</span>:
       <span style="color:#f92672">annotations</span>:
-        <span style="color:#f92672">kompose.cmd</span>: <span style="color:#ae81ff">kompose convert -f docker-compose.yml</span>
+        <span style="color:#f92672">kompose.cmd</span>: <span style="color:#ae81ff">kompose convert -f docker-compose.yaml</span>
         <span style="color:#f92672">kompose.version</span>: <span style="color:#ae81ff">1.22.0</span> <span style="color:#ae81ff">(955b78124)</span>
       <span style="color:#f92672">creationTimestamp</span>: <span style="color:#66d9ef">null</span>
       <span style="color:#f92672">labels</span>:

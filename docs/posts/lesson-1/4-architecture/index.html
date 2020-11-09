@@ -108,7 +108,7 @@ kind get clusters
 kind delete cluster --name kind3
 docker ps
 </code></pre></div><p>Note: you can also run something like: <code>kubectl delete --all namespaces</code> to delete all namespaces (and the objects in there) in the system. It will not delete system namespaces. So it has the effect of cleaning the cluster. With kind, it&rsquo;s just easier for me to recreate the cluster.</p>
-<p>Let&rsquo;s create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster.</p>
+<p>Let&rsquo;s create a new cluster. Remember, we created a new yaml file before. We can use it for the new cluster.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; singlenode.yaml</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
 <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>

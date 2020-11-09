@@ -118,7 +118,7 @@ More Details: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 
 **Lab Exercise**
 
-Let's create a new cluster. Remember, we created a new yml file before. We can use it for the new cluster. 
+Let's create a new cluster. Remember, we created a new yaml file before. We can use it for the new cluster. 
 ```yaml
 cat <<EOF > singlenode.yaml
 kind: Cluster
@@ -155,7 +155,7 @@ kubectl get serviceaccount
 ```
 
 Create a role that can only read/list/watch the default namespace:
-```yml
+```yaml
 cat <<EOF > default-pod-role.yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1 

@@ -97,7 +97,15 @@
 
 <div class="content ">
   <p>A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods. A Service is defined using YAML (preferred) or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a LabelSelector (see below for why you might want a Service without including selector in the spec).</p>
+<p><img src="/getting_started_with_k8s/images/lesson3/services.svg" alt="Services"></p>
+<p>There are three service types that we&rsquo;ll be concerned about:</p>
+<ul>
+<li>clusterip</li>
+<li>nodeport</li>
+<li>loadbalancer</li>
+</ul>
 <p>Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service. Services allow your applications to receive traffic.</p>
+<p><strong>NOTE: All pods deployed on a node can more horizontally to another pod. These are not isolated unless they&rsquo;re in namespaces.</strong></p>
 <p>Services match a set of Pods using labels and selectors, a grouping primitive that allows logical operation on objects in Kubernetes. Labels are key/value pairs attached to objects and can be used in any number of ways:</p>
 <ul>
 <li>Designate objects for development, test, and production</li>
@@ -107,18 +115,33 @@
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
 <li>Learn how services are used to expose your services to traffic</li>
-<li>Learn about the different service types</li>
+<li>Learn about the different service types, specifically clusterip, nodeport, and loadbalancer</li>
 <li>See how to get logs from the pods.</li>
 <li>Execute commands against and inside the pods.</li>
 <li>Learn more about how the overlay networks work in Kubernetes.</li>
 </ol>
 <h3 id="services-and-labels">Services and Labels</h3>
-<p>Explore the IPs that were created:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 10.244.1.3
-kubectl exec -it hello-node-7887c44b77-4bw6v  -- bash
-ping 10.244.3.11
-</code></pre></div><p>These addresses are only routable inside the cluster, not outside&hellip; services address this.</p>
-<p><img src="/getting_started_with_k8s/images/lesson3/services.svg" alt="Services"></p>
+<p>Explore the IPs that were created. Let&rsquo;s first look at the nodes:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get nodes -o wide
+</code></pre></div><p>This shows the node IPs. This is the infra that your nodes are running on. If you were to take a VM created in vSphere or provisioned on a cloud provider to install k8s on it, this is the accessible IP. It is required that your nodes need to be able to communicate between the control plan and the worker nodes. In the example below, I have a single node that is both the control plane and the worker node.</p>
+<pre><code>NAME                 STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                     KERNEL-VERSION      CONTAINER-RUNTIME
+test-control-plane   Ready    master   34m   v1.19.1   172.22.0.2    &lt;none&gt;        Ubuntu Groovy Gorilla (development branch)   4.19.121-linuxkit   containerd://1.4.0
+</code></pre><p>Now that we&rsquo;ve looked at the nodes, let&rsquo;s look at the pod IPs.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -o wide
+</code></pre></div><p>In my case, I see:</p>
+<pre><code>NAME                               READY   STATUS    RESTARTS   AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+hello-kubernetes-8448b6db7-27dlc   1/1     Running   0          37m   10.244.0.7   test-control-plane   &lt;none&gt;           &lt;none&gt;
+hello-kubernetes-8448b6db7-knn2l   1/1     Running   0          37m   10.244.0.5   test-control-plane   &lt;none&gt;           &lt;none&gt;
+hello-kubernetes-8448b6db7-x8m2d   1/1     Running   0          37m   10.244.0.6   test-control-plane   &lt;none&gt;           &lt;none&gt;
+</code></pre><p>Notice that the IPs here are 10.244.<em>.</em> addresses. Why?</p>
+<p>These are the pod IPs. These are only routable (right now) inside the cluster. Give it a try. Ping one of the IPs from your host machine and then shell into one of your pods and ping it again.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># from your host OS</span>
+ping 10.244.0.7
+
+<span style="color:#75715e">#shell into a pod and ping from inside the cluster</span>
+kubectl exec -it hello-kubernetes-8448b6db7-27dlc  -- bash
+ping 10.244.0.7
+</code></pre></div><p>These addresses are only routable &ldquo;individually&rdquo; inside the cluster, not outside the cluster. To address these two things, we use services. A service can make a VIP and/or expose that VIP outside the cluster. Here are the three we&rsquo;ll discuss</p>
 <p>Services can be exposed in different ways by specifying a type in the ServiceSpec:</p>
 <ul>
 <li><strong>ClusterIP</strong> (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.</li>
@@ -127,7 +150,7 @@ ping 10.244.3.11
 <li><strong>ExternalName</strong> - Exposes the Service using an arbitrary name (specified by externalName in the spec) by returning a CNAME record with the name. No proxy is used. This type requires v1.7 or higher of kube-dns.</li>
 </ul>
 <h4 id="type-clusterip">type: clusterip</h4>
-<p>Let&rsquo;s start by looking at a default standard deployment. Kompose created a service, let&rsquo;s look at it.</p>
+<p>Let&rsquo;s start by looking at a default standard deployment. Kompose created a service, let&rsquo;s look at it (again, you can look just after this is you want to create the service manually and not use Kompose).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
 <span style="color:#f92672">metadata</span>:
@@ -147,7 +170,22 @@ ping 10.244.3.11
     <span style="color:#f92672">io.kompose.service</span>: <span style="color:#ae81ff">hello-node</span>
 <span style="color:#f92672">status</span>:
   <span style="color:#f92672">loadBalancer</span>: {}
-</code></pre></div><p>Now let&rsquo;s apply this yaml and test it out.</p>
+</code></pre></div><p><strong>Creating a clusterip service yourself</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; hello-node-service.yaml</span>
+<span style="color:#75715e"># Save to &#39;hello-node-service.yaml&#39;</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">ports</span>:
+  - <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">3000</span>
+  <span style="color:#f92672">selector</span>:
+    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>The top matter looks similar. It just has a kind of Service (notice if nothing is specified it defaults to clusterip). In the spect section it defines the VIP port to use (in this case 80&hellip; or in the case of the Kompose one 3000), and then the port that you exposed your app on inside the container in the pod.</p>
+<p>Now let&rsquo;s apply this yaml and test it out.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f hello-node-service.yaml
 </code></pre></div><pre><code>NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 hello-node   ClusterIP   10.96.217.162   &lt;none&gt;        3000/TCP   8s
@@ -162,7 +200,7 @@ kubectl exec -it hello-node-86d687ddfb-d56dp -- bash
 <p>Now exit that pod and let&rsquo;s expose the app with nodeport.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get deployment
 kubectl expose deployment hello-node --type<span style="color:#f92672">=</span>NodePort --name<span style="color:#f92672">=</span>hello-node-port
-ubectl get services
+kubectl get services
 </code></pre></div><pre><code>NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 hello-node        ClusterIP   10.96.217.162   &lt;none&gt;        3000/TCP         21m
 hello-node-port   NodePort    10.96.98.158    &lt;none&gt;        3000:31117/TCP   14s
@@ -174,9 +212,46 @@ kubernetes        ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP       
 <p>Before we move to the next section, let&rsquo;s get the yaml from <code>kubectl</code> for this NodePort. We can use <code>kubectl</code> to do that:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get services hello-node-port -o yaml  &gt; hello-node-port.yaml
 </code></pre></div><p>NOTE: This is not really for saving off configuration. It&rsquo;s more for getting and grep values if you need it. The yaml this generates is not always small is structured very easily. You can also use <code>-o json</code>.</p>
+<p><strong>NOTE</strong> I created the nodeport using kubectl above for variety. You can also create it uing yaml like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; node-port-service.yaml</span>
+<span style="color:#75715e"># Save to &#39;node-port-service.yaml&#39;</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hello-kubernetes-nodeport</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">NodePort</span>
+  <span style="color:#f92672">selector</span>:
+    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+  <span style="color:#f92672">ports</span>:
+  - <span style="color:#f92672">nodePort</span>: <span style="color:#ae81ff">30163</span>
+    <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">3000</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Nodeport is the port that will be exposed outside the cluster.
+Port is the port that will be used on the VIP inside the cluster.
+TargetPort is the port that will be targetted (where the app is deployed).</p>
+<p><strong>NOTE:</strong> One more note. If you&rsquo;re using kind on MacOS or Windows, when you try to access the nodeport outside the cluster it will fail. This fails because we&rsquo;re using docker in kubernetes to access things. It works in linux because (well, because the containers technology is part of linux&hellip; not an app that has to expose ports explicity). If you want to make nodeport work explicitly on Windows or MacOS, you need to tell Docker that you want to open the node port that&rsquo;s used when you create the cluster. Below is an example of what it might look like to do that:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; node-port-cluster.yaml</span>
+<span style="color:#75715e"># Save to &#39;node-port-cluster.yaml&#39;</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kind.x-k8s.io/v1alpha4</span>
+<span style="color:#f92672">nodes</span>:
+- <span style="color:#f92672">role</span>: <span style="color:#ae81ff">control-plane</span>
+- <span style="color:#f92672">role</span>: <span style="color:#ae81ff">worker</span>
+  <span style="color:#f92672">extraPortMappings</span>:
+  - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#f92672">listenAddress</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>
+  - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">30163</span>
+    <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">30163</span>
+    <span style="color:#f92672">listenAddress</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Creates a two node cluster with port 80 and 30163 mapped</p>
 <h4 id="type-loadbalancer">type: loadbalancer</h4>
-<p>If you’re using YAML files from your production deployment, be aware that a service of type LoadBalancer isn’t going to work on your local machine. You can create the service, but the External IP address will stay in Pending state indefinitely. This is because LoadBalancer type relies on an external provider (like your cloud service) setting up a load balancer for sending traffic to the service. You’ll need to set the type to NodePort.</p>
-<p>Using loadbalancer with any of the cloud providers will working this out. If you&rsquo;re doing this on kind (like we are), you will see an external IP address of pending. You will need to expose a different service or install something like Metallb for this to resolve.</p>
+<p>If you’re using YAML files from your production deployment, be aware that a service of type LoadBalancer isn’t going to work on your local machine. You can create the service, but the External IP address will stay in Pending state indefinitely. This is because LoadBalancer type relies on an external provider (like your cloud service or vSphere) setting up a load balancer for sending traffic to the service. You’ll need to set the type to NodePort (or use an ingress).</p>
+<p>Using loadbalancer with any of the cloud providers will work this out. If you&rsquo;re doing this on kind (like we are), you will see an external IP address of pending. You will need to expose a different service or install something like Metallb for this to resolve.</p>
+<p><strong>NOTE</strong> You can also install Metallb which is a tool that will assign a range of IP address to kind and pretty east to configure if you prefer. I dont cover Metallb here.</p>
 
 </div>
 </div>

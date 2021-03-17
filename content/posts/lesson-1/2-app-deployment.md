@@ -79,6 +79,9 @@ docker-compose up
 ```
 
 #### Kompose
+
+*NOTE: This next section shows using Kompose to build your deployment descriptor. If you're not starting with docker-compose, you can skip this section and manually create your own deployment descriptor.*
+
 kompose is a tool to help users who are familiar with docker-compose move to Kubernetes. kompose takes a Docker Compose file and translates it into Kubernetes resources.
 
 kompose is a convenience tool to go from local Docker development to managing your application with Kubernetes. Transformation of the Docker Compose format to Kubernetes resources manifest may not be exact, but it helps tremendously when first deploying an application on Kubernetes.
@@ -102,7 +105,7 @@ Convert your `docker-compose.yaml` to a kubernetes.yaml file for deployment.
 kompose convert -f docker-compose.yaml
 ```
 
-#### Deploy to your Cluster
+#### Deploy to your Cluster (using Kompose generated deployment descriptor)
 A Deployment provides declarative updates for Pods and ReplicaSets.
 
 You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.
@@ -142,11 +145,47 @@ spec:
       restartPolicy: Always
 status: {}
 ```
+#### Deploy to your Cluster (by creating your own deployment descriptor)
+
+In the example above, I used Kompose as a quick way to go from a docker-compose file to a deployment.yaml file. You of course don't need to use compose. You can just create it yourself. If that is your preference, here is an example:
+
+```yaml
+cat <<EOF > deployment.yaml
+# Save to 'deployment.yaml'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes
+    spec:
+      containers:
+      - name: hello-kubernetes
+        image: wesreisz/hello-node:v1
+        ports:
+        - containerPort: 3000
+EOF
+```
+
+Regardless of whether you used Kompose or created the deployment descriptor yourself, to apply it you would use: 
 
 To apply it, run:
 ```bash
 kubectl apply -f hello-node-deployment.yaml 
 ```
+
+**Explaining the Deployment Descriptor**
+
+The first two lines just  show the api version and the type of yaml file we're creating (a deployment). hello-kubernetes will be the name of the deployment. You can type `kubectl get deployments` to see that.
+
+Below that is the spec. Which defines characteristics about the application that will be deploymented (including the port inside the container where the app is running), the image/tag, and the labels applied to the deployment. Notice the difference between what get's created by kompose and what is required to make a deployment.
 
 See your deployment:
 ```bash
@@ -226,7 +265,7 @@ kubectl drain kind3-worker3
 
 **DaemonSet?**
 
-DaemonSets are used to ensure that some or all of your K8S nodes run a copy of a pod, which allows you to run a daemon on every node.
+DaemonSets are used to ensure that some or all of your K8s nodes run a copy of a pod, which allows you to run a daemon on every node.
 
 Let's reschedule workloads
 ```bash

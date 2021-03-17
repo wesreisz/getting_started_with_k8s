@@ -147,6 +147,7 @@ docker push wesreisz/hello-node:v1
 </code></pre></div><p>Run it</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker-compose up
 </code></pre></div><h4 id="kompose">Kompose</h4>
+<p><em>NOTE: This next section shows using Kompose to build your deployment descriptor. If you&rsquo;re not starting with docker-compose, you can skip this section and manually create your own deployment descriptor.</em></p>
 <p>kompose is a tool to help users who are familiar with docker-compose move to Kubernetes. kompose takes a Docker Compose file and translates it into Kubernetes resources.</p>
 <p>kompose is a convenience tool to go from local Docker development to managing your application with Kubernetes. Transformation of the Docker Compose format to Kubernetes resources manifest may not be exact, but it helps tremendously when first deploying an application on Kubernetes.</p>
 <p><a href="https://github.com/kubernetes/kompose">https://github.com/kubernetes/kompose</a></p>
@@ -158,7 +159,7 @@ chmod +x kompose
 sudo mv ./kompose /usr/local/bin/kompose
 </code></pre></div><p>Convert your <code>docker-compose.yaml</code> to a kubernetes.yaml file for deployment.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kompose convert -f docker-compose.yaml
-</code></pre></div><h4 id="deploy-to-your-cluster">Deploy to your Cluster</h4>
+</code></pre></div><h4 id="deploy-to-your-cluster-using-kompose-generated-deployment-descriptor">Deploy to your Cluster (using Kompose generated deployment descriptor)</h4>
 <p>A Deployment provides declarative updates for Pods and ReplicaSets.</p>
 <p>You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
@@ -194,9 +195,37 @@ sudo mv ./kompose /usr/local/bin/kompose
           <span style="color:#f92672">resources</span>: {}
       <span style="color:#f92672">restartPolicy</span>: <span style="color:#ae81ff">Always</span>
 <span style="color:#f92672">status</span>: {}
-</code></pre></div><p>To apply it, run:</p>
+</code></pre></div><h4 id="deploy-to-your-cluster-by-creating-your-own-deployment-descriptor">Deploy to your Cluster (by creating your own deployment descriptor)</h4>
+<p>In the example above, I used Kompose as a quick way to go from a docker-compose file to a deployment.yaml file. You of course don&rsquo;t need to use compose. You can just create it yourself. If that is your preference, here is an example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; deployment.yaml</span>
+<span style="color:#75715e"># Save to &#39;deployment.yaml&#39;</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
+  <span style="color:#f92672">selector</span>:
+    <span style="color:#f92672">matchLabels</span>:
+      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+  <span style="color:#f92672">template</span>:
+    <span style="color:#f92672">metadata</span>:
+      <span style="color:#f92672">labels</span>:
+        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+    <span style="color:#f92672">spec</span>:
+      <span style="color:#f92672">containers</span>:
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hello-kubernetes</span>
+        <span style="color:#f92672">image</span>: <span style="color:#ae81ff">wesreisz/hello-node:v1</span>
+        <span style="color:#f92672">ports</span>:
+        - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">3000</span>
+<span style="color:#ae81ff">EOF</span>
+</code></pre></div><p>Regardless of whether you used Kompose or created the deployment descriptor yourself, to apply it you would use:</p>
+<p>To apply it, run:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f hello-node-deployment.yaml 
-</code></pre></div><p>See your deployment:</p>
+</code></pre></div><p><strong>Explaining the Deployment Descriptor</strong></p>
+<p>The first two lines just  show the api version and the type of yaml file we&rsquo;re creating (a deployment). hello-kubernetes will be the name of the deployment. You can type <code>kubectl get deployments</code> to see that.</p>
+<p>Below that is the spec. Which defines characteristics about the application that will be deploymented (including the port inside the container where the app is running), the image/tag, and the labels applied to the deployment. Notice the difference between what get&rsquo;s created by kompose and what is required to make a deployment.</p>
+<p>See your deployment:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
 </code></pre></div><h4 id="pods">Pods</h4>
 <p><img src="/getting_started_with_k8s/images/lesson3/k8s-arch3-thanks-weave.png" alt=""></p>
@@ -239,7 +268,7 @@ kubectl cordon kind3-worker3
 <p>Now let&rsquo;s <code>drain</code> traffic</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl drain kind3-worker3
 </code></pre></div><p><strong>DaemonSet?</strong></p>
-<p>DaemonSets are used to ensure that some or all of your K8S nodes run a copy of a pod, which allows you to run a daemon on every node.</p>
+<p>DaemonSets are used to ensure that some or all of your K8s nodes run a copy of a pod, which allows you to run a daemon on every node.</p>
 <p>Let&rsquo;s reschedule workloads</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl uncordon kind3-worker3
 kubectl scale --replicas <span style="color:#ae81ff">2</span> deployment/hello-node
